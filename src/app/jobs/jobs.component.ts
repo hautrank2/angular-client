@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
 import { CommonModule } from '@angular/common';
-import { TypographyDirective } from '../directives/typography.directive';
 import { DetailComponent } from './detail/detail.component';
+import { TypographyDirective } from '~/directives/typography.directive';
 
 @Component({
   selector: 'app-jobs',
@@ -23,7 +23,7 @@ export class JobsComponent implements OnInit {
     });
   }
 
-  jsonStringify(data: Job) {
-    return JSON.stringify(data);
+  onSelectJob(index: number): void {
+    this.selectJob = this.jobsData()[index];
   }
 }

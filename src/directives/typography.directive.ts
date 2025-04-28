@@ -19,7 +19,7 @@ export class TypographyDirective implements OnChanges {
     | 'h5'
     | 'h6'
     | 'p'
-    | 'span' = 'p';
+    | 'small' = 'p';
   @Input() color: string = 'text-black';
   @Input() fontWeight: string = 'font-normal';
   @Input() align: 'left' | 'center' | 'right' = 'left';
@@ -49,9 +49,9 @@ export class TypographyDirective implements OnChanges {
   private mapVariantToFontSize(variant: string): string {
     switch (variant) {
       case 'h1':
-        return 'text-4xl';
+        return 'text-5xl';
       case 'h2':
-        return 'text-3xl';
+        return 'text-4xl';
       case 'h3':
         return 'text-2xl';
       case 'h4':
@@ -62,7 +62,7 @@ export class TypographyDirective implements OnChanges {
         return 'text-base';
       case 'p':
         return 'text-base';
-      case 'span':
+      case 'small':
         return 'text-sm';
       default:
         return 'text-base';

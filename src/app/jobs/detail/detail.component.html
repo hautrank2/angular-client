@@ -1,1 +1,39 @@
-<p>detail works!</p>
+<mat-card *ngIf="data" class="p-6 space-y-4">
+  <h2 appTypography="h2">{{ data.title }}</h2>
+
+  <p appTypography="p">{{ data.location }} • {{ data.type }}</p>
+
+  <p appTypography="p">{{ data.description }}</p>
+
+  <div>
+    <h3 appTypography="h3" class="mb-2">Skills</h3>
+    <mat-chip-set class="flex flex-wrap gap-2">
+      <mat-chip *ngFor="let skill of data.skills">
+        {{ skill }}
+      </mat-chip>
+    </mat-chip-set>
+  </div>
+
+  <div>
+    <h3 appTypography="h3" class="mb-2">Requirements</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li *ngFor="let req of data.requirement" appTypography="p">
+        {{ req }}
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <h3 appTypography="h3" class="mb-2">Benefits</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li *ngFor="let benefit of data.benefit" appTypography="p">
+        {{ benefit }}
+      </li>
+    </ul>
+  </div>
+
+  <small appTypography="small">
+    Created at: {{ data.createdAt | date : "mediumDate" }} • Updated at:
+    {{ data.updatedAt | date : "mediumDate" }}
+  </small>
+</mat-card>
