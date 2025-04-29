@@ -4,147 +4,271 @@
     "title": "Frontend Developer",
     "location": "Ho Chi Minh City",
     "type": "Full-time",
-    "description": "We are looking for an Angular frontend developer to join our amazing team!",
+    "description": "Build beautiful web apps with Angular.",
     "skills": ["angular", "typescript", "html", "css"],
-    "requirement": [
-      "1+ year experience with Angular",
-      "Strong understanding of responsive design",
-      "Experience with REST APIs"
+    "responsibility": [
+      "Develop responsive UI",
+      "Collaborate with UX designers",
+      "Optimize app for performance"
     ],
-    "benefit": ["13th month salary", "Health insurance", "Annual company trip"],
+    "requirement": ["1+ year Angular", "Knowledge of REST APIs"],
+    "benefit": ["13th salary", "Health insurance", "Company trip"],
     "createdAt": "2024-05-01T00:00:00Z",
-    "updatedAt": "2024-05-05T00:00:00Z"
+    "updatedAt": "2024-05-02T00:00:00Z"
   },
   {
     "id": "2",
     "title": "Backend Developer",
     "location": "Remote",
     "type": "Hybrid",
-    "description": "Join our backend team to build scalable APIs using NestJS and MongoDB.",
+    "description": "Create APIs with NestJS.",
     "skills": ["node", "nestjs", "mongodb"],
-    "requirement": [
-      "2+ years Node.js experience",
-      "Familiarity with MongoDB and RESTful APIs"
+    "responsibility": [
+      "Develop APIs",
+      "Ensure server security",
+      "Optimize DB queries"
     ],
+    "requirement": ["2+ years Node.js", "Experience with MongoDB"],
     "benefit": ["Remote work", "Performance bonus"],
     "createdAt": "2024-05-02T00:00:00Z",
-    "updatedAt": "2024-05-06T00:00:00Z"
+    "updatedAt": "2024-05-03T00:00:00Z"
   },
   {
     "id": "3",
-    "title": "ReactJS Developer",
+    "title": "React Developer",
     "location": "Da Nang",
     "type": "Part-time",
-    "description": "Enthusiastic ReactJS developer for a fast-growing project.",
-    "skills": ["react", "typescript", "redux"],
-    "requirement": [
-      "Strong knowledge of ReactJS",
-      "Experience with state management libraries"
+    "description": "Create frontend with React.",
+    "skills": ["react", "redux", "typescript"],
+    "responsibility": [
+      "Build reusable components",
+      "Manage global state",
+      "Optimize UI"
     ],
-    "benefit": ["Flexible working hours", "Project bonus"],
+    "requirement": ["2+ years React", "Experience with Redux"],
+    "benefit": ["Flexible hours", "Project bonus"],
     "createdAt": "2024-05-03T00:00:00Z",
-    "updatedAt": "2024-05-07T00:00:00Z"
+    "updatedAt": "2024-05-04T00:00:00Z"
   },
   {
     "id": "4",
-    "title": "Fullstack Developer",
-    "location": "Hanoi",
-    "type": "Full-time",
-    "description": "Work with both frontend and backend using Angular and Node.js.",
-    "skills": ["angular", "node", "typescript"],
-    "requirement": [
-      "Experience with Angular and Node.js",
-      "Microservices understanding"
-    ],
-    "benefit": ["Competitive salary", "Annual bonus", "Paid leave"],
-    "createdAt": "2024-05-04T00:00:00Z",
-    "updatedAt": "2024-05-08T00:00:00Z"
-  },
-  {
-    "id": "5",
     "title": "Mobile Developer",
     "location": "Remote",
     "type": "Full-time",
-    "description": "We are hiring React Native mobile developers for global projects.",
-    "skills": ["react", "react-native", "typescript"],
-    "requirement": [
-      "Experience with React Native",
-      "Understanding of mobile UI best practices"
+    "description": "Create cross-platform apps.",
+    "skills": ["react-native", "typescript"],
+    "responsibility": [
+      "Develop mobile apps",
+      "Optimize mobile performance",
+      "Integrate native modules"
     ],
-    "benefit": ["Remote work", "Travel allowance"],
+    "requirement": ["React Native experience", "Understanding of mobile UX"],
+    "benefit": ["Remote allowance", "Health insurance"],
+    "createdAt": "2024-05-04T00:00:00Z",
+    "updatedAt": "2024-05-05T00:00:00Z"
+  },
+  {
+    "id": "5",
+    "title": "QA Engineer",
+    "location": "Hanoi",
+    "type": "Full-time",
+    "description": "Ensure product quality.",
+    "skills": ["selenium", "cypress", "testing"],
+    "responsibility": [
+      "Write test cases",
+      "Perform manual testing",
+      "Automate tests"
+    ],
+    "requirement": ["Experience with testing tools", "Attention to detail"],
+    "benefit": ["Annual bonus", "Healthcare"],
     "createdAt": "2024-05-05T00:00:00Z",
-    "updatedAt": "2024-05-09T00:00:00Z"
+    "updatedAt": "2024-05-06T00:00:00Z"
   },
   {
     "id": "6",
-    "title": "DevOps Engineer",
-    "location": "Ho Chi Minh City",
-    "type": "Full-time",
-    "description": "Setup CI/CD pipelines and manage cloud infrastructure.",
-    "skills": ["aws", "docker", "kubernetes"],
-    "requirement": ["Knowledge of AWS, Docker, and CI/CD pipelines"],
-    "benefit": ["Flexible working hours", "AWS certification support"],
-    "createdAt": "2024-05-06T00:00:00Z",
-    "updatedAt": "2024-05-10T00:00:00Z"
-  },
-  {
-    "id": "7",
-    "title": "QA Engineer",
-    "location": "Remote",
-    "type": "Part-time",
-    "description": "Ensure software quality with automated and manual testing.",
-    "skills": ["selenium", "cypress", "manual-testing"],
-    "requirement": [
-      "Experience in automated testing tools",
-      "Attention to detail"
-    ],
-    "benefit": ["Remote work", "Bonus based on performance"],
-    "createdAt": "2024-05-07T00:00:00Z",
-    "updatedAt": "2024-05-11T00:00:00Z"
-  },
-  {
-    "id": "8",
     "title": "UI/UX Designer",
     "location": "Ho Chi Minh City",
     "type": "Full-time",
-    "description": "Create amazing user experiences with Figma and Adobe XD.",
-    "skills": ["figma", "adobexd", "design-thinking"],
-    "requirement": [
-      "Portfolio of design projects",
-      "Creativity and attention to detail"
+    "description": "Design seamless user experiences.",
+    "skills": ["figma", "adobe-xd"],
+    "responsibility": [
+      "Create prototypes",
+      "Design user flows",
+      "Conduct UX research"
     ],
-    "benefit": ["Creative work environment", "Training budget"],
+    "requirement": ["Experience with Figma", "Creativity"],
+    "benefit": ["Creative environment", "Training budget"],
+    "createdAt": "2024-05-06T00:00:00Z",
+    "updatedAt": "2024-05-07T00:00:00Z"
+  },
+  {
+    "id": "7",
+    "title": "DevOps Engineer",
+    "location": "Remote",
+    "type": "Hybrid",
+    "description": "Maintain cloud infrastructure.",
+    "skills": ["aws", "docker", "kubernetes"],
+    "responsibility": [
+      "Setup CI/CD pipelines",
+      "Manage cloud infra",
+      "Monitor system health"
+    ],
+    "requirement": ["Experience with AWS", "Knowledge of Docker/K8s"],
+    "benefit": ["Remote flexibility", "Certification support"],
+    "createdAt": "2024-05-07T00:00:00Z",
+    "updatedAt": "2024-05-08T00:00:00Z"
+  },
+  {
+    "id": "8",
+    "title": "Project Manager",
+    "location": "Hanoi",
+    "type": "Full-time",
+    "description": "Lead software projects.",
+    "skills": ["scrum", "agile", "management"],
+    "responsibility": [
+      "Manage team",
+      "Track project progress",
+      "Communicate with stakeholders"
+    ],
+    "requirement": ["PM experience", "Strong leadership"],
+    "benefit": ["Attractive salary", "Company trips"],
     "createdAt": "2024-05-08T00:00:00Z",
-    "updatedAt": "2024-05-12T00:00:00Z"
+    "updatedAt": "2024-05-09T00:00:00Z"
   },
   {
     "id": "9",
-    "title": "Business Analyst",
-    "location": "Hanoi",
-    "type": "Hybrid",
-    "description": "Bridge between technical teams and business stakeholders.",
-    "skills": ["business-analysis", "agile", "scrum"],
-    "requirement": [
-      "Experience gathering requirements",
-      "Good communication skills"
-    ],
-    "benefit": ["Attractive salary", "Annual performance review"],
-    "createdAt": "2024-05-09T00:00:00Z",
-    "updatedAt": "2024-05-13T00:00:00Z"
-  },
-  {
-    "id": "10",
     "title": "System Administrator",
     "location": "Da Nang",
     "type": "Full-time",
-    "description": "Maintain IT systems, servers, and security protocols.",
-    "skills": ["linux", "windows-server", "networking"],
-    "requirement": [
-      "Experience managing Linux and Windows servers",
-      "Network troubleshooting skills"
+    "description": "Manage IT systems.",
+    "skills": ["linux", "windows-server"],
+    "responsibility": [
+      "Maintain servers",
+      "Troubleshoot system issues",
+      "Ensure IT security"
     ],
-    "benefit": ["Work-life balance", "Health insurance"],
+    "requirement": ["Experience with Linux/Windows", "Networking knowledge"],
+    "benefit": ["Work-life balance", "Health support"],
+    "createdAt": "2024-05-09T00:00:00Z",
+    "updatedAt": "2024-05-10T00:00:00Z"
+  },
+  {
+    "id": "10",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
     "createdAt": "2024-05-10T00:00:00Z",
-    "updatedAt": "2024-05-14T00:00:00Z"
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "11",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "12",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "13",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "14",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "15",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
+  },
+  {
+    "id": "16",
+    "title": "Business Analyst",
+    "location": "Remote",
+    "type": "Part-time",
+    "description": "Bridge tech and business.",
+    "skills": ["business-analysis", "agile"],
+    "responsibility": [
+      "Gather requirements",
+      "Analyze business needs",
+      "Support product roadmap"
+    ],
+    "requirement": ["BA experience", "Strong communication"],
+    "benefit": ["Remote work", "Annual bonus"],
+    "createdAt": "2024-05-10T00:00:00Z",
+    "updatedAt": "2024-05-11T00:00:00Z"
   }
 ]

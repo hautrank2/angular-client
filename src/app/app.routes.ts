@@ -16,4 +16,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./jobs/detail/detail.component').then((m) => m.DetailComponent),
   },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./admin/admin.component').then((m) => m.AdminComponent),
+  },
 ];

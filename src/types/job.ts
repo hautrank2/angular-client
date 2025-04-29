@@ -8,6 +8,7 @@ export interface Job {
   description: string;
   skills: string[]; // array of skill keys, ví dụ: ['angular', 'node']
   requirement: string[];
+  responsibility: string[];
   benefit: string[];
   createdAt: string;
   updatedAt: string;

@@ -1,5 +1,12 @@
 .job-card {
-  &:hover {
-    background-color: var(--mat-sys-primary-fixed);
+  &.active {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+
+  &:not(.active) {
+    &:hover {
+      background-color: var(--mat-sys-surface-container-high);
+      cursor: pointer;
+    }
   }
 }

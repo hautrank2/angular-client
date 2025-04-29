@@ -1,11 +1,13 @@
-<div class="container mx-auto">
-  <div class="grid grid-cols-2 gap-4">
+<div class="container mx-auto lg:max-w-4xl xl:max-w-6xl">
+  <div class="grid grid-cols-3 gap-4">
     <div class="col-span-1">
       <div class="sticky top-20 max-h-[80vh] overflow-y-auto">
         @for (job of jobsData(); track $index; let index = $index) {
         <div
-          class="p-2 job-card rounded-lg hover:cursor-pointer"
+          class="p-2 job-card rounded-lg"
+          [ngClass]="{ active: selectJob?.id === job.id }"
           (click)="onSelectJob(index)"
+          matRipple
         >
           <h4 appTypography="h5">{{ job.title }}</h4>
           <p appTypography="small">{{ job.type }} | {{ job.location }}</p>
@@ -13,8 +15,8 @@
         }
       </div>
     </div>
-    <div class="col-span-1">
-      <app-detail *ngIf="selectJob" [data]="selectJob"></app-detail>
+    <div class="col-span-2">
+      <app-job-card *ngIf="selectJob" [data]="selectJob"></app-job-card>
     </div>
   </div>
 </div>

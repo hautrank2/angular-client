@@ -49,9 +49,9 @@ export class TypographyDirective implements OnChanges {
   private mapVariantToFontSize(variant: string): string {
     switch (variant) {
       case 'h1':
-        return 'text-5xl';
-      case 'h2':
         return 'text-4xl';
+      case 'h2':
+        return 'text-3xl';
       case 'h3':
         return 'text-2xl';
       case 'h4':
@@ -59,7 +59,7 @@ export class TypographyDirective implements OnChanges {
       case 'h5':
         return 'text-lg';
       case 'h6':
-        return 'text-base';
+        return 'text-base font-semibold';
       case 'p':
         return 'text-base';
       case 'small':
