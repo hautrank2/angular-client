@@ -4,7 +4,7 @@ import { Job } from '~/types/job';
 import { CommonModule } from '@angular/common';
 import { TypographyDirective } from '~/directives/typography.directive';
 import { MatRippleModule } from '@angular/material/core';
-import { JobCardComponent } from '~/components/job/job-card/job-card.component';
+import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
 
 @Component({
   selector: 'app-jobs',

@@ -1,4 +1,6 @@
-[
+import { Skill } from '~/types/job';
+
+export const SKILL_DATA: Skill[] = [
   {
     key: 'node',
     title: 'Node.js',

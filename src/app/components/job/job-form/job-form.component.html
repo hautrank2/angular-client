@@ -1,0 +1,127 @@
+<h2 mat-dialog-title>{{ data.title || "Job form" }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Job Title</mat-label>
+      <input matInput formControlName="title" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Job Type</mat-label>
+      <mat-select formControlName="type" required>
+        <mat-option *ngFor="let type of jobTypes" [value]="type">{{
+          type
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        formControlName="description"
+        required
+      ></textarea>
+    </mat-form-field>
+
+    <!-- Skills Input (Chips) -->
+    <mat-form-field appearance="outline">
+      <mat-label>Skills</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Skill selection">
+        @for (skill of skills.value; track $index; let index = $index) {
+        <mat-chip-row (removed)="removeSkill(index)">
+          {{ skill.title }}
+          <button matChipRemove [attr.aria-label]="'remove ' + skill.key">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input
+        name="currentFruit"
+        placeholder="Select skill..."
+        #skillInput
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (skill of filteredSkill(); track $index) {
+        <mat-option [value]="skill.key">{{ skill.title }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Requirements -->
+    <div class="array-group">
+      <h4>Requirements</h4>
+      <div *ngFor="let req of requirement.controls; let i = index">
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput />
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeFromArray(requirement, i)"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <button mat-button (click)="addToArray(requirement, '')" type="button">
+        Add Requirement
+      </button>
+    </div>
+
+    <!-- Responsibilities -->
+    <div class="array-group">
+      <h4>Responsibilities</h4>
+      <div *ngFor="let res of responsibility.controls; let i = index">
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput />
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeFromArray(responsibility, i)"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <button mat-button (click)="addToArray(responsibility, '')" type="button">
+        Add Responsibility
+      </button>
+    </div>
+
+    <!-- Benefits -->
+    <div class="array-group">
+      <h4>Benefits</h4>
+      <div *ngFor="let ben of benefit.controls; let i = index">
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput />
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeFromArray(benefit, i)"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <button mat-button (click)="addToArray(benefit, '')" type="button">
+        Add Benefit
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="close()">Close</button>
+  <button mat-flat-button cdkFocusInitial>Ok</button>
+</mat-dialog-actions>
