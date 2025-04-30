@@ -47,3 +47,5 @@ export const SKILL_DATA: Skill[] = [
     logo: '/img/nestjs-logo.png',
   },
 ];
+
+export const LOCATION_DEFAULT = 'Quan 1, HCM City';

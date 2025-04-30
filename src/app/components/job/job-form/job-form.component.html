@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ data.title || "Job form" }}</h2>
 <mat-dialog-content>
-  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col py-4">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Job Title</mat-label>
       <input matInput formControlName="title" required />
@@ -36,7 +36,7 @@
       <mat-chip-grid #chipGrid aria-label="Skill selection">
         @for (skill of skills.value; track $index; let index = $index) {
         <mat-chip-row (removed)="removeSkill(index)">
-          {{ skill.title }}
+          {{ getSkillTitleByKey(skill) }}
           <button matChipRemove [attr.aria-label]="'remove ' + skill.key">
             <mat-icon>cancel</mat-icon>
           </button>
@@ -49,8 +49,12 @@
         #skillInput
         [matChipInputFor]="chipGrid"
         [matAutocomplete]="auto"
+        formControlName="skillInput"
       />
-      <mat-autocomplete #auto="matAutocomplete">
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selectSkill($event)"
+      >
         @for (skill of filteredSkill(); track $index) {
         <mat-option [value]="skill.key">{{ skill.title }}</mat-option>
         }
@@ -59,15 +63,17 @@
 
     <!-- Requirements -->
     <div class="array-group">
-      <h4>Requirements</h4>
+      <p appTypography="h5">Requirements</p>
       <div *ngFor="let req of requirement.controls; let i = index">
         <mat-form-field appearance="outline" class="full-width">
-          <input matInput />
+          <input matInput placeholder="Enter..." />
           <button
+            matSuffix
             mat-icon-button
             color="warn"
             (click)="removeFromArray(requirement, i)"
             type="button"
+            aria-label="Clear requirement"
           >
             <mat-icon>delete</mat-icon>
           </button>
@@ -83,12 +89,14 @@
       <h4>Responsibilities</h4>
       <div *ngFor="let res of responsibility.controls; let i = index">
         <mat-form-field appearance="outline" class="full-width">
-          <input matInput />
+          <input matInput placeholder="Enter..." />
           <button
+            matSuffix
             mat-icon-button
             color="warn"
             (click)="removeFromArray(responsibility, i)"
             type="button"
+            aria-label="Clear requirement"
           >
             <mat-icon>delete</mat-icon>
           </button>

@@ -61,8 +61,8 @@ export class AdminComponent implements OnInit {
   openJobFormDialog(defaultValues?: Job) {
     this.dialog
       .open(JobFormComponent, {
-        maxWidth: '80vw',
-        width: '80vw',
+        maxWidth: '60vw',
+        width: '60vw',
         data: {
           title: 'Create Job',
           defaultValues,

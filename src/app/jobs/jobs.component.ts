@@ -2,18 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
 import { CommonModule } from '@angular/common';
-import { TypographyDirective } from '~/directives/typography.directive';
 import { MatRippleModule } from '@angular/material/core';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
+import { CoreModule } from '../core/core.module';
 
 @Component({
   selector: 'app-jobs',
-  imports: [
-    CommonModule,
-    TypographyDirective,
-    MatRippleModule,
-    JobCardComponent,
-  ],
+  imports: [CommonModule, CoreModule, MatRippleModule, JobCardComponent],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.scss',
   standalone: true,

@@ -1,4 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  model,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -26,7 +33,8 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-import { SKILL_DATA } from '~/constant/job';
+import { LOCATION_DEFAULT, SKILL_DATA } from '~/constant/job';
+import { CoreModule } from '~/app/core/core.module';
 
 type JobFormData = {
   title?: string;
@@ -35,7 +43,7 @@ type JobFormData = {
 @Component({
   selector: 'app-job-form',
   imports: [
-    CommonModule,
+    CoreModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -54,9 +62,10 @@ type JobFormData = {
   templateUrl: './job-form.component.html',
   styleUrl: './job-form.component.scss',
 })
-export class JobFormComponent {
+export class JobFormComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<JobFormComponent>);
   readonly data = inject<JobFormData>(MAT_DIALOG_DATA);
+  readonly currentSkill = model('');
 
   form: FormGroup;
   skillsData = signal<Skill[]>([]);
@@ -66,9 +75,10 @@ export class JobFormComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       title: ['', Validators.required],
-      location: ['', Validators.required],
+      location: [LOCATION_DEFAULT, Validators.required],
       type: ['', Validators.required],
       description: ['', Validators.required],
+      skillInput: ['', Validators.required],
       skills: this.fb.array([], Validators.required),
       requirement: this.fb.array([]),
       responsibility: this.fb.array([]),
@@ -78,23 +88,47 @@ export class JobFormComponent {
     this.skillsData.set(SKILL_DATA);
   }
 
+  ngOnInit(): void {
+    this.form.get('skillInput')?.valueChanges.subscribe((value) => {
+      this.currentSkill.set(value);
+    });
+  }
+
   //#region Skill hanlder
   get skills() {
     return this.form.get('skills') as FormArray;
   }
 
-  removeSkill(index: number) {}
+  removeSkill(index: number) {
+    this.skills.removeAt(index);
+  }
 
   readonly filteredSkill = computed(() => {
-    // const currentFruit = this.currentFruit().toLowerCase();
-    // return currentFruit
-    //   ? this.allFruits.filter((fruit) =>
-    //       fruit.toLowerCase().includes(currentFruit)
-    //     )
-    //   : this.allFruits.slice();
-    return this.skillsData();
+    const excludeSelectedSkills = this.skillsData().filter(
+      (skill) =>
+        !this.skills.value.find(
+          (selectedSkill: string) => skill.key === selectedSkill
+        )
+    );
+    if (!this.currentSkill()) {
+      return excludeSelectedSkills;
+    }
+    return excludeSelectedSkills.filter((skill) =>
+      skill.title.toLowerCase().startsWith(this.currentSkill().toLowerCase())
+    );
   });
+
+  selectSkill(event: MatAutocompleteSelectedEvent) {
+    this.skills.push(this.fb.control(event.option.value));
+    this.form.patchValue({ skillInput: '' });
+  }
+
+  getSkillTitleByKey(key: string) {
+    return this.skillsData().find((e) => e.key === key)?.title;
+  }
+
   //#endregion
+
   get requirement() {
     return this.form.get('requirement') as FormArray;
   }
@@ -108,9 +142,7 @@ export class JobFormComponent {
   }
 
   addToArray(control: FormArray, value: string) {
-    if (value) {
-      control.push(this.fb.control(value));
-    }
+    control.push(this.fb.control(value));
   }
 
   removeFromArray(control: FormArray, index: number) {

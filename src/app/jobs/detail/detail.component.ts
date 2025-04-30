@@ -3,11 +3,11 @@ import { Job } from '~/types/job';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
-import { TypographyDirective } from '~/directives/typography.directive';
+import { CoreModule } from '~/app/core/core.module';
 
 @Component({
   selector: 'app-detail',
-  imports: [CommonModule, MatCardModule, MatChipsModule, TypographyDirective],
+  imports: [CommonModule, MatCardModule, MatChipsModule, CoreModule],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss',
 })
