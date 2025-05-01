@@ -31,7 +31,7 @@
     </mat-form-field>
 
     <!-- Skills Input (Chips) -->
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" required>
       <mat-label>Skills</mat-label>
       <mat-chip-grid #chipGrid aria-label="Skill selection">
         @for (skill of skills.value; track $index; let index = $index) {
@@ -62,74 +62,83 @@
     </mat-form-field>
 
     <!-- Requirements -->
-    <div class="array-group">
-      <p appTypography="h5">Requirements</p>
-      <div *ngFor="let req of requirement.controls; let i = index">
-        <mat-form-field appearance="outline" class="full-width">
-          <input matInput placeholder="Enter..." />
-          <button
-            matSuffix
-            mat-icon-button
-            color="warn"
-            (click)="removeFromArray(requirement, i)"
-            type="button"
-            aria-label="Clear requirement"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
+    <div class="array-group mb-4" formArrayName="requirement">
+      <h5 appTypography="h5" extraClass="mb-2">Requirements</h5>
+      @for (req of requirement.controls; track $index; let index = $index) {
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput [formControlName]="index" placeholder="Enter..." />
+        <button
+          matSuffix
+          mat-icon-button
+          color="warn"
+          (click)="removeFromArray(requirement, index)"
+          type="button"
+          aria-label="Clear requirement"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-form-field>
+      }
       <button mat-button (click)="addToArray(requirement, '')" type="button">
         Add Requirement
       </button>
     </div>
 
-    <!-- Responsibilities -->
-    <div class="array-group">
-      <h4>Responsibilities</h4>
-      <div *ngFor="let res of responsibility.controls; let i = index">
-        <mat-form-field appearance="outline" class="full-width">
-          <input matInput placeholder="Enter..." />
-          <button
-            matSuffix
-            mat-icon-button
-            color="warn"
-            (click)="removeFromArray(responsibility, i)"
-            type="button"
-            aria-label="Clear requirement"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
+    <!-- Responsibility -->
+    <div class="array-group mb-4" formArrayName="responsibility">
+      <h5 appTypography="h5" extraClass="mb-2">Responsibility</h5>
+      @for (req of responsibility.controls; track $index; let index = $index) {
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput [formControlName]="index" placeholder="Enter..." />
+        <button
+          matSuffix
+          mat-icon-button
+          color="warn"
+          (click)="removeFromArray(responsibility, index)"
+          type="button"
+          aria-label="Clear responsibility"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-form-field>
+      }
       <button mat-button (click)="addToArray(responsibility, '')" type="button">
-        Add Responsibility
+        Add responsibility
       </button>
     </div>
 
     <!-- Benefits -->
-    <div class="array-group">
-      <h4>Benefits</h4>
-      <div *ngFor="let ben of benefit.controls; let i = index">
-        <mat-form-field appearance="outline" class="full-width">
-          <input matInput />
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="removeFromArray(benefit, i)"
-            type="button"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
+    <div class="array-group mb-4" formArrayName="benefit">
+      <h5 appTypography="h5" extraClass="mb-2">Benefits</h5>
+      @for (req of benefit.controls; track $index; let index = $index) {
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput [formControlName]="index" placeholder="Enter..." />
+        <button
+          matSuffix
+          mat-icon-button
+          color="warn"
+          (click)="removeFromArray(benefit, index)"
+          type="button"
+          aria-label="Clear benefit"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-form-field>
+      }
       <button mat-button (click)="addToArray(benefit, '')" type="button">
-        Add Benefit
+        Add benefit
       </button>
     </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="close()">Close</button>
-  <button mat-flat-button cdkFocusInitial>Ok</button>
+  <button
+    mat-flat-button
+    [disabled]="form.invalid"
+    cdkFocusInitial
+    (click)="submit()"
+  >
+    Save
+  </button>
 </mat-dialog-actions>

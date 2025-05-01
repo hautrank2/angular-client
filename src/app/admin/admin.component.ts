@@ -30,7 +30,13 @@ import { JobFormComponent } from '../components/job/job-form/job-form.component'
 export class AdminComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   layout: 'grid' | 'table' = 'grid';
-  displayedColumns: string[] = ['title', 'location', 'type', 'createdAt'];
+  displayedColumns: string[] = [
+    'title',
+    'location',
+    'type',
+    'createdAt',
+    'actions',
+  ];
   jobData = signal<ApiResponse<Job>>(API_REPONSE_BASE);
   dataSource: Job[] = [];
 
@@ -64,7 +70,7 @@ export class AdminComponent implements OnInit {
         maxWidth: '60vw',
         width: '60vw',
         data: {
-          title: 'Create Job',
+          title: defaultValues ? 'Edit Job' : 'Create Job',
           defaultValues,
         },
       })

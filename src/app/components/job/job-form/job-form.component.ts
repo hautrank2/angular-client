@@ -78,12 +78,29 @@ export class JobFormComponent implements OnInit {
       location: [LOCATION_DEFAULT, Validators.required],
       type: ['', Validators.required],
       description: ['', Validators.required],
-      skillInput: ['', Validators.required],
+      skillInput: [''],
       skills: this.fb.array([], Validators.required),
-      requirement: this.fb.array([]),
-      responsibility: this.fb.array([]),
-      benefit: this.fb.array([]),
+      requirement: this.fb.array([], Validators.required),
+      responsibility: this.fb.array([], Validators.required),
+      benefit: this.fb.array([], Validators.required),
     });
+
+    const job = this.data?.defaultValues;
+    if (job) {
+      this.form.patchValue({
+        title: job.title,
+        location: job.location,
+        type: job.type,
+        description: job.description,
+      });
+
+      this.setFormArray('skills', job.skills);
+      this.setFormArray('requirement', job.requirement);
+      this.setFormArray('responsibility', job.responsibility);
+      this.setFormArray('benefit', job.benefit);
+    }
+
+    console.log(this.form.value);
 
     this.skillsData.set(SKILL_DATA);
   }
@@ -92,6 +109,12 @@ export class JobFormComponent implements OnInit {
     this.form.get('skillInput')?.valueChanges.subscribe((value) => {
       this.currentSkill.set(value);
     });
+  }
+
+  private setFormArray(field: keyof Job, values?: string[]) {
+    const array = this.form.get(field) as FormArray;
+    array.clear();
+    values?.forEach((value) => array.push(this.fb.control(value)));
   }
 
   //#region Skill hanlder
@@ -150,15 +173,7 @@ export class JobFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.form.valid) {
-      const job: Job = {
-        id: '', // nếu edit thì giữ id cũ
-        createdAt: '', // backend tự sinh hoặc giữ
-        updatedAt: '', // backend tự sinh
-        ...this.form.value,
-      };
-      console.log('Submit job:', job);
-    }
+    console.log('submit', this.form.value);
   }
 
   close(): void {

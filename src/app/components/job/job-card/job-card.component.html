@@ -1,10 +1,30 @@
-<mat-card *ngIf="data" class="p-6 space-y-4 h-full">
-  <h2 appTypography="h2">{{ data.title }}</h2>
-  <small appTypography="small">{{ data.location }} • {{ data.type }}</small>
-  <p appTypography="p">{{ data.description }}</p>
+<mat-card
+  *ngIf="data"
+  class="p-6 space-y-4 h-full relative"
+  (mouseenter)="isHovered = true"
+  (mouseleave)="isHovered = false"
+>
+  @if (isHovered) {
+  <div class="absolute bottom-4 right-4">
+    <button mat-mini-fab (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+  }
+
+  <div class="header space-y-2">
+    <small appTypography="small" class="mb-0">
+      Created at: {{ data.createdAt | date : "mediumDate" }} • Updated at:
+      {{ data.updatedAt | date : "mediumDate" }}
+    </small>
+
+    <h2 appTypography="h2">{{ data.title }}</h2>
+    <small appTypography="small">{{ data.location }} • {{ data.type }}</small>
+    <p appTypography="p">{{ data.description }}</p>
+  </div>
 
   <div>
-    <h3 appTypography="h3" class="mb-2">Skills</h3>
+    <h3 appTypography="h4" extraClass="mb-2">Skills</h3>
     <mat-chip-set class="flex flex-wrap gap-2">
       <mat-chip *ngFor="let skill of data.skills">
         {{ skill }}
@@ -13,7 +33,7 @@
   </div>
 
   <div>
-    <h3 appTypography="h3" class="mb-2">Responsibility</h3>
+    <h3 appTypography="h4" extraClass="mb-2">Responsibility</h3>
     <ul class="list-disc list-inside space-y-1">
       <li *ngFor="let req of data.responsibility" appTypography="p">
         {{ req }}
@@ -22,7 +42,7 @@
   </div>
 
   <div>
-    <h3 appTypography="h3" class="mb-2">Requirements</h3>
+    <h3 appTypography="h4" extraClass="mb-2">Requirements</h3>
     <ul class="list-disc list-inside space-y-1">
       <li *ngFor="let req of data.requirement" appTypography="p">
         {{ req }}
@@ -31,16 +51,11 @@
   </div>
 
   <div>
-    <h3 appTypography="h3" class="mb-2">Benefits</h3>
+    <h3 appTypography="h4" extraClass="mb-2">Benefits</h3>
     <ul class="list-disc list-inside space-y-1">
       <li *ngFor="let benefit of data.benefit" appTypography="p">
         {{ benefit }}
       </li>
     </ul>
   </div>
-
-  <small appTypography="small">
-    Created at: {{ data.createdAt | date : "mediumDate" }} • Updated at:
-    {{ data.updatedAt | date : "mediumDate" }}
-  </small>
 </mat-card>
