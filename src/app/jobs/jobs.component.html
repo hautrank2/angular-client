@@ -16,7 +16,11 @@
       </div>
     </div>
     <div class="col-span-2">
-      <app-job-card *ngIf="selectJob" [data]="selectJob"></app-job-card>
+      <app-job-card
+        *ngIf="selectJob"
+        [data]="selectJob"
+        [disableEdit]="true"
+      ></app-job-card>
     </div>
   </div>
 </div>

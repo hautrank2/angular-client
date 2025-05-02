@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class JobCardComponent {
   @Input() data: Job | undefined;
+  @Input() disableEdit?: boolean = false;
   @Output() clickEdit = new EventEmitter();
 
   isHovered: boolean = false;

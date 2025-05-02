@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
@@ -21,6 +21,9 @@ export class JobsComponent implements OnInit {
   ngOnInit(): void {
     this.http.get<Job[]>(`/data/jobs.json`).subscribe((res) => {
       this.jobsData.set(res);
+      if (this.selectJob === undefined) {
+        this.selectJob = res[0];
+      }
     });
   }
 
