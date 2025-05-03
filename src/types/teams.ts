@@ -14,9 +14,9 @@ export interface TeamMember {
   nickname: string;
   avatar: string;
   email: string;
-  role: string;
+  roles: string[];
   hobbies: string[];
-  social: Social[];
+  socials: Social[];
   createdAt: string;
   updatedAt: string;
 }
@@ -33,7 +33,11 @@ export type TeamRole =
   | 'Designer'
   | 'DevOps'
   | 'QA'
-  | 'PM';
+  | 'PO'
+  | 'PM'
+  | 'BA'
+  | 'Intern'
+  | 'Unity';
 
 export const TEAM_ROLES: TeamRole[] = [
   'Frontend',
@@ -42,5 +46,9 @@ export const TEAM_ROLES: TeamRole[] = [
   'Designer',
   'DevOps',
   'QA',
+  'PO',
   'PM',
+  'BA',
+  'Intern',
+  'Unity',
 ];

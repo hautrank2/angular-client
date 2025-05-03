@@ -59,7 +59,7 @@ export class TypographyDirective implements OnChanges {
       case 'h5':
         return 'text-lg';
       case 'h6':
-        return 'text-base font-semibold';
+        return 'text-base font-medium';
       case 'p':
         return 'text-base';
       case 'small':
