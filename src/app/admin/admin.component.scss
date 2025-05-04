@@ -1,3 +1,4 @@
-.panel {
-    
+mat-drawer-container {
+  height: calc(90vh - calc(var(--spacing) * 8) - calc(var(--spacing) * 8));
+  --mat-sidenav-container-width: 240px;
 }

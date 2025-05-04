@@ -11,10 +11,15 @@
     </div>
     <div class="team-card-body grid grid-cols-4 gap-8">
       @for (mem of team.members; track $index) {
-      <mat-card appearance="raised" class="team-member col-span-1">
-        <img mat-card-image [src]="mem.avatar" [alt]="mem.avatar" />
+      <mat-card appearance="raised" class="team-member col-span-1 pb-10">
         <mat-card-content class="pt-4!">
-          <div class="flex flex-col">
+          <div class="flex flex-col items-center text-center">
+            <img
+              mat-card-avatar
+              [src]="mem.avatar"
+              [alt]="mem.avatar"
+              class="w-20! h-20!"
+            />
             <small appTypography="small" extraClass="flex gap-2 items-center">
               @for (role of mem.roles; track $index; let first = $first) {
               <span
@@ -24,10 +29,15 @@
               <span>{{ role }}</span>
               }
             </small>
-            <h1 appTypography="h3" extraClass="font-medium">{{ mem.name }}</h1>
-            <h1 appTypography="h4">({{ mem.nickname }})</h1>
+            <h1 appTypography="h3" extraClass="font-medium mt-2">
+              {{ mem.name }}
+            </h1>
+            <h1 appTypography="h5">({{ mem.nickname }})</h1>
+            <small appTypography="small" extraClass="my-4">
+              {{ mem.description }}
+            </small>
           </div>
-          <mat-card
+          <!-- <mat-card
             appearance="outlined"
             class="flex flex-col p-2 mt-4 bg-transparent"
           >
@@ -43,21 +53,23 @@
                 }
               </ul>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
         </mat-card-content>
 
-        <mat-card-actions class="flex justify-end">
+        <mat-card-actions
+          class="absolute inset-x-0 bottom-0 flex justify-center items-center p-4"
+        >
           <div class="flex gap-4 flex-wrap">
             @for (social of mem.socials; track $index) {
             <a
               [href]="social.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center gap-2"
+              class="flex items-center"
               ><i
                 [ngClass]="[
                   getSocialData(social.platform)?.icon,
-                  'text-xl text-[var(--foreground)]/70 hover:text-[var(--foreground)]'
+                  'text-base text-[var(--foreground)]/70 hover:text-[var(--foreground)]'
                 ]"
               ></i
             ></a>

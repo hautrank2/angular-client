@@ -2,9 +2,9 @@ export interface Team {
   _id: string;
   name: string;
   description: string;
-  members: TeamMember[];
   createdAt: string;
   updatedAt: string;
+  members?: TeamMember[];
 }
 
 export interface TeamMember {
@@ -12,9 +12,10 @@ export interface TeamMember {
   name: string;
   birthday: string; // YYYY-MM-DD
   nickname: string;
+  description: string;
   avatar: string;
   email: string;
-  roles: string[];
+  roles: TeamRole[];
   hobbies: string[];
   socials: Social[];
   createdAt: string;

@@ -1,85 +1,45 @@
-<div class="container mx-auto px-4">
-  <div
+<mat-drawer-container class="bg-transparent!" autosize>
+  <mat-drawer
+    #drawer
+    [opened]="sidebarOpened()"
+    class="sidebar"
+    mode="side"
+    [ngClass]="['p-4']"
+  >
+    <div class="flex flex-col">
+      @for (route of sidebarRoutes; track $index) {
+      <a
+        [href]="route.path"
+        class="justify-start!"
+        [ngClass]="[
+          'flex gap-4 items-center rounded-full',
+          'p-4',
+          'hover:bg-[var(--primary)]/10',
+          activeRoute() === route.path ? 'text-[var(--primary)]' : ''
+        ]"
+      >
+        <mat-icon>{{ route.icon }}</mat-icon>
+        <span>{{ route.title }}</span>
+      </a>
+      }
+    </div>
+  </mat-drawer>
+
+  <header
+    class="flex sticky top-0 items-center justify-between px-2 z-10 h-10"
     [ngClass]="[
-      'panel flex justify-between items-center mb-4 sticky top-16 z-10 p-4 rounded-lg',
+      'mb-4 mx-4',
       'bg-[var(--mat-sys-background)] shadow-[var(--mat-sys-level1)]'
     ]"
   >
-    <div>
-      <mat-button-toggle-group
-        [value]="layout"
-        name="layout"
-        aria-label="Layout Toggle"
-        (change)="changeLayout($event)"
-      >
-        <mat-button-toggle value="table">Table</mat-button-toggle>
-        <mat-button-toggle value="grid">Grid</mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <button mat-fab extended (click)="openJobFormDialog()">
-        <mat-icon>add</mat-icon>
-        Add
+    <div class="flex items-center gap-4">
+      <button type="button" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
+      <h3 appTypography="h5">Admin page</h3>
     </div>
+  </header>
+  <div class="container mx-auto px-4">
+    <router-outlet></router-outlet>
   </div>
-
-  @if (layout === 'table') {
-  <section
-    class="overflow-y-auto max-h-[72vh] shadow-[var(--mat-sys-level2)]"
-    tabindex="0"
-  >
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <!-- Title Column -->
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef>Job Title</th>
-        <td mat-cell *matCellDef="let job">{{ job.title }}</td>
-      </ng-container>
-
-      <!-- Location Column -->
-      <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef>Location</th>
-        <td mat-cell *matCellDef="let job">{{ job.location }}</td>
-      </ng-container>
-
-      <!-- Type Column -->
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Job Type</th>
-        <td mat-cell *matCellDef="let job">{{ job.type }}</td>
-      </ng-container>
-
-      <!-- CreatedAt Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Posted Date</th>
-        <td mat-cell *matCellDef="let job">
-          {{ job.createdAt | date : "yyyy-MM-dd" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let job">
-          <button mat-icon-button (click)="openJobFormDialog(job)">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-  </section>
-  } @else {
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @for (item of dataSource; track $index) {
-    <div class="col-span-1">
-      <app-job-card
-        [data]="item"
-        (clickEdit)="openJobFormDialog(item)"
-      ></app-job-card>
-    </div>
-    }
-  </div>
-  }
-</div>
+</mat-drawer-container>

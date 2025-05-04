@@ -1,0 +1,67 @@
+[
+  {
+    "_id": "1",
+    "name": "Nguyễn Văn An",
+    "birthday": "1997-05-12",
+    "nickname": "AnDev",
+    "description": "Frontend developer with a passion for UI/UX and performance optimization.",
+    "avatar": "https://i.pravatar.cc/150?img=1",
+    "email": "an.nguyen@example.com",
+    "roles": ["Frontend"],
+    "hobbies": ["Reading", "Gaming", "Photography"],
+    "socials": [
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/annguyen" },
+      { "platform": "GitHub", "url": "https://github.com/annguyen" }
+    ],
+    "createdAt": "2024-11-01T09:00:00Z",
+    "updatedAt": "2025-05-01T08:00:00Z"
+  },
+  {
+    "_id": "2",
+    "name": "Trần Thị Bình",
+    "birthday": "1995-09-20",
+    "nickname": "BinhDesign",
+    "description": "Creative UI/UX designer focused on clean and accessible interfaces.",
+    "avatar": "https://i.pravatar.cc/150?img=2",
+    "email": "binh.tran@example.com",
+    "roles": ["Designer"],
+    "hobbies": ["Drawing", "Traveling", "Yoga"],
+    "socials": [
+      { "platform": "Dribbble", "url": "https://dribbble.com/binhtran" },
+      { "platform": "Instagram", "url": "https://instagram.com/binhdesign" }
+    ],
+    "createdAt": "2024-11-05T10:30:00Z",
+    "updatedAt": "2025-05-01T08:00:00Z"
+  },
+  {
+    "_id": "3",
+    "name": "Lê Quốc Dũng",
+    "birthday": "1993-01-08",
+    "nickname": "DungOps",
+    "description": "DevOps engineer with a love for automation and scalable infrastructure.",
+    "avatar": "https://i.pravatar.cc/150?img=3",
+    "email": "dung.le@example.com",
+    "roles": ["DevOps"],
+    "hobbies": ["Cycling", "Cloud Computing", "Cooking"],
+    "socials": [
+      { "platform": "LinkedIn", "url": "https://linkedin.com/in/dungle" },
+      { "platform": "Twitter", "url": "https://twitter.com/dungops" }
+    ],
+    "createdAt": "2024-11-10T08:45:00Z",
+    "updatedAt": "2025-05-01T08:00:00Z"
+  },
+  {
+    "_id": "4",
+    "name": "Phạm Minh Châu",
+    "birthday": "1998-03-17",
+    "nickname": "ChauQA",
+    "description": "QA engineer who ensures software quality through automation and testing best practices.",
+    "avatar": "https://i.pravatar.cc/150?img=4",
+    "email": "chau.pham@example.com",
+    "roles": ["QA"],
+    "hobbies": ["Board games", "K-drama", "Blogging"],
+    "socials": [{ "platform": "GitHub", "url": "https://github.com/chaupham" }],
+    "createdAt": "2024-11-15T11:20:00Z",
+    "updatedAt": "2025-05-01T08:00:00Z"
+  }
+]

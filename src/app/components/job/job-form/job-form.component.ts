@@ -100,8 +100,6 @@ export class JobFormComponent implements OnInit {
       this.setFormArray('benefit', job.benefit);
     }
 
-    console.log(this.form.value);
-
     this.skillsData.set(SKILL_DATA);
   }
 

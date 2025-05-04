@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>{{ data.title ? "Edit Member" : "Create Member" }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="flex flex-col gap-4 py-4">
+    <!-- Name -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <!-- Nickname -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nickname</mat-label>
+      <input matInput formControlName="nickname" required />
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" required />
+    </mat-form-field>
+
+    <!-- Roles with Chips -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Roles</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Roles">
+        <mat-chip-row
+          *ngFor="let role of roles.value; let i = index"
+          (removed)="removeRole(i)"
+        >
+          {{ role }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input
+        placeholder="Add role"
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="autoRole"
+        formControlName="roleInput"
+      />
+      <mat-autocomplete
+        #autoRole="matAutocomplete"
+        (optionSelected)="selectRole($event.option.value)"
+      >
+        <mat-option *ngFor="let role of filteredRoles()" [value]="role">{{
+          role
+        }}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="submit()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>
