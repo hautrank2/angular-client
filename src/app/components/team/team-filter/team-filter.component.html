@@ -1,0 +1,11 @@
+<form *ngIf="form" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Outline form field</mat-label>
+    <mat-select placeholder="Placeholder" formControlName="team">
+      <mat-option>None</mat-option>
+      @for (team of teamData(); track $index) {
+      <mat-option [value]="team._id">{{ team.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</form>

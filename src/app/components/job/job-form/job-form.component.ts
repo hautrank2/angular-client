@@ -163,7 +163,7 @@ export class JobFormComponent implements OnInit {
   }
 
   addToArray(control: FormArray, value: string) {
-    control.push(this.fb.control(value));
+    control.push(this.fb.control(value, [Validators.required]));
   }
 
   removeFromArray(control: FormArray, index: number) {

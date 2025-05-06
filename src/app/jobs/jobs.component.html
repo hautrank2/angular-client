@@ -1,7 +1,10 @@
 <div class="container mx-auto lg:max-w-4xl xl:max-w-6xl">
   <div class="grid grid-cols-3 gap-4">
     <div class="col-span-1">
-      <div class="sticky top-20 max-h-[80vh] overflow-y-auto">
+      <div
+        class="sticky top-20 max-h-[calc(100vh - var(--spacing) * 16)] overflow-y-auto"
+        [ngStyle]="{ 'max-height': 'calc(100vh - var(--spacing) * 28)' }"
+      >
         @for (job of jobsData(); track $index; let index = $index) {
         <div
           class="p-2 job-card rounded-lg"
