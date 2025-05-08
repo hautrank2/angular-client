@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -9,7 +9,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TeamMember, TeamRole } from '~/types/teams';
+import { Team, TeamMember, TeamRole } from '~/types/teams';
 import {
   FormBuilder,
   FormGroup,
@@ -23,6 +23,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CoreModule } from '~/app/core/core.module';
+import { HttpClient } from '@angular/common/http';
 
 type TeamFormData = {
   title?: string;
@@ -53,6 +54,7 @@ type TeamFormData = {
 })
 export class TeamMemberFormComponent implements OnInit {
   form: FormGroup;
+  teamData = signal<Team[]>([]);
 
   ALL_ROLES: TeamRole[] = [
     'Frontend',
@@ -70,6 +72,7 @@ export class TeamMemberFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private http: HttpClient,
     private dialogRef: MatDialogRef<TeamMemberFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TeamFormData
   ) {
@@ -82,6 +85,7 @@ export class TeamMemberFormComponent implements OnInit {
       ],
       roles: [data.defaultValues?.roles ?? []],
       roleInput: [''],
+      teamId: ['', Validators.required],
     });
   }
 
@@ -89,6 +93,10 @@ export class TeamMemberFormComponent implements OnInit {
     this.form.controls['roles'].valueChanges.subscribe((value) => {
       this.form.controls['roleInput'].setValue('');
       this.form.controls['roleInput'].markAsPristine();
+    });
+
+    this.http.get<Team[]>('/data/teams.json').subscribe((res) => {
+      this.teamData.set(res);
     });
   }
 

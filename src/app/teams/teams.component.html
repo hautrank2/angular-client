@@ -1,7 +1,7 @@
-<div class="container mx-auto px-4">
+<div>
   <div
     [ngClass]="[
-      'sticky top-[var(--header-height)] flex justify-between z-10 p-4 rounded-lg',
+      'sticky top-[var(--header-height)] flex justify-between z-10 p-4',
       'bg-background shadow-[var(--mat-sys-level1)]'
     ]"
   >
@@ -23,7 +23,7 @@
     <div></div>
   </div>
 
-  <div>
+  <div class="container mx-auto px-4">
     @for (team of teamData(); track $index;) {
     <div [id]="team.name" class="team-card pt-40 flex flex-col">
       <div class="team-card-header mb-8">
