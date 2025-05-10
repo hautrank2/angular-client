@@ -14,8 +14,8 @@
         [ngClass]="[
           'flex gap-4 items-center rounded-full',
           'p-4',
-          'hover:bg-[var(--primary)]/10',
-          activeRoute() === route.path ? 'text-[var(--primary)]' : ''
+          'hover:bg-primary/10',
+          activeRoute() === route.path ? 'text-primary' : ''
         ]"
       >
         <mat-icon>{{ route.icon }}</mat-icon>
@@ -39,7 +39,7 @@
       <h3 appTypography="h5" extraClass="text-primary">Admin page</h3>
     </div>
   </header>
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4 pb-8">
     <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>

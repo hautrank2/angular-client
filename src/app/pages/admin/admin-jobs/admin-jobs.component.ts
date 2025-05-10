@@ -1,8 +1,7 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
-import { API_REPONSE_BASE, ApiResponse } from '~/types/query';
+import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClient } from '@angular/common/http';
 import {
   MatButtonToggleChange,
   MatButtonToggleModule,
@@ -11,15 +10,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
 import { JobFormComponent } from '~/app/components/job/job-form/job-form.component';
+import { JobService } from '~/app/core/services/job.service';
+import { TablePagination } from '~/types/table';
 
 @Component({
   selector: 'app-admin-jobs',
   imports: [
     MatTableModule,
-    CoreModule,
+    SharedModule,
     JobCardComponent,
     MatButtonToggleModule,
     MatIconModule,
@@ -40,31 +41,34 @@ export class AdminJobsComponent implements OnInit {
     'createdAt',
     'actions',
   ];
-  jobData = signal<ApiResponse<Job>>(API_REPONSE_BASE);
+  jobData = signal<ApiPaginationResponse<Job>>(API_REPONSE_BASE);
   dataSource: Job[] = [];
+  filter: TablePagination = { pageSize: 100, page: 1 };
 
-  constructor(private http: HttpClient) {
+  constructor(private jobSrv: JobService) {
     effect(() => {
       this.dataSource = this.jobData().items;
     });
   }
 
   ngOnInit(): void {
-    this.http.get<Job[]>(`/data/jobs.json`).subscribe((res) => {
-      const pageSize = 10;
-      const page = 1;
-      this.jobData.set({
-        totalCount: res.length,
-        totalPage: Math.ceil(res.length / pageSize),
-        pageSize,
-        page,
-        items: res,
-      });
+    this.fetchData();
+  }
+
+  private fetchData() {
+    this.jobSrv.find(this.filter).subscribe((res) => {
+      this.jobData.set(res);
     });
   }
 
   changeLayout(event: MatButtonToggleChange) {
     this.layout = event.value;
+  }
+
+  deleteJob(item: Job) {
+    this.jobSrv.delete(item._id).subscribe(() => {
+      this.fetchData();
+    });
   }
 
   openJobFormDialog(defaultValues?: Job) {
@@ -78,6 +82,10 @@ export class AdminJobsComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe((result) => {});
+      .subscribe((result) => {
+        if (result.success) {
+          this.fetchData();
+        }
+      });
   }
 }

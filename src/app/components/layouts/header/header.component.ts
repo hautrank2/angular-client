@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 @Component({
   selector: 'app-header',
-  imports: [MatButtonModule, CoreModule],
+  imports: [MatButtonModule, SharedModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

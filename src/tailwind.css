@@ -2,24 +2,35 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+  --color-background: var(--mat-sys-background);
+  --color-foreground: var(--mat-sys-on-background);
+  --color-border: var(--mat-sys-outline);
+  --color-shadow: var(--mat-sys-shadow);
+
+  /* Error color: red color */
+  --color-error: var(--mat-sys-error);
+  --color-error--foreground: var(--mat-sys-on-error);
+
+  /* Success color: green color */
+  --color-success: var(--success);
+  --color-success--foreground: var(--success-foreground);
+
+  /* Tertiary color */
+  --color-tertiary-foreground: var(--mat-sys-on-tertiary);
+  --color-tertiary: var(--mat-sys-tertiary);
+
+  /* Use for hover */
+  --color-muted-foreground: var(--mat-sys-inverse-surface);
+  --color-muted: var(--mat-sys-surface-dim);
+
+  /* Secondary color */
+  --color-secondary-foreground: var(--mat-sys-on-secondary);
+  --color-secondary: var(--mat-sys-secondary);
+
+  /* Primary color */
+  --color-primary-foreground: var(--mat-sys-on-primary);
+  --color-primary: var(--mat-sys-primary);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -29,47 +40,16 @@
 
 :root {
   --radius: 8px;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklab(0.49 -0.04 -0.16);
-  --primary-foreground: oklch(0.12 0.02 250);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.129 0.042 264.695);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
   --scrollbar-background: #f0f0f0;
   --scrollbar-thumb: #c0c0c0;
+  --success: #008000;
+  --success-foreground: #cff0cf;
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklab(0.49 -0.04 -0.16);
-  --primary-foreground: oklch(0.12 0.02 250);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.44 0.003 247.858);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
+  --radius: 8px;
   --scrollbar-background: #383838;
   --scrollbar-thumb: #7a7a7a;
+  --success: #008000;
+  --success-foreground: #cff0cf;
 }

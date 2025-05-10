@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@use "sass:meta";
 
 html,
 body {
@@ -18,10 +20,13 @@ body {
     background-color: var(--scrollbar-background);
   }
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+@include mat.form-field-density(-2);
 
 mat-form-field {
   .mat-mdc-text-field-wrapper {

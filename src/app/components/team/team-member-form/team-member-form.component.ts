@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { HttpClient } from '@angular/common/http';
 
 type TeamFormData = {
@@ -33,7 +33,7 @@ type TeamFormData = {
 @Component({
   selector: 'app-team-member-form',
   imports: [
-    CoreModule,
+    SharedModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,

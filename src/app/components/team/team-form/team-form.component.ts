@@ -33,8 +33,8 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-import { CoreModule } from '~/app/core/core.module';
-import { API_REPONSE_BASE, ApiResponse } from '~/types/query';
+import { SharedModule } from '~/app/shared/shared.module';
+import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 
 type TeamFormData = {
   title?: string;
@@ -43,7 +43,7 @@ type TeamFormData = {
 @Component({
   selector: 'app-team-form',
   imports: [
-    CoreModule,
+    SharedModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -71,7 +71,7 @@ export class TeamFormComponent implements OnInit {
   membersFormValue = signal<string[]>([]);
 
   // 👇 Giả lập danh sách member từ backend
-  membersData = signal<ApiResponse<TeamMember>>(API_REPONSE_BASE);
+  membersData = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({

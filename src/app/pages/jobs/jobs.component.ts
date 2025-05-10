@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, effect, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
-import { CoreModule } from '../core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
+import { JobService } from '~/app/core/services/job.service';
 
 @Component({
   selector: 'app-jobs',
-  imports: [CommonModule, CoreModule, MatRippleModule, JobCardComponent],
+  imports: [CommonModule, SharedModule, MatRippleModule, JobCardComponent],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.scss',
   standalone: true,
@@ -16,14 +16,11 @@ import { CoreModule } from '../core/core.module';
 export class JobsComponent implements OnInit {
   jobsData = signal<Job[]>([]);
   selectJob: Job | undefined;
-  constructor(private http: HttpClient) {}
+  constructor(private jobSrv: JobService) {}
 
   ngOnInit(): void {
-    this.http.get<Job[]>(`/data/jobs.json`).subscribe((res) => {
-      this.jobsData.set(res);
-      if (this.selectJob === undefined) {
-        this.selectJob = res[0];
-      }
+    this.jobSrv.find({ page: 1, pageSize: 100 }).subscribe((res) => {
+      this.jobsData.set(res.items);
     });
   }
 

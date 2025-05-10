@@ -4,7 +4,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CoreModule } from '../core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { RouterOutlet } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -12,7 +12,7 @@ import { Location } from '@angular/common';
   selector: 'app-admin',
   imports: [
     MatTableModule,
-    CoreModule,
+    SharedModule,
     MatButtonToggleModule,
     MatIconModule,
     MatButtonModule,

@@ -1,4 +1,4 @@
-<div class="container mx-auto lg:max-w-4xl xl:max-w-6xl">
+<div class="container mx-auto lg:max-w-4xl xl:max-w-6xl pt-8">
   <div class="grid grid-cols-3 gap-4">
     <div class="col-span-1">
       <div
@@ -8,7 +8,7 @@
         @for (job of jobsData(); track $index; let index = $index) {
         <div
           class="p-2 job-card rounded-lg"
-          [ngClass]="{ active: selectJob?.id === job.id }"
+          [ngClass]="{ active: selectJob?._id === job._id }"
           (click)="onSelectJob(index)"
           matRipple
         >

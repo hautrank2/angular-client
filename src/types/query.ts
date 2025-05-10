@@ -1,4 +1,4 @@
-export type ApiResponse<T> = {
+export type ApiPaginationResponse<T> = {
   totalCount: number;
   totalPage: number;
   pageSize: number;
@@ -12,4 +12,16 @@ export const API_REPONSE_BASE = {
   pageSize: 0,
   page: 0,
   items: [],
+};
+
+export type ApiPaginationQuery = {
+  pageSize: number;
+  page: number;
+  [key: string]: any;
+};
+
+export type DocumentResponse = {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 };

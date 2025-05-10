@@ -1,0 +1,4 @@
+mat-drawer-container {
+  height: calc(100vh - var(--header-height));
+  --mat-sidenav-container-width: 240px;
+}

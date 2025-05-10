@@ -27,14 +27,14 @@ import {
 } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { LOCATION_DEFAULT, SKILL_DATA } from '~/constant/job';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
+import { JobService } from '~/app/core/services/job.service';
 
 type JobFormData = {
   title?: string;
@@ -43,7 +43,7 @@ type JobFormData = {
 @Component({
   selector: 'app-job-form',
   imports: [
-    CoreModule,
+    SharedModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -69,10 +69,11 @@ export class JobFormComponent implements OnInit {
 
   form: FormGroup;
   skillsData = signal<Skill[]>([]);
+  isEdit: boolean = false;
 
   jobTypes = ['Full-time', 'Part-time', 'Internship', 'Contract']; // ví dụ nếu JobType là enum
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private jobSrv: JobService) {
     this.form = this.fb.group({
       title: ['', Validators.required],
       location: [LOCATION_DEFAULT, Validators.required],
@@ -101,6 +102,8 @@ export class JobFormComponent implements OnInit {
     }
 
     this.skillsData.set(SKILL_DATA);
+
+    this.isEdit = !!job;
   }
 
   ngOnInit(): void {
@@ -171,7 +174,19 @@ export class JobFormComponent implements OnInit {
   }
 
   submit() {
-    console.log('submit', this.form.value);
+    const values = this.form.value;
+    delete values['skillInput'];
+    if (this.isEdit && this.data?.defaultValues?._id) {
+      this.jobSrv
+        .update(this.data?.defaultValues?._id, values)
+        .subscribe(() => {
+          this.dialogRef.close({ success: true });
+        });
+    } else {
+      this.jobSrv.create(values).subscribe(() => {
+        this.dialogRef.close({ success: true });
+      });
+    }
   }
 
   close(): void {

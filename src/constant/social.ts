@@ -1,30 +1,30 @@
 export const SOCIALS = [
   {
-    id: 'facebook',
+    _id: 'facebook',
     icon: 'fa-brands fa-facebook-f',
   },
   {
-    id: 'instagram',
+    _id: 'instagram',
     icon: 'fa-brands fa-instagram',
   },
   {
-    id: 'linkedin',
+    _id: 'linkedin',
     icon: 'fa-brands fa-linkedin-in',
   },
   {
-    id: 'github',
+    _id: 'github',
     icon: 'fa-brands fa-github',
   },
   {
-    id: 'twitter',
+    _id: 'twitter',
     icon: 'fa-brands fa-twitter',
   },
   {
-    id: 'tiktok',
+    _id: 'tiktok',
     icon: 'fa-brands fa-tiktok',
   },
   {
-    id: 'youtube',
+    _id: 'youtube',
     icon: 'fa-brands fa-youtube',
   },
 ];

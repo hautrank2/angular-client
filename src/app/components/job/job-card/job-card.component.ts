@@ -3,7 +3,7 @@ import { Job } from '~/types/job';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatCardModule,
     MatChipsModule,
-    CoreModule,
+    SharedModule,
     MatIconModule,
     MatButtonModule,
   ],
@@ -24,11 +24,16 @@ export class JobCardComponent {
   @Input() data: Job | undefined;
   @Input() disableEdit?: boolean = false;
   @Output() clickEdit = new EventEmitter();
+  @Output() clickDelete = new EventEmitter();
 
   isHovered: boolean = false;
   constructor() {}
 
   edit() {
     this.clickEdit.emit();
+  }
+
+  remove() {
+    this.clickDelete.emit();
   }
 }

@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { API_REPONSE_BASE, ApiResponse } from '~/types/query';
+import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { Team } from '~/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
 
@@ -18,7 +18,7 @@ import { TeamFormComponent } from '~/app/components/team/team-form/team-form.com
   selector: 'app-admin-teams',
   imports: [
     MatTableModule,
-    CoreModule,
+    SharedModule,
     MatButtonToggleModule,
     MatIconModule,
     MatButtonModule,
@@ -38,7 +38,7 @@ export class AdminTeamsComponent {
     'createdAt',
     'actions',
   ];
-  data = signal<ApiResponse<Team>>(API_REPONSE_BASE);
+  data = signal<ApiPaginationResponse<Team>>(API_REPONSE_BASE);
   dataSource: Team[] = [];
 
   constructor(private http: HttpClient) {

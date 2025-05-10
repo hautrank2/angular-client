@@ -7,4 +7,4 @@ import { TypographyDirective } from './directives/typography.directive';
   imports: [CommonModule, TypographyDirective],
   exports: [CommonModule, TypographyDirective],
 })
-export class CoreModule {}
+export class SharedModule {}

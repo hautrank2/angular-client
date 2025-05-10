@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { Team } from '~/types/teams';
-import { CoreModule } from '../core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
 import { SOCIALS } from '~/constant/social';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -14,7 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 @Component({
   selector: 'app-teams',
   imports: [
-    CoreModule,
+    SharedModule,
     MatCardModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -37,7 +37,7 @@ export class TeamsComponent {
   }
 
   public getSocialData(social: string) {
-    return this.socialData.find((item) => item.id === social);
+    return this.socialData.find((item) => item._id === social);
   }
 
   onJumpToTeam(team: Team) {

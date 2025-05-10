@@ -5,9 +5,12 @@
   (mouseleave)="isHovered = false"
 >
   @if (isHovered) {
-  <div [ngClass]="{ hidden: disableEdit }" class="absolute bottom-4 right-4">
+  <div [ngClass]="{ hidden: disableEdit }" class="absolute bottom-4 right-4 space-x-2">
     <button mat-mini-fab (click)="edit()">
       <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-mini-fab (click)="remove()">
+      <mat-icon>delete</mat-icon>
     </button>
   </div>
   }

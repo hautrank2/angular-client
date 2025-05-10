@@ -14,14 +14,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { SOCIALS } from '~/constant/social';
 import { Team } from '~/types/teams';
 
 @Component({
   selector: 'app-team-filter',
   imports: [
-    CoreModule,
+    SharedModule,
     MatCardModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -64,6 +64,6 @@ export class TeamFilterComponent implements OnInit, OnChanges {
   }
 
   public getSocialData(social: string) {
-    return this.socialData.find((item) => item.id === social);
+    return this.socialData.find((item) => item._id === social);
   }
 }

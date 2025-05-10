@@ -1,7 +1,8 @@
+import { DocumentResponse } from './query';
+
 export type JobType = 'Full-time' | 'Part-time' | 'Hybrid';
 
-export interface Job {
-  id: string;
+export interface Job extends DocumentResponse {
   title: string;
   location: string;
   type: JobType;
@@ -10,8 +11,6 @@ export interface Job {
   requirement: string[];
   responsibility: string[];
   benefit: string[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Skill {

@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { API_REPONSE_BASE, ApiResponse } from '~/types/query';
+import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { CoreModule } from '~/app/core/core.module';
+import { SharedModule } from '~/app/shared/shared.module';
 import { TeamMember } from '~/types/teams';
 import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/team-member-form.component';
 
@@ -18,7 +18,7 @@ import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/
   selector: 'app-admin-members',
   imports: [
     MatTableModule,
-    CoreModule,
+    SharedModule,
     MatButtonToggleModule,
     MatIconModule,
     MatButtonModule,
@@ -39,7 +39,7 @@ export class AdminMembersComponent {
     'roles',
     'actions',
   ];
-  data = signal<ApiResponse<TeamMember>>(API_REPONSE_BASE);
+  data = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
   dataSource: TeamMember[] = [];
 
   constructor(private http: HttpClient) {

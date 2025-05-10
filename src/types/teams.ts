@@ -1,14 +1,13 @@
-export interface Team {
-  _id: string;
+import { DocumentResponse } from './query';
+
+export interface Team extends DocumentResponse {
   name: string;
   description: string;
   createdAt: string;
-  updatedAt: string;
   members?: TeamMember[];
 }
 
-export interface TeamMember {
-  _id: string;
+export interface TeamMember extends DocumentResponse {
   name: string;
   birthday: string; // YYYY-MM-DD
   nickname: string;
@@ -18,8 +17,6 @@ export interface TeamMember {
   roles: TeamRole[];
   hobbies: string[];
   socials: Social[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Social {
