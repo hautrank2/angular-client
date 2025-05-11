@@ -33,7 +33,6 @@ export class AdminComponent {
   ];
 
   constructor(private location: Location) {
-    console.log(this.location.path());
     this.activeRoute.set(this.location.path());
   }
 }

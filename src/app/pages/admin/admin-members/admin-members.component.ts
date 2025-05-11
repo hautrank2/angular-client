@@ -13,6 +13,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { SharedModule } from '~/app/shared/shared.module';
 import { TeamMember } from '~/types/teams';
 import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/team-member-form.component';
+import { TablePagination } from '~/types/table';
+import { TeamMemberService } from '~/app/core/services/team-member.service';
 
 @Component({
   selector: 'app-admin-members',
@@ -41,24 +43,24 @@ export class AdminMembersComponent {
   ];
   data = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
   dataSource: TeamMember[] = [];
+  filter: TablePagination = { pageSize: 100, page: 1 };
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private teamMemberSrv: TeamMemberService
+  ) {
     effect(() => {
       this.dataSource = this.data().items;
     });
   }
 
   ngOnInit(): void {
-    this.http.get<TeamMember[]>(`/data/members.json`).subscribe((res) => {
-      const pageSize = 10;
-      const page = 1;
-      this.data.set({
-        totalCount: res.length,
-        totalPage: Math.ceil(res.length / pageSize),
-        pageSize,
-        page,
-        items: res,
-      });
+    this.fetchData();
+  }
+
+  private fetchData() {
+    this.teamMemberSrv.find(this.filter).subscribe((res) => {
+      this.data.set(res);
     });
   }
 

@@ -1,30 +1,19 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
-import {
-  MatButtonToggleChange,
-  MatButtonToggleModule,
-} from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { SharedModule } from '~/app/shared/shared.module';
 import { Team } from '~/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
+import { UiModule } from '~/app/shared/ui.module';
+import { TeamService } from '~/app/core/services/team.service';
+import { TablePagination } from '~/types/table';
 
 @Component({
   selector: 'app-admin-teams',
-  imports: [
-    MatTableModule,
-    SharedModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatButtonModule,
-  ],
+  imports: [MatTableModule, SharedModule, UiModule],
   templateUrl: './admin-teams.component.html',
   styleUrl: './admin-teams.component.scss',
 })
@@ -40,24 +29,21 @@ export class AdminTeamsComponent {
   ];
   data = signal<ApiPaginationResponse<Team>>(API_REPONSE_BASE);
   dataSource: Team[] = [];
+  filter: TablePagination = { pageSize: 100, page: 1 };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private teamSrv: TeamService) {
     effect(() => {
       this.dataSource = this.data().items;
     });
   }
 
   ngOnInit(): void {
-    this.http.get<Team[]>(`/data/teams.json`).subscribe((res) => {
-      const pageSize = 10;
-      const page = 1;
-      this.data.set({
-        totalCount: res.length,
-        totalPage: Math.ceil(res.length / pageSize),
-        pageSize,
-        page,
-        items: res,
-      });
+    this.fetchData();
+  }
+
+  private fetchData() {
+    this.teamSrv.find(this.filter).subscribe((res) => {
+      this.data.set(res);
     });
   }
 
@@ -78,6 +64,10 @@ export class AdminTeamsComponent {
         },
       })
       .afterClosed()
-      .subscribe((result) => {});
+      .subscribe((result) => {
+        if (result?.success) {
+          this.fetchData();
+        }
+      });
   }
 }

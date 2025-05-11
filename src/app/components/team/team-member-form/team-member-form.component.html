@@ -14,6 +14,16 @@
       <input matInput formControlName="nickname" required />
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Choose a birthday</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="birthday" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
     <!-- Email -->
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Email</mat-label>
@@ -49,6 +59,29 @@
         }}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
+
+    <!-- hobbiess -->
+    <div class="array-group mb-4" formArrayName="hobbies">
+      <h5 appTypography="h5" extraClass="mb-2">Hobbies</h5>
+      @for (req of hobbies.controls; track $index; let index = $index) {
+      <mat-form-field appearance="outline" class="w-full">
+        <input matInput [formControlName]="index" placeholder="Enter..." />
+        <button
+          matSuffix
+          mat-icon-button
+          color="warn"
+          (click)="removeFromArray(hobbies, index)"
+          type="button"
+          aria-label="Clear hobbies"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-form-field>
+      }
+      <button mat-button (click)="addToArray(hobbies, '')" type="button">
+        Add hobbies
+      </button>
+    </div>
 
     <mat-form-field appearance="outline">
       <mat-label>Team</mat-label>

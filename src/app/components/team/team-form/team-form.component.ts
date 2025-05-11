@@ -7,16 +7,8 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { Team, TeamMember } from '~/types/teams';
 import {
   FormArray,
@@ -26,15 +18,11 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  MatAutocompleteModule,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { SharedModule } from '~/app/shared/shared.module';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
+import { UiModule } from '~/app/shared/ui.module';
+import { TeamService } from '~/app/core/services/team.service';
 
 type TeamFormData = {
   title?: string;
@@ -46,17 +34,7 @@ type TeamFormData = {
     SharedModule,
     FormsModule,
     MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
+    UiModule,
     ReactiveFormsModule,
   ],
   templateUrl: './team-form.component.html',
@@ -66,6 +44,7 @@ export class TeamFormComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<TeamFormComponent>);
   readonly data = inject<TeamFormData>(MAT_DIALOG_DATA);
   readonly currentMember = model('');
+  isEdit: boolean = false;
 
   form: FormGroup;
   membersFormValue = signal<string[]>([]);
@@ -73,7 +52,11 @@ export class TeamFormComponent implements OnInit {
   // 👇 Giả lập danh sách member từ backend
   membersData = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private teamSrv: TeamService
+  ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -84,12 +67,13 @@ export class TeamFormComponent implements OnInit {
     const team = this.data?.defaultValues;
     if (team) {
       this.form.patchValue({
-        title: team.name,
+        name: team.name,
         description: team.description,
       });
 
       this.setFormArray('members', team.members?.map((e) => e._id) || []);
     }
+    this.isEdit = !!team;
   }
 
   private setFormArray(field: keyof Team, values?: string[]) {
@@ -155,7 +139,19 @@ export class TeamFormComponent implements OnInit {
 
   submit() {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value); // members là array of string (_id)
+      const values = this.form.value;
+      delete values['memberInput'];
+      if (this.isEdit && this.data?.defaultValues?._id) {
+        this.teamSrv
+          .update(this.data?.defaultValues?._id, values)
+          .subscribe(() => {
+            this.dialogRef.close({ success: true });
+          });
+      } else {
+        this.teamSrv.create(values).subscribe(() => {
+          this.dialogRef.close({ success: true });
+        });
+      }
     }
   }
 

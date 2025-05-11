@@ -3,7 +3,6 @@ import { DocumentResponse } from './query';
 export interface Team extends DocumentResponse {
   name: string;
   description: string;
-  createdAt: string;
   members?: TeamMember[];
 }
 

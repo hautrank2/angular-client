@@ -83,7 +83,7 @@ export class AdminJobsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((result) => {
-        if (result.success) {
+        if (result?.success) {
           this.fetchData();
         }
       });
