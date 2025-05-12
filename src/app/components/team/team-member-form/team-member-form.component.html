@@ -92,6 +92,34 @@
         }
       </mat-select>
     </mat-form-field>
+
+    <div>
+      <h5 appTypography="h5" extraClass="mb-2">Socials</h5>
+      <div formArrayName="socials" class="flex flex-col">
+        @for (social of socials.controls; track $index; let index = $index) {
+        <div class="flex gap-2" [formGroupName]="index">
+          <mat-form-field appearance="outline">
+            <mat-label>Platform</mat-label>
+            <mat-select formControlName="platform">
+              <mat-option>None</mat-option>
+              @for (role of teamRoleData; track $index) {
+              <mat-option [value]="role">{{ role }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>URL</mat-label>
+            <input matInput type="email" formControlName="url" required />
+          </mat-form-field>
+          <button mat-icon-button (click)="removeFromArray(socials, index)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        }
+      </div>
+      <button mat-button (click)="addSocial()">Add social</button>
+    </div>
   </form>
 </mat-dialog-content>
 

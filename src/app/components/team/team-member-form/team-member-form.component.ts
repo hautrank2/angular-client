@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Team, TeamMember, TeamRole } from '~/types/teams';
+import { Team, TEAM_ROLES, TeamMember, TeamRole } from '~/types/teams';
 import {
   FormBuilder,
   FormGroup,
@@ -30,6 +30,7 @@ export class TeamMemberFormComponent implements OnInit {
   form: FormGroup;
   teamData = signal<Team[]>([]);
   isEdit: boolean = false;
+  teamRoleData: TeamRole[] = TEAM_ROLES;
 
   ALL_ROLES: TeamRole[] = [
     'Frontend',
@@ -92,6 +93,19 @@ export class TeamMemberFormComponent implements OnInit {
 
   get hobbies() {
     return this.form.get('hobbies') as FormArray;
+  }
+
+  get socials() {
+    return this.form.get('socials') as FormArray;
+  }
+
+  addSocial() {
+    this.socials.push(
+      this.fb.group({
+        platform: ['', Validators.required],
+        url: ['', Validators.required],
+      })
+    );
   }
 
   private setFormArray(field: keyof TeamMember, values?: string[]) {
