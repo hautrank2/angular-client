@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SharedModule } from '~/app/shared/shared.module';
 import { Team } from '~/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
-import { UiModule } from '~/app/shared/ui.module';
+import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { TablePagination } from '~/types/table';
 

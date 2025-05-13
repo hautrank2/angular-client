@@ -1,0 +1,84 @@
+<mat-grid-list cols="12" gutterSize="16px" rowHeight="fit">
+  <ng-container *ngFor="let field of fields">
+    <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
+      <!-- Input -->
+      <mat-form-field
+        *ngIf="field.type === 'text' || field.type === 'number'"
+        appearance="fill"
+        style="width: 100%"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [type]="field.type" formControlName="{{ field.key }}" />
+      </mat-form-field>
+
+      <!-- Select -->
+      <mat-form-field
+        *ngIf="field.type === 'select'"
+        appearance="fill"
+        style="width: 100%"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <mat-select formControlName="{{ field.key }}">
+          <mat-option *ngFor="let opt of field.options" [value]="opt.value">
+            {{ opt.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Radio -->
+      <div *ngIf="field.type === 'radio'">
+        <label>{{ field.label }}</label>
+        <mat-radio-group formControlName="{{ field.key }}">
+          <mat-radio-button
+            *ngFor="let opt of field.options"
+            [value]="opt.value"
+          >
+            {{ opt.label }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Date -->
+      <mat-form-field
+        *ngIf="field.type === 'date'"
+        appearance="fill"
+        style="width: 100%"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="{{ field.key }}"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Form Array -->
+      <div *ngIf="field.type === 'array'" [formArrayName]="field.key">
+        <label>{{ field.label }}</label>
+        <div
+          *ngFor="let ctrl of getFormArray(field.key).controls; let i = index"
+          [formGroupName]="i"
+        >
+          <app-form-wrapper
+            [fields]="[field.arrayField!]"
+            [formGroup]="getFormArrayGroup(field.key, i)"
+          ></app-form-wrapper>
+        </div>
+        <button mat-button (click)="addArrayItem(field)">+ Add</button>
+      </div>
+
+      <!-- Custom component -->
+      <!-- <ng-container *ngIf="field.type === 'custom' && field.componentRef">
+        <ng-container
+          *ngComponentOutlet="
+            field.componentRef;
+            injector: createInjector(field)
+          "
+        >
+        </ng-container>
+      </ng-container> -->
+    </mat-grid-tile>
+  </ng-container>
+</mat-grid-list>

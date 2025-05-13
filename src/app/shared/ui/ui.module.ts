@@ -42,7 +42,6 @@ const materialModules = [
   MatCardModule,
   MatToolbarModule,
   MatInputModule,
-  MatSelectModule,
   MatMenuModule,
   MatDialogModule,
   MatTooltipModule,
@@ -66,6 +65,7 @@ const materialModules = [
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatAutocompleteModule,
+  MatSelectModule,
 ];
 
 @NgModule({

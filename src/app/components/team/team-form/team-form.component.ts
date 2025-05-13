@@ -21,7 +21,7 @@ import {
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { SharedModule } from '~/app/shared/shared.module';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
-import { UiModule } from '~/app/shared/ui.module';
+import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 
 type TeamFormData = {

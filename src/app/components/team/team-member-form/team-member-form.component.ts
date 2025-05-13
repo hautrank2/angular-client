@@ -11,9 +11,10 @@ import {
   FormArray,
 } from '@angular/forms';
 import { SharedModule } from '~/app/shared/shared.module';
-import { UiModule } from '~/app/shared/ui.module';
+import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
+import { SOCIALS } from '~/constant/social';
 
 type TeamFormData = {
   title?: string;
@@ -30,7 +31,8 @@ export class TeamMemberFormComponent implements OnInit {
   form: FormGroup;
   teamData = signal<Team[]>([]);
   isEdit: boolean = false;
-  teamRoleData: TeamRole[] = TEAM_ROLES;
+  readonly teamRoleData: TeamRole[] = TEAM_ROLES;
+  readonly socialData = SOCIALS;
 
   ALL_ROLES: TeamRole[] = [
     'Frontend',

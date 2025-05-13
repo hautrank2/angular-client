@@ -102,8 +102,11 @@
             <mat-label>Platform</mat-label>
             <mat-select formControlName="platform">
               <mat-option>None</mat-option>
-              @for (role of teamRoleData; track $index) {
-              <mat-option [value]="role">{{ role }}</mat-option>
+              @for (social of socialData; track $index) {
+              <mat-option [value]="social._id">
+                <mat-icon [ngClass]="social.icon" class="text-center"></mat-icon>
+                {{ social._id }}
+              </mat-option>
               }
             </mat-select>
           </mat-form-field>
