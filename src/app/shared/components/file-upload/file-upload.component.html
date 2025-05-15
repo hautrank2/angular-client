@@ -1,0 +1,21 @@
+<div>
+  <input
+    type="file"
+    [accept]="accept"
+    [multiple]="maxFiles > 1"
+    (change)="onFileSelected($event)"
+  />
+
+  <div *ngIf="previews.length">
+    <div *ngFor="let preview of previews; let i = index">
+      <img
+        *ngIf="preview"
+        [src]="preview"
+        width="150"
+        alt="Preview"
+        style="margin-top: 10px"
+      />
+      <button type="button" (click)="removeFile(i)">Remove</button>
+    </div>
+  </div>
+</div>

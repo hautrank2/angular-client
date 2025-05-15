@@ -15,6 +15,7 @@ import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { SOCIALS } from '~/constant/social';
+import { FormService } from '~/app/shared/services/form.service';
 
 type TeamFormData = {
   title?: string;
@@ -52,6 +53,7 @@ export class TeamMemberFormComponent implements OnInit {
     private fb: FormBuilder,
     private teamSrv: TeamService,
     private teamMemberSrv: TeamMemberService,
+    private formSrv: FormService,
     private dialogRef: MatDialogRef<TeamMemberFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: TeamFormData
   ) {
@@ -73,6 +75,14 @@ export class TeamMemberFormComponent implements OnInit {
     const defaultValues = this.data?.defaultValues;
     if (defaultValues) {
       this.setFormArray('hobbies', defaultValues.hobbies);
+      defaultValues.socials.forEach((socialDt) => {
+        this.socials.push(
+          this.fb.group({
+            platform: [socialDt.platform, Validators.required],
+            url: [socialDt.url, Validators.required],
+          })
+        );
+      });
     }
 
     this.isEdit = !!data.defaultValues;
@@ -148,6 +158,7 @@ export class TeamMemberFormComponent implements OnInit {
   }
 
   submit() {
+    console.log(this.form.valid);
     if (this.form.valid) {
       const values = this.form.value;
       delete values['roleInput'];

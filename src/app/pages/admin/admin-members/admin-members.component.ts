@@ -81,6 +81,10 @@ export class AdminMembersComponent {
         },
       })
       .afterClosed()
-      .subscribe((result) => {});
+      .subscribe((result) => {
+        if (result?.success) {
+          this.fetchData();
+        }
+      });
   }
 }
