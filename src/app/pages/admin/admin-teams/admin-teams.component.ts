@@ -70,4 +70,10 @@ export class AdminTeamsComponent {
         }
       });
   }
+
+  remove(item: Team) {
+    this.teamSrv.delete(item._id).subscribe(() => {
+      this.fetchData();
+    });
+  }
 }

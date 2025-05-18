@@ -7,13 +7,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormService } from './services/form.service';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { JsonFormComponent } from './components/json-form/json-form.component';
+import { AttrDirective } from './directives/attr.directive';
 
 const services = [FormService];
+const components = [
+  FormWrapperComponent,
+  FileUploadComponent,
+  JsonFormComponent,
+];
+const directives = [TypographyDirective, AttrDirective];
 
 @NgModule({
-  declarations: [FormWrapperComponent, FileUploadComponent, JsonFormComponent],
-  imports: [ReactiveFormsModule, CommonModule, TypographyDirective, UiModule],
-  exports: [CommonModule, TypographyDirective, FormWrapperComponent],
+  declarations: [...components, ...directives],
+  imports: [ReactiveFormsModule, CommonModule, UiModule],
+  exports: [CommonModule, ...components, ...directives],
   providers: [...services],
 })
 export class SharedModule {}

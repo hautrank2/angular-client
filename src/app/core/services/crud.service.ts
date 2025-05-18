@@ -1,4 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpContext,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '~/environments/environment';
@@ -10,6 +15,15 @@ export type ApiPaginationResponse<T> = {
   page: number;
   items: T[];
 };
+
+export interface HttpPostOptions {
+  headers?: HttpHeaders | { [header: string]: string | string[] };
+  params?: HttpParams | { [param: string]: string | string[] };
+  observe?: 'body';
+  responseType?: 'json';
+  withCredentials?: boolean;
+  context?: HttpContext;
+}
 
 export const API_REPONSE_BASE: ApiPaginationResponse<any> = {
   totalCount: 0,
@@ -47,11 +61,11 @@ export class CrudService<T> {
     return this.http.get<T>(`${this.apiEndpoint}/${id}`);
   }
 
-  create(dto: T): Observable<T> {
-    return this.http.post<T>(this.apiEndpoint, dto);
+  create(dto: T | FormData, options?: HttpPostOptions): Observable<T> {
+    return this.http.post<T>(this.apiEndpoint, dto, options);
   }
 
-  update(_id: string, dto: T & { _id: string }): Observable<T> {
+  update(_id: string, dto: (T & { _id: string }) | FormData): Observable<T> {
     return this.http.patch<T>(`${this.apiEndpoint}/${_id}`, dto);
   }
 

@@ -2,6 +2,17 @@
 
 <mat-dialog-content>
   <form [formGroup]="form" class="flex flex-col gap-4 py-4">
+    <!-- Avatar -->
+    @if(!isEdit) {
+    <app-file-upload
+      accept="image/*"
+      [maxFiles]="1"
+      [maxSizeMB]="5"
+      [formArray]="avatar"
+      [imgProps]="{ width: 200, height: 200 }"
+    ></app-file-upload>
+    }
+
     <!-- Name -->
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Name</mat-label>
@@ -104,7 +115,10 @@
               <mat-option>None</mat-option>
               @for (social of socialData; track $index) {
               <mat-option [value]="social._id">
-                <mat-icon [ngClass]="social.icon" class="text-center"></mat-icon>
+                <mat-icon
+                  [ngClass]="social.icon"
+                  class="text-center"
+                ></mat-icon>
                 {{ social._id }}
               </mat-option>
               }

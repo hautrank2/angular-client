@@ -16,6 +16,7 @@ export interface TeamMember extends DocumentResponse {
   roles: TeamRole[];
   hobbies: string[];
   socials: Social[];
+  teamId: string;
 }
 
 export interface Social {

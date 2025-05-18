@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, effect, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Team, TEAM_ROLES, TeamMember, TeamRole } from '~/types/teams';
 import {
@@ -16,6 +16,7 @@ import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { SOCIALS } from '~/constant/social';
 import { FormService } from '~/app/shared/services/form.service';
+import { finalize } from 'rxjs';
 
 type TeamFormData = {
   title?: string;
@@ -34,6 +35,7 @@ export class TeamMemberFormComponent implements OnInit {
   isEdit: boolean = false;
   readonly teamRoleData: TeamRole[] = TEAM_ROLES;
   readonly socialData = SOCIALS;
+  loading = signal(false);
 
   ALL_ROLES: TeamRole[] = [
     'Frontend',
@@ -61,7 +63,6 @@ export class TeamMemberFormComponent implements OnInit {
       name: [data.defaultValues?.name ?? '', Validators.required],
       nickname: [data.defaultValues?.nickname ?? '', Validators.required],
       birthday: [data.defaultValues?.birthday ?? '', Validators.required],
-      avatar: [data.defaultValues?.avatar ?? ''],
       email: [
         data.defaultValues?.email ?? '',
         [Validators.required, Validators.email],
@@ -70,7 +71,7 @@ export class TeamMemberFormComponent implements OnInit {
       hobbies: this.fb.array([]),
       socials: this.fb.array([]),
       roleInput: [''],
-      teamId: ['', Validators.required],
+      teamId: [data.defaultValues?.teamId ?? '', Validators.required],
     });
     const defaultValues = this.data?.defaultValues;
     if (defaultValues) {
@@ -83,9 +84,23 @@ export class TeamMemberFormComponent implements OnInit {
           })
         );
       });
+    } else {
+      console.log('this.data', this.data);
+      this.form.addControl('avatar', this.fb.array([], Validators.required));
     }
 
+    this.form.valueChanges.subscribe((res) => {
+      console.log('onChange', res);
+    });
     this.isEdit = !!data.defaultValues;
+
+    effect(() => {
+      if (this.loading()) {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -109,6 +124,10 @@ export class TeamMemberFormComponent implements OnInit {
 
   get socials() {
     return this.form.get('socials') as FormArray;
+  }
+
+  get avatar() {
+    return this.form.get('avatar') as FormArray;
   }
 
   addSocial() {
@@ -157,21 +176,40 @@ export class TeamMemberFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onFileSelected(event: Event) {
+    console.log('onFileSelected', event);
+  }
+
   submit() {
-    console.log(this.form.valid);
     if (this.form.valid) {
-      const values = this.form.value;
+      const values = this.form.getRawValue();
       delete values['roleInput'];
+      this.loading.set(true);
       if (this.isEdit && this.data?.defaultValues?._id) {
         this.teamMemberSrv
           .update(this.data?.defaultValues?._id, values)
+          .pipe(
+            finalize(() => {
+              this.loading.set(false);
+            })
+          )
           .subscribe(() => {
             this.dialogRef.close({ success: true });
           });
       } else {
-        this.teamMemberSrv.create(values).subscribe(() => {
-          this.dialogRef.close({ success: true });
-        });
+        values.image = values.avatar[0];
+        delete values['avatar'];
+
+        this.teamMemberSrv
+          .create(this.formSrv.buildFormData(values))
+          .pipe(
+            finalize(() => {
+              this.loading.set(false);
+            })
+          )
+          .subscribe((res) => {
+            this.dialogRef.close({ success: true });
+          });
       }
     }
   }

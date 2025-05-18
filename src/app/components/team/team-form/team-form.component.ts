@@ -23,6 +23,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
+import { TeamMemberService } from '~/app/core/services/team-member.service';
 
 type TeamFormData = {
   title?: string;
@@ -51,11 +52,13 @@ export class TeamFormComponent implements OnInit {
 
   // 👇 Giả lập danh sách member từ backend
   membersData = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
+  isJsonForm: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private teamSrv: TeamService
+    private teamSrv: TeamService,
+    private teamMemberSrv: TeamMemberService
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -98,6 +101,10 @@ export class TeamFormComponent implements OnInit {
     });
     this.form.get('members')?.valueChanges.subscribe((value) => {
       this.membersFormValue.set(value);
+    });
+
+    this.teamMemberSrv.find({ pageSize: 100, page: 1 }).subscribe((res) => {
+      this.membersData.set(res);
     });
   }
 
@@ -157,5 +164,13 @@ export class TeamFormComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
+  }
+
+  get jsonValue(): string {
+    return JSON.stringify(this.form.getRawValue(), null, 2);
+  }
+
+  onJsonValueChange(value: string): void {
+    this.form.patchValue(JSON.parse(value));
   }
 }

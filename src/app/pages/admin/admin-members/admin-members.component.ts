@@ -15,6 +15,7 @@ import { TeamMember } from '~/types/teams';
 import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/team-member-form.component';
 import { TablePagination } from '~/types/table';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
+import { environment } from '~/environments/environment';
 
 @Component({
   selector: 'app-admin-members',
@@ -58,6 +59,10 @@ export class AdminMembersComponent {
     this.fetchData();
   }
 
+  getAvatarUrl(avatar: string) {
+    return `${environment.assetPrefix}${avatar}`;
+  }
+
   private fetchData() {
     this.teamMemberSrv.find(this.filter).subscribe((res) => {
       this.data.set(res);
@@ -86,5 +91,11 @@ export class AdminMembersComponent {
           this.fetchData();
         }
       });
+  }
+
+  remove(item: TeamMember) {
+    this.teamMemberSrv.delete(item._id).subscribe(() => {
+      this.fetchData();
+    });
   }
 }

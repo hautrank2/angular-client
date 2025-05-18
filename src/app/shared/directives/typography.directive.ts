@@ -8,7 +8,7 @@ import {
 
 @Directive({
   selector: '[appTypography]',
-  standalone: true,
+  standalone: false,
 })
 export class TypographyDirective implements OnChanges {
   @Input('appTypography') variant:

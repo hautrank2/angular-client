@@ -47,4 +47,44 @@ export class FormService {
       })
     );
   }
+
+  buildFormData(
+    obj: any,
+    formData: FormData = new FormData(),
+    parentKey: string | null = null
+  ): FormData {
+    for (const key in obj) {
+      if (!obj.hasOwnProperty(key)) continue;
+
+      const value = obj[key];
+      const fullKey = parentKey ? `${parentKey}[${key}]` : key;
+
+      if (value instanceof File) {
+        formData.append(fullKey, value);
+      } else if (value instanceof Date) {
+        // Convert Date to ISO string
+        formData.append(fullKey, value.toISOString());
+      } else if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          if (
+            typeof item === 'object' &&
+            !(item instanceof File) &&
+            !(item instanceof Date)
+          ) {
+            this.buildFormData(item, formData, `${fullKey}[${index}]`);
+          } else if (item instanceof Date) {
+            formData.append(`${fullKey}[${index}]`, item.toISOString());
+          } else {
+            formData.append(`${fullKey}[]`, item);
+          }
+        });
+      } else if (typeof value === 'object' && value !== null) {
+        this.buildFormData(value, formData, fullKey);
+      } else if (value !== undefined && value !== null) {
+        formData.append(fullKey, value);
+      }
+    }
+
+    return formData;
+  }
 }
