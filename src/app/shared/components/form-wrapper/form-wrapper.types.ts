@@ -1,4 +1,11 @@
 import { Type } from '@angular/core';
+import { FormControlOptions, ValidatorFn } from '@angular/forms';
+
+export type ValidatorOpts =
+  | ValidatorFn
+  | ValidatorFn[]
+  | FormControlOptions
+  | null;
 
 export type FormFieldType =
   | 'text'
@@ -16,10 +23,10 @@ export interface FormField {
   label?: string;
   type: FormFieldType;
   value?: any;
-  validators?: any[];
+  validators?: ValidatorOpts;
   options?: { label: string; value: any }[];
   fields?: FormField[];
-  arrayField?: FormField;
+  arrayFields?: FormField[];
   componentRef?: Type<any>;
   inputs?: { [key: string]: any };
   col?: number;

@@ -1,6 +1,8 @@
-import { Component, InjectionToken, Injector, Input } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { FormField } from './form-wrapper.types';
+import { DynamicAttrType } from '../../directives/attr.directive';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-form-wrapper',
@@ -11,12 +13,15 @@ import { FormField } from './form-wrapper.types';
 export class FormWrapperComponent {
   @Input() fields: FormField[] = [];
   @Input() formGroup?: FormGroup;
+  @Input() appearance: MatFormFieldAppearance = 'outline';
+  @Input() fieldAttrs: DynamicAttrType = {};
 
   constructor(private fb: FormBuilder, private injector: Injector) {}
 
   ngOnInit() {
     if (!this.formGroup) {
       this.formGroup = this.buildForm(this.fields);
+      console.log(this.formGroup);
     }
   }
 
@@ -25,7 +30,7 @@ export class FormWrapperComponent {
     for (const field of fields) {
       if (field.type === 'group') {
         group[field.key] = this.buildForm(field.fields || []);
-      } else if (field.type === 'array' && field.arrayField) {
+      } else if (field.type === 'array' && field.arrayFields) {
         group[field.key] = this.fb.array([]);
       } else {
         group[field.key] = new FormControl(
@@ -51,7 +56,7 @@ export class FormWrapperComponent {
 
   addArrayItem(field: FormField) {
     const array = this.getFormArray(field.key);
-    const newGroup = this.buildForm([field.arrayField!]);
+    const newGroup = this.buildForm(field.arrayFields || []);
     array.push(newGroup);
   }
 

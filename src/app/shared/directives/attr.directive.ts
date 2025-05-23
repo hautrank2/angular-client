@@ -7,6 +7,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
+export type DynamicAttrType = Record<string, any>;
 @Directive({
   selector: '[appAttr]',
   standalone: false,

@@ -2,27 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { Team } from '~/types/teams';
 import { SharedModule } from '~/app/shared/shared.module';
-import { MatCardModule } from '@angular/material/card';
 import { SOCIALS } from '~/constant/social';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
+import { FormField } from '~/app/shared/components/form-wrapper/form-wrapper.types';
+import { UiModule } from '~/app/shared/ui/ui.module';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-teams',
-  imports: [
-    SharedModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    MatChipsModule,
-  ],
+  imports: [SharedModule, UiModule, ReactiveFormsModule],
   templateUrl: './teams.component.html',
   styleUrl: './teams.component.scss',
 })
@@ -46,4 +33,89 @@ export class TeamsComponent {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   }
+
+  formFieldConfig: FormField[] = [
+    {
+      key: 'username',
+      label: 'Username',
+      type: 'text',
+      value: '',
+      validators: [Validators.required],
+    },
+    {
+      key: 'age',
+      label: 'Age',
+      type: 'number',
+      value: 25,
+      validators: [Validators.required, Validators.min(0)],
+    },
+    {
+      key: 'gender',
+      label: 'Gender',
+      type: 'select',
+      value: 'male',
+      options: [
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+      ],
+    },
+    {
+      key: 'subscription',
+      label: 'Subscription Type',
+      type: 'radio',
+      value: 'basic',
+      options: [
+        { label: 'Basic', value: 'basic' },
+        { label: 'Premium', value: 'premium' },
+      ],
+    },
+    {
+      key: 'dob',
+      label: 'Date of Birth',
+      type: 'date',
+      value: '1990-01-01',
+    },
+
+    {
+      key: 'acceptTerms',
+      label: 'Accept Terms',
+      type: 'checkbox',
+      value: false,
+      validators: [Validators.required],
+    },
+    {
+      key: 'address',
+      label: 'Address',
+      type: 'group',
+      fields: [
+        {
+          key: 'street',
+          label: 'Street',
+          type: 'text',
+        },
+        {
+          key: 'city',
+          label: 'City',
+          type: 'text',
+        },
+        {
+          key: 'zip',
+          label: 'ZIP Code',
+          type: 'number',
+        },
+      ],
+    },
+    {
+      key: 'contacts',
+      label: 'Contact Numbers',
+      type: 'array',
+      arrayFields: [
+        {
+          key: 'phone',
+          type: 'text',
+          label: 'Phone',
+        },
+      ],
+    },
+  ];
 }
