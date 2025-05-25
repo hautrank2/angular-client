@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { Team } from '~/types/teams';
 import { SharedModule } from '~/app/shared/shared.module';
 import { SOCIALS } from '~/constant/social';
-import { FormField } from '~/app/shared/components/form-wrapper/form-wrapper.types';
+import { FormField } from '~/app/shared/components/form/form.types';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -60,6 +60,19 @@ export class TeamsComponent {
       ],
     },
     {
+      key: 'genderAuto',
+      label: 'Gender',
+      type: 'autocomplete',
+      placeholder: 'Choose gender',
+      options: [
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+      ],
+      autocompleteOptions: {
+        debounceTime: 0,
+      },
+    },
+    {
       key: 'subscription',
       label: 'Subscription Type',
       type: 'radio',
@@ -109,6 +122,12 @@ export class TeamsComponent {
       key: 'contacts',
       label: 'Contact Numbers',
       type: 'array',
+      formArrayOptions: {
+        cols: 3,
+        col: 1,
+        row: 1,
+        rowHeight: 142,
+      },
       arrayFields: [
         {
           key: 'phone',

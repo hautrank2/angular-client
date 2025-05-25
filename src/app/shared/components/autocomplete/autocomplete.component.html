@@ -1,0 +1,32 @@
+<mat-form-field
+  [appearance]="formOptions.appearance ?? 'outline'"
+  [appAttr]="formOptions.fieldAttrs ?? {}"
+  required
+  class="w-full"
+>
+  <mat-label>{{ field.label }}</mat-label>
+  <mat-chip-grid #chipGrid aria-label="Auto-complete label">
+    @for (item of fa.value; track $index; let index = $index) {
+    <mat-chip-row (removed)="removeArrayItem(index)">
+      {{ formSrv.getLabelFromValue(item, filterdOptions()) }}
+      <button matChipRemove [attr.aria-label]="'remove ' + item">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+    }
+  </mat-chip-grid>
+  <input
+    name="currentFruit"
+    [placeholder]="field.placeholder ?? 'Choose items'"
+    [matChipInputFor]="chipGrid"
+    [matAutocomplete]="auto"
+    [formControl]="autoInputCtrl"
+    matInput
+    aria-label="Autocomplete filter"
+  />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem($event)">
+    @for (option of filterdOptions(); track $index) {
+    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
