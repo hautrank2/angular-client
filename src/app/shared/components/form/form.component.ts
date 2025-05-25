@@ -17,16 +17,16 @@ export class FormWrapperComponent {
     isGrid: false,
     fieldAttrs: {},
   };
+  @Input() hideFooter: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private injector: Injector,
-    public formSrv: FormService
-  ) {}
+  constructor(private fb: FormBuilder, public formSrv: FormService) {}
 
   ngOnInit() {
     if (!this.formGroup) {
-      this.formGroup = this.buildForm(this.fields);
+      this.formGroup = this.formSrv.buildForm(this.fields);
+      this.formGroup.valueChanges.subscribe((res) => {
+        console.log(res);
+      });
     }
   }
 
@@ -38,24 +38,12 @@ export class FormWrapperComponent {
     return this.formOptions.fieldAttrs || {};
   }
 
-  buildForm(fields: FormField[]): FormGroup {
-    const group: any = {};
-    for (const field of fields) {
-      if (field.type === 'group') {
-        group[field.key] = this.buildForm(field.fields || []);
-      } else if (
-        (field.type === 'array' && field.arrayFields) ||
-        field.type === 'autocomplete'
-      ) {
-        group[field.key] = this.fb.array([]);
-      } else {
-        group[field.key] = new FormControl(
-          field.value || '',
-          field.validators || []
-        );
-      }
-    }
-    return this.fb.group(group);
+  reset() {
+    this.formGroup?.reset();
+  }
+
+  submit() {
+    console.log('Form submit()', this.formGroup?.getRawValue());
   }
 
   getFormGroupForKey(key: string): FormGroup {
@@ -72,7 +60,7 @@ export class FormWrapperComponent {
 
   addArrayItem(field: FormField) {
     const array = this.getFormArray(field.key);
-    const newGroup = this.buildForm(field.arrayFields || []);
+    const newGroup = this.formSrv.buildForm(field.arrayFields || []);
     array.push(newGroup);
   }
 

@@ -5,7 +5,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { SOCIALS } from '~/constant/social';
 import { FormField } from '~/app/shared/components/form/form.types';
 import { UiModule } from '~/app/shared/ui/ui.module';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-teams',
@@ -40,37 +40,47 @@ export class TeamsComponent {
       label: 'Username',
       type: 'text',
       value: '',
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.minLength(4)],
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      type: 'text',
+      value: '',
+      validators: [Validators.required, Validators.email],
+    },
+    {
+      key: 'password',
+      label: 'Password',
+      type: 'password',
+      value: '',
+      validators: [Validators.required, Validators.minLength(6)],
     },
     {
       key: 'age',
       label: 'Age',
       type: 'number',
-      value: 25,
-      validators: [Validators.required, Validators.min(0)],
+      value: null,
+      validators: [Validators.required, Validators.min(0), Validators.max(120)],
     },
     {
       key: 'gender',
       label: 'Gender',
       type: 'select',
-      value: 'male',
+      value: '',
       options: [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
+        { label: 'Other', value: 'other' },
       ],
+      validators: [Validators.required],
     },
     {
-      key: 'genderAuto',
-      label: 'Gender',
-      type: 'autocomplete',
-      placeholder: 'Choose gender',
-      options: [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
-      ],
-      autocompleteOptions: {
-        debounceTime: 0,
-      },
+      key: 'dob',
+      label: 'Date of Birth',
+      type: 'date',
+      value: '',
+      validators: [Validators.required],
     },
     {
       key: 'subscription',
@@ -80,21 +90,15 @@ export class TeamsComponent {
       options: [
         { label: 'Basic', value: 'basic' },
         { label: 'Premium', value: 'premium' },
+        { label: 'Enterprise', value: 'enterprise' },
       ],
     },
     {
-      key: 'dob',
-      label: 'Date of Birth',
-      type: 'date',
-      value: '1990-01-01',
-    },
-
-    {
       key: 'acceptTerms',
-      label: 'Accept Terms',
+      label: 'I accept the Terms and Conditions',
       type: 'checkbox',
       value: false,
-      validators: [Validators.required],
+      validators: [Validators.requiredTrue],
     },
     {
       key: 'address',
@@ -103,38 +107,79 @@ export class TeamsComponent {
       fields: [
         {
           key: 'street',
-          label: 'Street',
+          label: 'Street Address',
           type: 'text',
+          validators: [Validators.required],
         },
         {
           key: 'city',
           label: 'City',
           type: 'text',
+          validators: [Validators.required],
         },
         {
           key: 'zip',
           label: 'ZIP Code',
           type: 'number',
+          validators: [Validators.required],
+        },
+        {
+          key: 'country',
+          label: 'Country',
+          type: 'text',
+          validators: [Validators.required],
         },
       ],
     },
     {
       key: 'contacts',
-      label: 'Contact Numbers',
+      label: 'Emergency Contacts',
       type: 'array',
       formArrayOptions: {
+        itemLabel: 'Contact',
         cols: 3,
         col: 1,
         row: 1,
-        rowHeight: 142,
+        rowHeight: 320,
       },
       arrayFields: [
         {
+          key: 'name',
+          type: 'text',
+          label: 'Name',
+          validators: [Validators.required],
+        },
+        {
+          key: 'relation',
+          type: 'text',
+          label: 'Relation',
+          validators: [Validators.required],
+        },
+        {
           key: 'phone',
           type: 'text',
-          label: 'Phone',
+          label: 'Phone Number',
+          validators: [Validators.required],
         },
       ],
+    },
+    {
+      key: 'profession',
+      label: 'Profession',
+      type: 'autocomplete',
+      placeholder: 'Select or type your profession',
+      value: '',
+      options: [
+        { label: 'Engineer', value: 'engineer' },
+        { label: 'Doctor', value: 'doctor' },
+        { label: 'Teacher', value: 'teacher' },
+        { label: 'Artist', value: 'artist' },
+        { label: 'Developer', value: 'developer' },
+      ],
+      autocompleteOptions: {
+        debounceTime: 0,
+      },
+      validators: [Validators.required],
     },
   ];
 }

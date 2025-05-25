@@ -12,6 +12,7 @@ export type ValidatorOpts =
 export type FormFieldType =
   | 'text'
   | 'number'
+  | 'password'
   | 'select'
   | 'autocomplete'
   | 'radio'
@@ -39,6 +40,7 @@ export const DEFAULT_FORM_OPTIONS: FormOptions = {
 };
 
 export interface FormArrayOptions {
+  itemLabel?: string;
   cols?: number;
   rowHeight?: number | string;
   col?: number;

@@ -9,6 +9,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
 import { JsonFormComponent } from './components/json-form/json-form.component';
 import { AttrDirective } from './directives/attr.directive';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { InputPasswordComponent } from './components/form/input-password/input-password.component';
 
 const services = [FormService];
 const components = [
@@ -20,7 +21,7 @@ const components = [
 const directives = [TypographyDirective, AttrDirective];
 
 @NgModule({
-  declarations: [...components, ...directives],
+  declarations: [...components, ...directives, InputPasswordComponent],
   imports: [ReactiveFormsModule, CommonModule, UiModule],
   exports: [CommonModule, ...components, ...directives],
   providers: [...services],
