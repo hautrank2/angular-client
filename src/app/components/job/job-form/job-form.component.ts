@@ -6,16 +6,7 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Job, Skill } from '~/types/job';
 import {
   FormArray,
@@ -25,16 +16,11 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  MatAutocompleteModule,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { LOCATION_DEFAULT, SKILL_DATA } from '~/constant/job';
 import { SharedModule } from '~/app/shared/shared.module';
 import { JobService } from '~/app/core/services/job.service';
+import { UiModule } from '~/app/shared/ui/ui.module';
 
 type JobFormData = {
   title?: string;
@@ -42,23 +28,7 @@ type JobFormData = {
 };
 @Component({
   selector: 'app-job-form',
-  imports: [
-    SharedModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-  ],
+  imports: [SharedModule, FormsModule, UiModule, ReactiveFormsModule],
   templateUrl: './job-form.component.html',
   styleUrl: './job-form.component.scss',
 })

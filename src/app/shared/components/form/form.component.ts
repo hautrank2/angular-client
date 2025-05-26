@@ -1,7 +1,7 @@
-import { Component, Injector, Input } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { FormField, FormOption, FormOptions } from './form.types';
-import { FormService } from './form.service';
+import { Component, Input } from '@angular/core';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormField, FormOptions } from './form.types';
+import { FormService } from '../../services/form.service';
 
 @Component({
   selector: 'app-form',
@@ -11,7 +11,7 @@ import { FormService } from './form.service';
 })
 export class FormWrapperComponent {
   @Input() fields: FormField[] = [];
-  @Input() formGroup?: FormGroup;
+  @Input() formGroup!: FormGroup;
   @Input() formOptions: FormOptions = {
     appearance: 'outline',
     isGrid: false,
@@ -25,7 +25,7 @@ export class FormWrapperComponent {
     if (!this.formGroup) {
       this.formGroup = this.formSrv.buildForm(this.fields);
       this.formGroup.valueChanges.subscribe((res) => {
-        console.log(res);
+        console.log('Form changes:', res);
       });
     }
   }

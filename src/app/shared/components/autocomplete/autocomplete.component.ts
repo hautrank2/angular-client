@@ -9,7 +9,7 @@ import {
   FormOptions,
 } from '../form/form.types';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormService } from '../form/form.service';
+import { FormService } from '../../services/form.service';
 
 @Component({
   selector: 'app-autocomplete',

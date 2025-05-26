@@ -15,8 +15,8 @@ import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { SOCIALS } from '~/constant/social';
-import { FormService } from '~/app/shared/services/form.service';
 import { finalize } from 'rxjs';
+import { FormService } from '~/app/shared/services/form.service';
 
 type TeamFormData = {
   title?: string;
