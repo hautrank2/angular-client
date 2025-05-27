@@ -73,7 +73,7 @@
 
     <!-- hobbiess -->
     <div class="array-group mb-4" formArrayName="hobbies">
-      <h5 appTypography="h5" extraClass="mb-2">Hobbies</h5>
+      <h5 appTypography="body-lg" extraClass="mb-2">Hobbies</h5>
       @for (req of hobbies.controls; track $index; let index = $index) {
       <mat-form-field appearance="outline" class="w-full">
         <input matInput [formControlName]="index" placeholder="Enter..." />
@@ -105,7 +105,7 @@
     </mat-form-field>
 
     <div>
-      <h5 appTypography="h5" extraClass="mb-2">Socials</h5>
+      <h5 appTypography="body-lg" extraClass="mb-2">Socials</h5>
       <div formArrayName="socials" class="flex flex-col">
         @for (social of socials.controls; track $index; let index = $index) {
         <div class="flex gap-2" [formGroupName]="index">

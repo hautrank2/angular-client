@@ -14,7 +14,7 @@
         ]"
         (click)="onJumpToTeam(team)"
       >
-        <p appTypography="h6">{{ team.name }}</p>
+        <p appTypography="body-md">{{ team.name }}</p>
       </div>
       }
     </div>
@@ -27,7 +27,7 @@
   <div [id]="team.name" class="team-card pt-40 flex flex-col">
     <div class="team-card-header mb-8">
       <a
-        appTypography="h2"
+        appTypography="headline-sm"
         [href]="'/teams/#' + team.name"
         extraClass="font-medium! hover:text-[var(--primary)]"
         >{{ team.name }}</a
@@ -44,7 +44,10 @@
               [alt]="mem.avatar"
               class="w-20! h-20!"
             />
-            <small appTypography="small" extraClass="flex gap-2 items-center">
+            <small
+              appTypography="body-md"
+              extraClass="flex gap-2 items-center"
+            >
               @for (role of mem.roles; track $index; let first = $first) {
               <span
                 class="h-1 w-1 rounded-full bg-[var(--foreground)]"
@@ -53,11 +56,11 @@
               <span>{{ role }}</span>
               }
             </small>
-            <h1 appTypography="h3" extraClass="font-medium mt-2">
+            <h1 appTypography="title-lg" extraClass="font-medium mt-2">
               {{ mem.name }}
             </h1>
-            <h1 appTypography="h5">({{ mem.nickname }})</h1>
-            <small appTypography="small" extraClass="my-4">
+            <h1 appTypography="title-sm">({{ mem.nickname }})</h1>
+            <small appTypography="body-md" extraClass="my-4">
               {{ mem.description }}
             </small>
           </div>
@@ -66,11 +69,11 @@
               class="flex flex-col p-2 mt-4 bg-transparent"
             >
               <mat-card-content class="p-2!">
-                <h4 appTypography="h4" extraClass="font-medium">Hobbies</h4>
+                <h4 appTypography="title-sm" extraClass="font-medium">Hobbies</h4>
                 <ul class="pl-4 list-disc">
                   @for (hobby of mem.hobbies; track $index) {
                   <li>
-                    <p appTypography="p" extraClass="font-light">
+                    <p appTypography="body-md" extraClass="font-light">
                       {{ hobby }}
                     </p>
                   </li>

@@ -63,7 +63,7 @@
 
     <!-- Requirements -->
     <div class="array-group mb-4" formArrayName="requirement">
-      <h5 appTypography="h5" extraClass="mb-2">Requirements</h5>
+      <h5 appTypography="body-lg" extraClass="mb-2">Requirements</h5>
       @for (req of requirement.controls; track $index; let index = $index) {
       <mat-form-field appearance="outline" class="w-full">
         <input matInput [formControlName]="index" placeholder="Enter..." />
@@ -86,7 +86,7 @@
 
     <!-- Responsibility -->
     <div class="array-group mb-4" formArrayName="responsibility">
-      <h5 appTypography="h5" extraClass="mb-2">Responsibility</h5>
+      <h5 appTypography="body-lg" extraClass="mb-2">Responsibility</h5>
       @for (req of responsibility.controls; track $index; let index = $index) {
       <mat-form-field appearance="outline" class="w-full">
         <input matInput [formControlName]="index" placeholder="Enter..." />
@@ -109,7 +109,7 @@
 
     <!-- Benefits -->
     <div class="array-group mb-4" formArrayName="benefit">
-      <h5 appTypography="h5" extraClass="mb-2">Benefits</h5>
+      <h5 appTypography="body-lg" extraClass="mb-2">Benefits</h5>
       @for (req of benefit.controls; track $index; let index = $index) {
       <mat-form-field appearance="outline" class="w-full">
         <input matInput [formControlName]="index" placeholder="Enter..." />
