@@ -10,6 +10,7 @@ import { AttrDirective } from './directives/attr.directive';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { InputPasswordComponent } from './components/form/input-password/input-password.component';
 import { FormService } from './services/form.service';
+import { ImgDirective } from './directives/img.directive';
 
 const services = [FormService];
 const components = [
@@ -18,7 +19,7 @@ const components = [
   JsonFormComponent,
   AutocompleteComponent,
 ];
-const directives = [TypographyDirective, AttrDirective];
+const directives = [TypographyDirective, AttrDirective, ImgDirective];
 
 @NgModule({
   declarations: [...components, ...directives, InputPasswordComponent],

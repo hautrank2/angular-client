@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { Team } from '~/types/teams';
 import { SharedModule } from '~/app/shared/shared.module';
 import { SOCIALS } from '~/constant/social';
 import { FormField } from '~/app/shared/components/form/form.types';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { TeamService } from '~/app/core/services/team.service';
+import { TeamMemberService } from '~/app/core/services/team-member.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-teams',
@@ -17,14 +20,44 @@ export class TeamsComponent {
   readonly socialData = SOCIALS;
   teamData = signal<Team[]>([]);
 
-  constructor(private http: HttpClient) {
-    this.http.get<Team[]>('/data/teams.json').subscribe((res) => {
-      this.teamData.set(res);
+  constructor(
+    private http: HttpClient,
+    private teamSrv: TeamService,
+    private teamMemberSrv: TeamMemberService
+  ) {
+    this.fetchTeamData();
+    effect(() => {
+      console.log(this.teamData());
     });
   }
 
   public getSocialData(social: string) {
     return this.socialData.find((item) => item._id === social);
+  }
+
+  private fetchTeamData() {
+    this.teamSrv
+      .find({ pageSize: 100, page: 1 })
+      .pipe(
+        finalize(() => {
+          this.fetchTeamMember();
+        })
+      )
+      .subscribe((res) => {
+        this.teamData.set(res.items);
+      });
+  }
+
+  private fetchTeamMember() {
+    const data = this.teamData();
+    this.teamData().forEach((team, index) => {
+      this.teamMemberSrv
+        .find({ pageSize: 100, page: 1, teamId: team._id })
+        .subscribe((res) => {
+          data[index].members = res.items;
+        });
+    });
+    this.teamData.set(data);
   }
 
   onJumpToTeam(team: Team) {

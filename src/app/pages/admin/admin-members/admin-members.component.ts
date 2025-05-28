@@ -1,7 +1,6 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClient } from '@angular/common/http';
 import {
   MatButtonToggleChange,
   MatButtonToggleModule,
@@ -46,10 +45,7 @@ export class AdminMembersComponent {
   dataSource: TeamMember[] = [];
   filter: TablePagination = { pageSize: 100, page: 1 };
 
-  constructor(
-    private http: HttpClient,
-    private teamMemberSrv: TeamMemberService
-  ) {
+  constructor(private teamMemberSrv: TeamMemberService) {
     effect(() => {
       this.dataSource = this.data().items;
     });
