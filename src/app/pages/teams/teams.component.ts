@@ -168,7 +168,7 @@ export class TeamsComponent {
       key: 'contacts',
       label: 'Emergency Contacts',
       type: 'array',
-      formArrayOptions: {
+      config: {
         itemLabel: 'Contact',
         cols: 3,
         col: 1,
@@ -209,9 +209,7 @@ export class TeamsComponent {
         { label: 'Artist', value: 'artist' },
         { label: 'Developer', value: 'developer' },
       ],
-      autocompleteOptions: {
-        debounceTime: 0,
-      },
+      debounceTime: 0,
       validators: [Validators.required],
     },
   ];

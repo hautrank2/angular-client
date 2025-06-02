@@ -2,9 +2,8 @@ import { Component, Input, signal } from '@angular/core';
 import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import {
-  AutocompleteOptions,
+  AutocompleteFormField,
   DEFAULT_FORM_OPTIONS,
-  FormField,
   FormOption,
   FormOptions,
 } from '../form/form.types';
@@ -18,7 +17,7 @@ import { FormService } from '../../services/form.service';
   standalone: false,
 })
 export class AutocompleteComponent {
-  @Input() field!: FormField;
+  @Input() field!: AutocompleteFormField;
   @Input() formGroup!: FormGroup;
   @Input() formOptions: FormOptions = DEFAULT_FORM_OPTIONS;
 
@@ -35,23 +34,19 @@ export class AutocompleteComponent {
     return this.field.options || [];
   }
 
-  get autocompleteOptions(): AutocompleteOptions | undefined {
-    return this.field.autocompleteOptions;
-  }
-
   ngOnInit() {
     this.filterdOptions.set(this.options);
     this.autoInputCtrl.valueChanges
-      .pipe(debounceTime(this.field.autocompleteOptions?.debounceTime ?? 200))
+      .pipe(debounceTime(this.field.debounceTime ?? 200))
       .subscribe((value) => {
         if (!value) {
           this.filterdOptions.set(this.options);
           return;
         }
-        if (!!this.autocompleteOptions?.filter) {
+        if (!!this.field.filter) {
           // Filter by filter function
-          this.autocompleteOptions?.filter(value);
-          this.filterdOptions.set(this.autocompleteOptions.filter(value));
+          this.field.filter(value);
+          this.filterdOptions.set(this.field.filter(value));
         } else {
           // Default Filter funtion
           this.filterdOptions.set(

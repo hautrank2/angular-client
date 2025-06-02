@@ -110,15 +110,15 @@
       <label>{{ field.label }}</label>
       @if (getFormArray(field.key).controls.length > 0) {
       <mat-grid-list
-        [cols]="field.formArrayOptions?.cols ?? 1"
-        [gutterSize]="field.formArrayOptions?.gutter ?? 8"
-        [rowHeight]="field.formArrayOptions?.rowHeight ?? 'fit'"
+        [cols]="field.config?.cols ?? 1"
+        [gutterSize]="field.config?.gutter ?? 8"
+        [rowHeight]="field.config?.rowHeight ?? 'fit'"
       >
         @for ( ctrl of getFormArray(field.key).controls; track $index; let i =
         $index ) {
         <mat-grid-tile
-          [colspan]="field.formArrayOptions?.col ?? 1"
-          [rowspan]="field.formArrayOptions?.row ?? 1"
+          [colspan]="field.config?.col ?? 1"
+          [rowspan]="field.config?.row ?? 1"
         >
           <mat-card
             appearance="outlined"
@@ -127,7 +127,7 @@
           >
             <mat-card-header class="flex justify-between items-center mb-2">
               <p mat-card-title appTypography="label-md">
-                {{ field.formArrayOptions?.itemLabel ?? "Item" }} {{ i + 1 }}
+                {{ field.config?.itemLabel ?? "Item" }} {{ i + 1 }}
               </p>
               <button
                 mat-icon-button

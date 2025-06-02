@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormArray } from '@angular/forms';
 import { FormField, FormOptions } from './form.types';
 import { FormService } from '../../services/form.service';
 
@@ -19,7 +19,7 @@ export class FormWrapperComponent {
   };
   @Input() hideFooter: boolean = false;
 
-  constructor(private fb: FormBuilder, public formSrv: FormService) {}
+  constructor(public formSrv: FormService) {}
 
   ngOnInit() {
     if (!this.formGroup) {
@@ -59,9 +59,11 @@ export class FormWrapperComponent {
   }
 
   addArrayItem(field: FormField) {
-    const array = this.getFormArray(field.key);
-    const newGroup = this.formSrv.buildForm(field.arrayFields || []);
-    array.push(newGroup);
+    if (field.type === 'array') {
+      const array = this.getFormArray(field.key);
+      const newGroup = this.formSrv.buildForm(field.arrayFields);
+      array.push(newGroup);
+    }
   }
 
   removeArrayItem(name: string, index: number) {

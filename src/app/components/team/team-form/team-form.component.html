@@ -2,76 +2,7 @@
 <mat-dialog-content>
   <p><mat-slide-toggle [(ngModel)]="isJsonForm">JSON form</mat-slide-toggle></p>
 
-  <form [formGroup]="form" class="flex flex-col gap-4 py-4">
-    <app-json-form
-      [ngClass]="[isJsonForm ? 'block' : 'hidden']"
-      [value]="jsonValue"
-      (onValueChange)="onJsonValueChange($event)"
-    ></app-json-form>
-
-    <div
-      [ngClass]="['flex flex-col gap-4 py-4', !isJsonForm ? 'flex' : 'hidden']"
-    >
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Team Name</mat-label>
-        <input matInput formControlName="name" required />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Description</mat-label>
-        <textarea
-          matInput
-          rows="3"
-          formControlName="description"
-          required
-        ></textarea>
-      </mat-form-field>
-
-      <!-- Members Input (Chips) -->
-      <mat-form-field appearance="outline" required>
-        <mat-label>Members</mat-label>
-        <mat-chip-grid #chipGrid aria-label="Member selection">
-          @for (member of members.value; track $index; let index = $index) {
-          <mat-chip-row (removed)="removeMember(index)">
-            {{ getMemberTitleByKey(member) }}
-            <button matChipRemove [attr.aria-label]="'remove ' + member.key">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-          }
-        </mat-chip-grid>
-        <input
-          name="currentFruit"
-          placeholder="Select member..."
-          #memberInput
-          [matChipInputFor]="chipGrid"
-          [matAutocomplete]="auto"
-          formControlName="memberInput"
-        />
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          (optionSelected)="selectMember($event)"
-        >
-          @for (member of filteredMember(); track $index) {
-          <mat-option [value]="member._id">
-            <div class="flex">
-              <img
-                *ngIf="member.avatar"
-                [src]="member.avatar"
-                alt="Avatar"
-                class="w-8 h-8 rounded-full mr-2"
-              />
-              <div>
-                <p appTypography="body-md">{{ member.name }}</p>
-                <small appTypography="body-sm">{{ member.nickname }}</small>
-              </div>
-            </div>
-          </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
-  </form>
+  <app-form [formGroup]="form" [fields]="formFields"></app-form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
