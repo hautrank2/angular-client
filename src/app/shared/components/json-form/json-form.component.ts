@@ -38,7 +38,9 @@ export class JsonFormComponent implements AfterViewInit, OnChanges {
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             const content = this.editorView.state.doc.toString();
-            this.onValueChange.emit(content);
+            if (this.isValidJson(content)) {
+              this.onValueChange.emit(content);
+            }
           }
         }),
       ],
@@ -68,5 +70,13 @@ export class JsonFormComponent implements AfterViewInit, OnChanges {
       },
     });
     this.editorView.dispatch(transaction);
+  }
+
+  private isValidJson(value: string): boolean {
+    try {
+      JSON.parse(value);
+      return true;
+    } catch {}
+    return false;
   }
 }

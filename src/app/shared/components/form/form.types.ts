@@ -97,6 +97,17 @@ export interface CustomFormField extends BaseFormField {
   type: 'custom';
 }
 
+export type FormFieldType =
+  | 'text'
+  | 'number'
+  | 'password'
+  | 'date'
+  | 'autocomplete'
+  | 'select'
+  | 'radio'
+  | 'group'
+  | 'array';
+
 // ─────────────────────────────────────────────
 // 🔗 Union Type for All FormField Variants
 // ─────────────────────────────────────────────

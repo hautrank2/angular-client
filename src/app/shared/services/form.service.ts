@@ -6,7 +6,11 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
-import { FormField, FormOption } from '../components/form/form.types';
+import {
+  FormField,
+  FormFieldType,
+  FormOption,
+} from '../components/form/form.types';
 
 @Injectable({
   providedIn: 'root',

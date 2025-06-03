@@ -8,9 +8,10 @@
     <div class="flex gap-2 items-center">
       @for (team of teamData(); track $index;) {
       <div
+        *ngIf="team.members?.length"
         [ngClass]="[
           'rounded-full px-4 py-2 text-center border border-transparent',
-          'hover:bg-primary/10 hover:cursor-pointer hover:border-border'
+          'hover:cursor-pointer hover:border-border'
         ]"
         (click)="onJumpToTeam(team)"
       >
@@ -23,13 +24,13 @@
 </div>
 
 <div class="container mx-auto px-4">
-  @for (team of teamData(); track $index;) {
+  @for (team of teamData(); track $index;) { @if(team.members?.length) {
   <div [id]="team.name" class="team-card pt-40 flex flex-col">
     <div class="team-card-header mb-8">
       <a
-        appTypography="headline-sm"
+        appTypography="headline-md"
         [href]="'/teams/#' + team.name"
-        extraClass="font-medium! hover:text-[var(--primary)]"
+        extraClass="hover:text-[var(--primary)]"
         >{{ team.name }}</a
       >
     </div>
@@ -45,7 +46,7 @@
               [alt]="mem.avatar"
               class="w-20! h-20!"
             />
-            <small appTypography="body-md" extraClass="flex gap-2 items-center">
+            <small appTypography="body-lg" extraClass="flex gap-2 items-center">
               @for (role of mem.roles; track $index; let first = $first) {
               <span
                 class="h-1 w-1 rounded-full bg-foreground"
@@ -54,31 +55,31 @@
               <span>{{ role }}</span>
               }
             </small>
-            <h1 appTypography="title-lg" extraClass="font-medium mt-2">
+            <h1 appTypography="headline-sm" extraClass="font-medium mt-2">
               {{ mem.name }}
             </h1>
-            <h1 appTypography="title-sm">({{ mem.nickname }})</h1>
+            <h1 appTypography="body-lg">({{ mem.nickname }})</h1>
             <small appTypography="body-md" extraClass="my-4">
               {{ mem.description }}
             </small>
           </div>
           <!-- <mat-card
-              appearance="outlined"
-              class="flex flex-col p-2 mt-4 bg-transparent"
-            >
-              <mat-card-content class="p-2!">
-                <h4 appTypography="title-sm" extraClass="font-medium">Hobbies</h4>
-                <ul class="pl-4 list-disc">
-                  @for (hobby of mem.hobbies; track $index) {
-                  <li>
-                    <p appTypography="body-md" extraClass="font-light">
-                      {{ hobby }}
-                    </p>
-                  </li>
-                  }
-                </ul>
-              </mat-card-content>
-            </mat-card> -->
+                  appearance="outlined"
+                  class="flex flex-col p-2 mt-4 bg-transparent"
+                >
+                  <mat-card-content class="p-2!">
+                    <h4 appTypography="title-sm" extraClass="font-medium">Hobbies</h4>
+                    <ul class="pl-4 list-disc">
+                      @for (hobby of mem.hobbies; track $index) {
+                      <li>
+                        <p appTypography="body-md" extraClass="font-light">
+                          {{ hobby }}
+                        </p>
+                      </li>
+                      }
+                    </ul>
+                  </mat-card-content>
+                </mat-card> -->
         </mat-card-content>
 
         <mat-card-actions
@@ -94,7 +95,7 @@
               ><i
                 [ngClass]="[
                   getSocialData(social.platform)?.icon,
-                  'text-base text-[var(--foreground)]/70 hover:text-[var(--foreground)]'
+                  'text-2xl text-[var(--foreground)]/70 hover:text-[var(--foreground)]'
                 ]"
               ></i
             ></a>
@@ -105,5 +106,5 @@
       }
     </div>
   </div>
-  }
+  } }
 </div>

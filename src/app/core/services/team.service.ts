@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { FormField } from '~/app/shared/components/form/form.types';
 import { map, Observable } from 'rxjs';
 import { TeamMemberService } from './team-member.service';
+import { Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +16,13 @@ export class TeamService extends CrudService<Team> {
       key: 'name',
       label: 'Name',
       type: 'text',
+      validators: [Validators.required],
     },
     {
       key: 'description',
       label: 'Description',
       type: 'text',
+      validators: [Validators.required],
     },
     {
       key: 'members',

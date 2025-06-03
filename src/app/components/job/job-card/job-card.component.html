@@ -19,18 +19,18 @@
   }
 
   <div class="header space-y-2">
-    <small appTypography="body-sm" class="mb-0">
+    <small appTypography="body-md" class="mb-0">
       Created at: {{ data.createdAt | date : "mediumDate" }} • Updated at:
       {{ data.updatedAt | date : "mediumDate" }}
     </small>
 
-    <h2 appTypography="headline-md">{{ data.title }}</h2>
-    <small appTypography="body-md">{{ data.location }} • {{ data.type }}</small>
-    <p appTypography="body-md">{{ data.description }}</p>
+    <h2 appTypography="headline-lg">{{ data.title }}</h2>
+    <small appTypography="label-lg">{{ data.location }} • {{ data.type }}</small>
+    <p appTypography="body-lg">{{ data.description }}</p>
   </div>
 
   <div>
-    <h3 appTypography="title-sm" extraClass="mb-2">Skills</h3>
+    <h3 appTypography="title-lg" extraClass="mb-2">Skills</h3>
     <mat-chip-set class="flex flex-wrap gap-2">
       <mat-chip *ngFor="let skill of data.skills">
         {{ skill }}
@@ -39,27 +39,27 @@
   </div>
 
   <div>
-    <h3 appTypography="title-sm" extraClass="mb-2">Responsibility</h3>
+    <h3 appTypography="title-lg" extraClass="mb-2">Responsibility</h3>
     <ul class="list-disc list-inside space-y-1">
-      <li *ngFor="let req of data.responsibility" appTypography="body-md">
+      <li *ngFor="let req of data.responsibility" appTypography="body-lg">
         {{ req }}
       </li>
     </ul>
   </div>
 
   <div>
-    <h3 appTypography="title-sm" extraClass="mb-2">Requirements</h3>
+    <h3 appTypography="title-lg" extraClass="mb-2">Requirements</h3>
     <ul class="list-disc list-inside space-y-1">
-      <li *ngFor="let req of data.requirement" appTypography="body-md">
+      <li *ngFor="let req of data.requirement" appTypography="body-lg">
         {{ req }}
       </li>
     </ul>
   </div>
 
   <div>
-    <h3 appTypography="title-sm" extraClass="mb-2">Benefits</h3>
+    <h3 appTypography="title-lg" extraClass="mb-2">Benefits</h3>
     <ul class="list-disc list-inside space-y-1">
-      <li *ngFor="let benefit of data.benefit" appTypography="body-md">
+      <li *ngFor="let benefit of data.benefit" appTypography="body-lg">
         {{ benefit }}
       </li>
     </ul>
