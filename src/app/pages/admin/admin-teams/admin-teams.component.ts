@@ -1,5 +1,9 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
+import {
+  API_REPONSE_BASE,
+  ApiPaginationQuery,
+  ApiPaginationResponse,
+} from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -9,7 +13,6 @@ import { Team } from '~/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
-import { TablePagination } from '~/types/table';
 
 @Component({
   selector: 'app-admin-teams',
@@ -29,7 +32,7 @@ export class AdminTeamsComponent {
   ];
   data = signal<ApiPaginationResponse<Team>>(API_REPONSE_BASE);
   dataSource: Team[] = [];
-  filter: TablePagination = { pageSize: 100, page: 1 };
+  filter: ApiPaginationQuery = { pageSize: 100, page: 1, isMembers: true };
 
   constructor(private http: HttpClient, private teamSrv: TeamService) {
     effect(() => {

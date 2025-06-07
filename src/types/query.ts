@@ -25,3 +25,7 @@ export type DocumentResponse = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type RequestQuery = {
+  [key: string]: any;
+};

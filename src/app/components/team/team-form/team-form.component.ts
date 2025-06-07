@@ -1,29 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  computed,
-  inject,
-  model,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Team, TeamMember } from '~/types/teams';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '~/app/shared/shared.module';
 import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
-import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { FormService } from '~/app/shared/services/form.service';
 import { FormField } from '~/app/shared/components/form/form.types';
 
@@ -62,6 +45,10 @@ export class TeamFormComponent implements OnInit {
     this.teamSrv.getFormFields().subscribe((res) => {
       this.formFields = res;
       this.form = this.formSrv.buildForm(res);
+
+      if (this.data.defaultValues) {
+        this.form.patchValue(this.data.defaultValues);
+      }
     });
   }
 
