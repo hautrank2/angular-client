@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Team, TeamMember } from '~/types/teams';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '~/app/shared/shared.module';
-import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
+import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { FormService } from '~/app/shared/services/form.service';
@@ -37,7 +37,7 @@ export class TeamFormComponent implements OnInit {
   membersFormValue = signal<string[]>([]);
 
   // 👇 Giả lập danh sách member từ backend
-  membersData = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
+  membersData = signal<PaginationResponse<TeamMember>>(API_REPONSE_BASE);
   isJsonForm: boolean = false;
 
   constructor(private teamSrv: TeamService, private formSrv: FormService) {

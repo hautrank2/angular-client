@@ -1,0 +1,217 @@
+<ng-container *ngIf="column.pipe">
+  {{ transformValue(getFormControl(rowIndex, column.key).value, column.pipe) }}
+</ng-container>
+
+<ng-container *ngIf="!column.pipe">
+  @switch (column.type) {
+    @case ("text") {
+      {{
+        column.formatter
+          ? column.formatter(
+              getFormControl(rowIndex, column.key).value,
+              row,
+              rowIndex
+            )
+          : getFormControl(rowIndex, column.key).value
+      }}
+    }
+    @case ("number") {
+      {{ getFormControl(rowIndex, column.key).value | shFormatNumber }}
+    }
+    @case ("date") {
+      {{
+        getFormControl(rowIndex, column.key).value
+          | date: "dd/MM/yyyy, HH:mm:ss"
+      }}
+    }
+    @case ("status") {
+      <div
+        *ngIf="getFormControl(rowIndex, column.key).value && column.getConfig"
+        class="flex items-center space-x-0-5"
+      >
+        <mat-icon
+          class="cell-status-icon md-30"
+          [attr.color]="
+            column.getConfig(getFormControl(rowIndex, column.key).value).color
+          "
+          >{{
+            column.getConfig(getFormControl(rowIndex, column.key).value)
+              .iconName
+          }}</mat-icon
+        >
+        <div class="cell-status-text">
+          {{
+            column.getConfig(getFormControl(rowIndex, column.key).value).label
+          }}
+        </div>
+      </div>
+    }
+    @case ("time") {
+      <input
+        hidden
+        matInput
+        [formControl]="getFormControl(rowIndex, column.key)"
+        placeholder="Enter {{ column.label }}"
+      />
+      {{ getFormControl(rowIndex, column.key).value | shFormatTime }}
+    }
+    @case ("iconText") {
+      <div class="flex items-center space-x-0-5">
+        <mat-icon
+          *ngIf="column.icon"
+          class="md-30"
+          [ngClass]="[
+            column.icon.getClass &&
+              column.icon.getClass(getFormControl(rowIndex, column.key).value),
+          ]"
+          >{{
+            column.icon.getIcon &&
+              column.icon.getIcon(getFormControl(rowIndex, column.key).value)
+          }}</mat-icon
+        >
+        <span>{{ getFormControl(rowIndex, column.key).value }}</span>
+      </div>
+    }
+    @case ("statusList") {
+      <mat-chip-listbox
+        aria-label="Status List"
+        class="status-list"
+        [formArrayName]="column.key"
+      >
+        <mat-chip
+          class="status-item chip-prefix outlined"
+          *ngFor="
+            let statusItem of getFormControl(rowIndex, column.key).value;
+            let index = index
+          "
+        >
+          <mat-icon
+            *ngIf="column.statusData?.getIcon"
+            class="prefix me-1 md-30"
+            [ngClass]="[
+              column.statusData?.getClass(
+                getFormControl(rowIndex, column.key).value[index],
+                row
+              ),
+            ]"
+            >{{
+              column.statusData?.getIcon(
+                getFormControl(rowIndex, column.key).value[index],
+                row
+              )
+            }}</mat-icon
+          >
+          {{
+            column.statusData?.getName(
+              getFormControl(rowIndex, column.key).value[index],
+              row
+            )
+          }}
+        </mat-chip>
+      </mat-chip-listbox>
+    }
+    @case ("select") {
+      <mat-form-field
+        *ngIf="getFormControl(rowIndex, column.key).value"
+        appearance="outline"
+        class="no-subscript text sm"
+        (click)="$event.stopPropagation()"
+        style="font-size: 14px"
+      >
+        <mat-select
+          [value]="getFormControl(rowIndex, column.key).value"
+          (selectionChange)="
+            column.onChange && column.onChange($event.value, row, rowIndex)
+          "
+          [formControl]="getFormControl(rowIndex, column.key)"
+        >
+          <mat-option
+            *ngFor="let option of column.options"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    }
+    @case ("toggle") {
+      <mat-slide-toggle
+        color="primary"
+        (click)="$event.stopPropagation()"
+        [checked]="getFormControl(rowIndex, column.key).value"
+        [aria-label]="getFormControl(rowIndex, column.key).value"
+        (change)="
+          column.onChange && column.onChange($event.checked, row, rowIndex)
+        "
+        class="size-sm"
+        [formControl]="getFormControl(rowIndex, column.key)"
+      ></mat-slide-toggle>
+    }
+    @case ("radio") {
+      <mat-radio-button
+        (click)="$event.stopPropagation()"
+        (change)="
+          column.onChange && column.onChange($event.value, row, rowIndex)
+        "
+        [checked]="getFormControl(rowIndex, column.key).value"
+        aria-label="Radio row"
+        [value]="getFormControl(rowIndex, column.key).value"
+        [formControl]="getFormControl(rowIndex, column.key)"
+        *ngFor="let key of objectKeys(column.props)"
+        [attr.[key]]="column.props && column.props[key]"
+      ></mat-radio-button>
+    }
+    @case ("actions") {
+      @if (column.actionType === "menu") {
+        <button mat-icon-button [matMenuTriggerFor]="menuBtn">
+          <mat-icon>{{ column.iconName }}</mat-icon>
+        </button>
+        <mat-menu #menuBtn="matMenu">
+          <button
+            (click)="
+              btnMenuItem.onClick(
+                getFormControl(rowIndex, column.key).value,
+                row,
+                rowIndex
+              )
+            "
+            mat-menu-item
+            *ngFor="let btnMenuItem of column.actions || []"
+          >
+            {{ btnMenuItem.label }}
+          </button>
+        </mat-menu>
+      } @else {
+        @for (item of column.actions || []; track item) {
+          <button
+            [matTooltip]="item.label"
+            mat-icon-button
+            (click)="
+              item.onClick(
+                getFormControl(rowIndex, column.key).value,
+                row,
+                rowIndex
+              )
+            "
+          >
+            <mat-icon class="material-icons-outlined">{{ item.icon }}</mat-icon>
+          </button>
+        }
+      }
+    }
+    @case ("custom") {
+      <ng-container
+        [ngTemplateOutlet]="getTemplate(column.key)"
+        [ngTemplateOutletContext]="{
+          control: getFormControl(rowIndex, column.key),
+          value: getFormControl(rowIndex, column.key).value,
+          item: row,
+          index: rowIndex,
+        }"
+      ></ng-container>
+    }
+    @default {
+      <span>Unsupported Type</span>
+    }
+  }
+</ng-container>

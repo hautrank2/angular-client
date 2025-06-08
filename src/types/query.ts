@@ -1,4 +1,4 @@
-export type ApiPaginationResponse<T> = {
+export type PaginationResponse<T> = {
   totalCount: number;
   totalPage: number;
   pageSize: number;

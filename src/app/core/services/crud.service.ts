@@ -8,7 +8,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '~/environments/environment';
 
-export type ApiPaginationResponse<T> = {
+export type PaginationResponse<T> = {
   totalCount: number;
   totalPage: number;
   pageSize: number;
@@ -25,7 +25,7 @@ export interface HttpPostOptions {
   context?: HttpContext;
 }
 
-export const API_REPONSE_BASE: ApiPaginationResponse<any> = {
+export const API_REPONSE_BASE: PaginationResponse<any> = {
   totalCount: 0,
   totalPage: 0,
   pageSize: 0,
@@ -51,8 +51,8 @@ export class CrudService<T> {
     this.apiEndpoint = environment.apiUrl + apiTag;
   }
 
-  find(query: ApiPaginationQuery): Observable<ApiPaginationResponse<T>> {
-    return this.http.get<ApiPaginationResponse<T>>(this.apiEndpoint, {
+  find(query: ApiPaginationQuery): Observable<PaginationResponse<T>> {
+    return this.http.get<PaginationResponse<T>>(this.apiEndpoint, {
       params: query,
     });
   }

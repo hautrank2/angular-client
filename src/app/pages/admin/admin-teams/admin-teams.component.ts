@@ -2,7 +2,7 @@ import { Component, effect, inject, signal } from '@angular/core';
 import {
   API_REPONSE_BASE,
   ApiPaginationQuery,
-  ApiPaginationResponse,
+  PaginationResponse,
 } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { Team } from '~/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
+import { ShColumn } from '~/app/shared/components/table/table.types';
 
 @Component({
   selector: 'app-admin-teams',
@@ -30,11 +31,14 @@ export class AdminTeamsComponent {
     'createdAt',
     'actions',
   ];
-  data = signal<ApiPaginationResponse<Team>>(API_REPONSE_BASE);
+  data = signal<PaginationResponse<Team>>(API_REPONSE_BASE);
   dataSource: Team[] = [];
   filter: ApiPaginationQuery = { pageSize: 100, page: 1, isMembers: true };
 
-  constructor(private http: HttpClient, private teamSrv: TeamService) {
+  constructor(
+    private http: HttpClient,
+    private teamSrv: TeamService,
+  ) {
     effect(() => {
       this.dataSource = this.data().items;
     });
@@ -63,7 +67,10 @@ export class AdminTeamsComponent {
         restoreFocus: true,
         data: {
           title: defaultValues ? 'Edit Team' : 'Create Team',
-          defaultValues,
+          defaultValues: defaultValues && {
+            ...defaultValues,
+            members: defaultValues?.members?.map((e) => e._id) || [],
+          },
         },
       })
       .afterClosed()
@@ -79,4 +86,32 @@ export class AdminTeamsComponent {
       this.fetchData();
     });
   }
+
+  readonly tbColumns: ShColumn[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      type: 'text',
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      type: 'text',
+    },
+    {
+      key: 'members',
+      label: 'Members',
+      type: 'text',
+      formatter: (value) => value.length,
+    },
+    {
+      key: 'action',
+      label: '',
+      type: 'actions',
+      actions: [
+        { label: 'Edit', icon: 'edit', type: 'btn', onClick: () => {} },
+        { label: 'Delete', icon: 'delete', type: 'btn', onClick: () => {} },
+      ],
+    },
+  ];
 }

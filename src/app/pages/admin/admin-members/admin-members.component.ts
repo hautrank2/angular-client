@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
+import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import {
   MatButtonToggleChange,
@@ -12,7 +12,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { SharedModule } from '~/app/shared/shared.module';
 import { TeamMember } from '~/types/teams';
 import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/team-member-form.component';
-import { TablePagination } from '~/types/table';
+import { TablePaginationReq } from '~/types/table';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { environment } from '~/environments/environment';
 
@@ -41,9 +41,9 @@ export class AdminMembersComponent {
     'roles',
     'actions',
   ];
-  data = signal<ApiPaginationResponse<TeamMember>>(API_REPONSE_BASE);
+  data = signal<PaginationResponse<TeamMember>>(API_REPONSE_BASE);
   dataSource: TeamMember[] = [];
-  filter: TablePagination = { pageSize: 100, page: 1 };
+  filter: TablePaginationReq = { pageSize: 100, page: 1 };
 
   constructor(private teamMemberSrv: TeamMemberService) {
     effect(() => {

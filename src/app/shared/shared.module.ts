@@ -11,6 +11,13 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { InputPasswordComponent } from './components/form/input-password/input-password.component';
 import { FormService } from './services/form.service';
 import { ImgDirective } from './directives/img.directive';
+import { EnManComponent } from './components/en-man/en-man.component';
+import { TableComponent } from './components/table/table.component';
+import { TableDirective } from './components/table/table.directive';
+import { TableCellComponent } from './components/table/table-cell/table-cell.component';
+import { EmptyComponent } from './components/empty/empty.component';
+import { FormatTimePipe } from './pipes/format-time.pipe';
+import { FormatNumberPipe } from './pipes/format-number.pipe';
 
 const services = [FormService];
 const components = [
@@ -18,13 +25,27 @@ const components = [
   FileUploadComponent,
   JsonFormComponent,
   AutocompleteComponent,
+  TableComponent,
+  TableCellComponent,
+  EmptyComponent,
 ];
-const directives = [TypographyDirective, AttrDirective, ImgDirective];
+const directives = [
+  TypographyDirective,
+  AttrDirective,
+  ImgDirective,
+  TableDirective,
+];
+const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [...components, ...directives, InputPasswordComponent],
-  imports: [ReactiveFormsModule, CommonModule, UiModule],
-  exports: [CommonModule, ...components, ...directives],
+  declarations: [
+    ...components,
+    ...directives,
+    InputPasswordComponent,
+    EnManComponent,
+  ],
+  imports: [ReactiveFormsModule, CommonModule, UiModule, ...pipes],
+  exports: [CommonModule, ...components, ...directives, ...pipes],
   providers: [...services],
 })
 export class SharedModule {}

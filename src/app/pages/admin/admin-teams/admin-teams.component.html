@@ -1,7 +1,7 @@
 <div
   [ngClass]="[
     'panel flex justify-between items-center mb-4 sticky top-12 z-10 p-4 rounded-lg',
-    'bg-[var(--mat-sys-background)]'
+    'bg-[var(--mat-sys-background)]',
   ]"
 >
   <div></div>
@@ -17,6 +17,11 @@
   class="overflow-y-auto max-h-[64vh] shadow-[var(--mat-sys-level2)]"
   tabindex="0"
 >
+  <sh-table
+    [isSelect]="true"
+    [data]="dataSource"
+    [columns]="tbColumns"
+  ></sh-table>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!-- Name Column -->
     <ng-container matColumnDef="name">
@@ -40,7 +45,7 @@
     <ng-container matColumnDef="createdAt">
       <th mat-header-cell *matHeaderCellDef>Created</th>
       <td mat-cell *matCellDef="let team">
-        {{ team.createdAt | date : "yyyy-MM-dd" }}
+        {{ team.createdAt | date: "yyyy-MM-dd" }}
       </td>
     </ng-container>
 

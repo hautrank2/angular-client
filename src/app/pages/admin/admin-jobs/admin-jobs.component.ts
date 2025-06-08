@@ -1,6 +1,6 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { Job } from '~/types/job';
-import { API_REPONSE_BASE, ApiPaginationResponse } from '~/types/query';
+import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
 import { MatTableModule } from '@angular/material/table';
 import {
   MatButtonToggleChange,
@@ -14,7 +14,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
 import { JobFormComponent } from '~/app/components/job/job-form/job-form.component';
 import { JobService } from '~/app/core/services/job.service';
-import { TablePagination } from '~/types/table';
+import { TablePaginationReq } from '~/types/table';
 
 @Component({
   selector: 'app-admin-jobs',
@@ -41,9 +41,9 @@ export class AdminJobsComponent implements OnInit {
     'createdAt',
     'actions',
   ];
-  jobData = signal<ApiPaginationResponse<Job>>(API_REPONSE_BASE);
+  jobData = signal<PaginationResponse<Job>>(API_REPONSE_BASE);
   dataSource: Job[] = [];
-  filter: TablePagination = { pageSize: 100, page: 1 };
+  filter: TablePaginationReq = { pageSize: 100, page: 1 };
 
   constructor(private jobSrv: JobService) {
     effect(() => {
