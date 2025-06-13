@@ -1,6 +1,6 @@
 import { Component, effect, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Team, TEAM_ROLES, TeamMember, TeamRole } from '~/types/teams';
+import { Team, TEAM_ROLES, TeamMember, TeamRole } from '~/app/types/teams';
 import {
   FormBuilder,
   FormGroup,
@@ -14,7 +14,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
-import { SOCIALS } from '~/constant/social';
+import { SOCIALS } from '~/app/constant/social';
 import { finalize } from 'rxjs';
 import { FormService } from '~/app/shared/services/form.service';
 

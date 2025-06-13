@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { Job } from '~/types/job';
+import { Job } from '~/app/types/job';
 import { CommonModule } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';

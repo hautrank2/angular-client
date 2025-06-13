@@ -1,6 +1,6 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { Job } from '~/types/job';
-import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
+import { Job } from '~/app/types/job';
+import { API_REPONSE_BASE, PaginationResponse } from '~/app/types/query';
 import { MatTableModule } from '@angular/material/table';
 import {
   MatButtonToggleChange,
@@ -14,7 +14,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { JobCardComponent } from '~/app/components/job/job-card/job-card.component';
 import { JobFormComponent } from '~/app/components/job/job-form/job-form.component';
 import { JobService } from '~/app/core/services/job.service';
-import { TablePaginationReq } from '~/types/table';
+import { TablePaginationReq } from '~/app/types/table';
 
 @Component({
   selector: 'app-admin-jobs',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Job } from '~/types/job';
+import { Job } from '~/app/types/job';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';

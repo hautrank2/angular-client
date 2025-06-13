@@ -3,13 +3,13 @@ import {
   API_REPONSE_BASE,
   ApiPaginationQuery,
   PaginationResponse,
-} from '~/types/query';
+} from '~/app/types/query';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { SharedModule } from '~/app/shared/shared.module';
-import { Team } from '~/types/teams';
+import { Team } from '~/app/types/teams';
 import { TeamFormComponent } from '~/app/components/team/team-form/team-form.component';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';

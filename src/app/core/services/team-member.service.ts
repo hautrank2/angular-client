@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { CrudService } from './crud.service';
-import { TeamMember } from '~/types/teams';
+import { TeamMember } from '~/app/types/teams';
 import { Injectable } from '@angular/core';
 
 @Injectable({

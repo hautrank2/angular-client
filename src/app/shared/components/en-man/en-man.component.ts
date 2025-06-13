@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { PaginationResponse } from '~/app/core/services/crud.service';
-import { API_REPONSE_BASE } from '~/types/query';
+import { API_REPONSE_BASE } from '~/app/types/query';
 
 @Component({
   selector: 'app-en-man',

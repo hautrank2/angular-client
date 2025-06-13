@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CrudService } from './crud.service';
-import { Job } from '~/types/job';
+import { Job } from '~/app/types/job';
 
 @Injectable({
   providedIn: 'root',

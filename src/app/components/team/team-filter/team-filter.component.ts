@@ -15,8 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SharedModule } from '~/app/shared/shared.module';
-import { SOCIALS } from '~/constant/social';
-import { Team } from '~/types/teams';
+import { SOCIALS } from '~/app/constant/social';
+import { Team } from '~/app/types/teams';
 
 @Component({
   selector: 'app-team-filter',

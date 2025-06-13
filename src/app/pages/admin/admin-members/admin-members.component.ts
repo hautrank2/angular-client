@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
+import { API_REPONSE_BASE, PaginationResponse } from '~/app/types/query';
 import { MatTableModule } from '@angular/material/table';
 import {
   MatButtonToggleChange,
@@ -10,9 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SharedModule } from '~/app/shared/shared.module';
-import { TeamMember } from '~/types/teams';
+import { TeamMember } from '~/app/types/teams';
 import { TeamMemberFormComponent } from '~/app/components/team/team-member-form/team-member-form.component';
-import { TablePaginationReq } from '~/types/table';
+import { TablePaginationReq } from '~/app/types/table';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { environment } from '~/environments/environment';
 

@@ -1,10 +1,10 @@
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Team, TeamMember } from '~/types/teams';
+import { Team, TeamMember } from '~/app/types/teams';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '~/app/shared/shared.module';
-import { API_REPONSE_BASE, PaginationResponse } from '~/types/query';
+import { API_REPONSE_BASE, PaginationResponse } from '~/app/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { FormService } from '~/app/shared/services/form.service';

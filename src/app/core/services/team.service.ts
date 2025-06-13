@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { CrudService } from './crud.service';
-import { Team } from '~/types/teams';
+import { Team } from '~/app/types/teams';
 import { Injectable } from '@angular/core';
 import { FormField } from '~/app/shared/components/form/form.types';
 import { map, Observable } from 'rxjs';

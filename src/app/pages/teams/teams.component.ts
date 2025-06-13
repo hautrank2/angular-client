@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, effect, signal } from '@angular/core';
-import { Team } from '~/types/teams';
+import { Team } from '~/app/types/teams';
 import { SharedModule } from '~/app/shared/shared.module';
-import { SOCIALS } from '~/constant/social';
+import { SOCIALS } from '~/app/constant/social';
 import { FormField } from '~/app/shared/components/form/form.types';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { ReactiveFormsModule, Validators } from '@angular/forms';

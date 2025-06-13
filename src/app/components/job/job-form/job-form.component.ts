@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Job, Skill } from '~/types/job';
+import { Job, Skill } from '~/app/types/job';
 import {
   FormArray,
   FormBuilder,
@@ -17,7 +17,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { LOCATION_DEFAULT, SKILL_DATA } from '~/constant/job';
+import { LOCATION_DEFAULT, SKILL_DATA } from '~/app/constant/job';
 import { SharedModule } from '~/app/shared/shared.module';
 import { JobService } from '~/app/core/services/job.service';
 import { UiModule } from '~/app/shared/ui/ui.module';
