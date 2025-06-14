@@ -106,7 +106,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
 
     if (!this.formGroup) {
       if (this.isForm) {
-        this.formGroup = this.formSrv.buildForm(this.formFields);
+        this.formGroup = this.formSrv.buildTableForm(this.columns);
       }
     }
   }

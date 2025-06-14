@@ -53,7 +53,7 @@
             (change)="$event ? toggleRow(row) : null"
             [checked]="selection.isSelected(row)"
             [aria-label]="checkboxLabel(row)"
-            [disabled]="disabledIndexRows?.includes(index)"
+            [disabled]="disabledIndexRows.includes(index)"
           >
           </mat-checkbox>
         </td>

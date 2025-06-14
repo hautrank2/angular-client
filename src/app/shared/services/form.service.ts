@@ -115,6 +115,18 @@ export class FormService {
     return formData;
   }
 
+  //#region Table form
+  buildTableForm(columns: ShColumn[]): FormGroup {
+    const formFields: ShFormField[] = [
+      {
+        key: 'rows',
+        type: 'array',
+        arrayFields: this.convertTableColsToFormField(columns),
+      },
+    ];
+    return this.buildForm(formFields);
+  }
+
   convertTableColsToFormField(columns: ShColumn[]): ShFormField[] {
     return columns.map((col) => this.convertTableColToFormField(col));
   }
@@ -179,4 +191,6 @@ export class FormService {
         throw new Error(`Unsupported column type: ${(column as any).type}`);
     }
   }
+
+  //#endregion
 }

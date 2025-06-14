@@ -42,7 +42,7 @@ export class AdminTeamsComponent {
     private teamSrv: TeamService,
     private formSrv: FormService,
   ) {
-    this.form = this.formSrv.buildForm(this.formFields);
+    this.form = this.formSrv.buildTableForm(this.tbColumns);
     this.form.valueChanges.subscribe((res) => {
       console.log('change form', res);
     });
@@ -122,8 +122,22 @@ export class AdminTeamsComponent {
       label: '',
       type: 'actions',
       actions: [
-        { label: 'Edit', icon: 'edit', type: 'btn', onClick: () => {} },
-        { label: 'Delete', icon: 'delete', type: 'btn', onClick: () => {} },
+        {
+          label: 'Edit',
+          icon: 'edit',
+          type: 'btn',
+          onClick: (_, item) => {
+            this.openTeamDialog(item);
+          },
+        },
+        {
+          label: 'Delete',
+          icon: 'delete',
+          type: 'btn',
+          onClick: (_, item) => {
+            this.remove(item);
+          },
+        },
       ],
     },
   ];
