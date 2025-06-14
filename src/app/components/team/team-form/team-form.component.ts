@@ -8,7 +8,7 @@ import { API_REPONSE_BASE, PaginationResponse } from '~/app/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { FormService } from '~/app/shared/services/form.service';
-import { FormField } from '~/app/shared/components/form/form.types';
+import { ShFormField } from '~/app/shared/components/form/form.types';
 
 type TeamFormData = {
   title?: string;
@@ -33,14 +33,17 @@ export class TeamFormComponent implements OnInit {
   isEdit: boolean = false;
 
   form: FormGroup = new FormGroup({});
-  formFields: FormField[] = [];
+  formFields: ShFormField[] = [];
   membersFormValue = signal<string[]>([]);
 
   // 👇 Giả lập danh sách member từ backend
   membersData = signal<PaginationResponse<TeamMember>>(API_REPONSE_BASE);
   isJsonForm: boolean = false;
 
-  constructor(private teamSrv: TeamService, private formSrv: FormService) {
+  constructor(
+    private teamSrv: TeamService,
+    private formSrv: FormService,
+  ) {
     this.isEdit = !!this.data.defaultValues;
     this.teamSrv.getFormFields().subscribe((res) => {
       this.formFields = res;

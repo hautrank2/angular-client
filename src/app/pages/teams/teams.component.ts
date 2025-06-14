@@ -1,14 +1,13 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, effect, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Team } from '~/app/types/teams';
 import { SharedModule } from '~/app/shared/shared.module';
 import { SOCIALS } from '~/app/constant/social';
-import { FormField } from '~/app/shared/components/form/form.types';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TeamService } from '~/app/core/services/team.service';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { finalize } from 'rxjs';
+import { ShFormField } from '~/app/shared/components/form/form.types';
 
 @Component({
   selector: 'app-teams',
@@ -21,14 +20,10 @@ export class TeamsComponent {
   teamData = signal<Team[]>([]);
 
   constructor(
-    private http: HttpClient,
     private teamSrv: TeamService,
-    private teamMemberSrv: TeamMemberService
+    private teamMemberSrv: TeamMemberService,
   ) {
     this.fetchTeamData();
-    effect(() => {
-      console.log(this.teamData());
-    });
   }
 
   public getSocialData(social: string) {
@@ -41,7 +36,7 @@ export class TeamsComponent {
       .pipe(
         finalize(() => {
           this.fetchTeamMember();
-        })
+        }),
       )
       .subscribe((res) => {
         this.teamData.set(res.items);
@@ -67,7 +62,7 @@ export class TeamsComponent {
     }
   }
 
-  formFieldConfig: FormField[] = [
+  formFieldConfig: ShFormField[] = [
     {
       key: 'username',
       label: 'Username',

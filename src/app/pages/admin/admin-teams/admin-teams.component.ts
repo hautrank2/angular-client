@@ -5,7 +5,6 @@ import {
   PaginationResponse,
 } from '~/app/types/query';
 import { MatTableModule } from '@angular/material/table';
-import { HttpClient } from '@angular/common/http';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { SharedModule } from '~/app/shared/shared.module';
@@ -14,6 +13,9 @@ import { TeamFormComponent } from '~/app/components/team/team-form/team-form.com
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
+import { FormGroup } from '@angular/forms';
+import { FormService } from '~/app/shared/services/form.service';
+import { ShFormField } from '~/app/shared/components/form/form.types';
 
 @Component({
   selector: 'app-admin-teams',
@@ -34,14 +36,23 @@ export class AdminTeamsComponent {
   data = signal<PaginationResponse<Team>>(API_REPONSE_BASE);
   dataSource: Team[] = [];
   filter: ApiPaginationQuery = { pageSize: 100, page: 1, isMembers: true };
+  form = new FormGroup({});
 
   constructor(
-    private http: HttpClient,
     private teamSrv: TeamService,
+    private formSrv: FormService,
   ) {
+    this.form = this.formSrv.buildForm(this.formFields);
+    this.form.valueChanges.subscribe((res) => {
+      console.log('change form', res);
+    });
     effect(() => {
       this.dataSource = this.data().items;
     });
+  }
+
+  get formFields(): ShFormField[] {
+    return this.formSrv.convertTableColsToFormField(this.tbColumns);
   }
 
   ngOnInit(): void {
@@ -86,6 +97,8 @@ export class AdminTeamsComponent {
       this.fetchData();
     });
   }
+
+  scrollBottom() {}
 
   readonly tbColumns: ShColumn[] = [
     {

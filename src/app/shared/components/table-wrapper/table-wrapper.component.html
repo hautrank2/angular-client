@@ -1,0 +1,28 @@
+<div
+  tableDirective
+  [shTableSize]="size"
+  [ngClass]="['table-wrapper', 'rounded', 'mat-elevation-z' + z]"
+>
+  <ng-container *ngIf="!hiddenPanel || hasFilterOrActions">
+    <div class="table-panel flex justify-between p-3">
+      <div class="table-filter">
+        <ng-content select="[table-filters]"></ng-content>
+      </div>
+      <div class="table-actions flex justify-end items-center">
+        <ng-content select="[table-actions]"></ng-content>
+        <button
+          mat-icon-button
+          class="table-actions-reload ms-2"
+          (click)="onReload()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <sh-table></sh-table>
+
+  <ng-content select="[table-footer]"></ng-content>
+</div>

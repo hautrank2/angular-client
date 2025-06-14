@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
-import { FormField, FormOptions } from './form.types';
+import { ShFormField, ShFormOptions } from './form.types';
 import { FormService } from '../../services/form.service';
 
 @Component({
@@ -10,9 +10,9 @@ import { FormService } from '../../services/form.service';
   styleUrl: './form.component.scss',
 })
 export class FormWrapperComponent {
-  @Input() fields: FormField[] = [];
+  @Input() fields: ShFormField[] = [];
   @Input() formGroup!: FormGroup;
-  @Input() formOptions: FormOptions = {
+  @Input() formOptions: ShFormOptions = {
     appearance: 'outline',
     isGrid: false,
     fieldAttrs: {},
@@ -58,7 +58,7 @@ export class FormWrapperComponent {
     return this.getFormArray(arrayKey).at(index) as FormGroup;
   }
 
-  addArrayItem(field: FormField) {
+  addArrayItem(field: ShFormField) {
     if (field.type === 'array') {
       const array = this.getFormArray(field.key);
       const newGroup = this.formSrv.buildForm(field.arrayFields);
@@ -71,7 +71,7 @@ export class FormWrapperComponent {
     array.removeAt(index);
   }
 
-  // createInjector(field: FormField): Injector {
+  // createInjector(field: ShFormField): Injector {
   //   const tokens = new WeakMap();
   //   tokens.set(FormControl, this.formGroup!.get(field.key));
   //   if (field.inputs) {

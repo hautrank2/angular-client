@@ -5,9 +5,9 @@ import {
   FormGroupDirective,
 } from '@angular/forms';
 import {
-  FormField,
-  FormOptions,
-  DEFAULT_FORM_OPTIONS,
+  ShFormField,
+  ShFormOptions,
+  SH_DEFAULT_FORM_OPTIONS,
 } from '../form.types';
 
 @Component({
@@ -23,9 +23,9 @@ import {
   ],
 })
 export class InputPasswordComponent {
-  @Input() field!: FormField;
+  @Input() field!: ShFormField;
   @Input() formGroup!: FormGroup;
-  @Input() formOptions: FormOptions = DEFAULT_FORM_OPTIONS;
+  @Input() formOptions: ShFormOptions = SH_DEFAULT_FORM_OPTIONS;
 
   hide = signal(true);
   clickEvent(event: MouseEvent) {

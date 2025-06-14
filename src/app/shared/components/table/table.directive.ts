@@ -10,7 +10,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-@Directive({ selector: '[tableDirective]', standalone: false })
+@Directive({
+  selector: '[tableDirective]',
+  standalone: false,
+})
 export class TableDirective
   implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
@@ -20,7 +23,10 @@ export class TableDirective
 
   @Input() shTableSize: 'small' | 'medium' | 'large' = 'medium';
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+  ) {}
 
   ngOnInit(): void {}
 
@@ -36,7 +42,7 @@ export class TableDirective
     // Hanlde scroll position loading
     if (this.tableWrapperEl) {
       this.loadingWrapperEl = this.el.nativeElement.querySelector(
-        '.table-loading-wrapper'
+        '.table-loading-wrapper',
       );
 
       if (this.loadingWrapperEl) {
@@ -46,7 +52,7 @@ export class TableDirective
           'scroll',
           (event: Event) => {
             this.hanldeScroll();
-          }
+          },
         );
       }
     }

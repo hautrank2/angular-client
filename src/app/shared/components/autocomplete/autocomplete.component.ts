@@ -2,10 +2,10 @@ import { Component, Input, signal } from '@angular/core';
 import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import {
-  AutocompleteFormField,
-  DEFAULT_FORM_OPTIONS,
-  FormOption,
-  FormOptions,
+  ShAutocompleteFormField,
+  SH_DEFAULT_FORM_OPTIONS,
+  ShFormOption,
+  ShFormOptions,
 } from '../form/form.types';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormService } from '../../services/form.service';
@@ -17,20 +17,23 @@ import { FormService } from '../../services/form.service';
   standalone: false,
 })
 export class AutocompleteComponent {
-  @Input() field!: AutocompleteFormField;
+  @Input() field!: ShAutocompleteFormField;
   @Input() formGroup!: FormGroup;
-  @Input() formOptions: FormOptions = DEFAULT_FORM_OPTIONS;
+  @Input() formOptions: ShFormOptions = SH_DEFAULT_FORM_OPTIONS;
 
   autoInputCtrl = new FormControl('');
-  filterdOptions = signal<FormOption[]>([]);
+  filterdOptions = signal<ShFormOption[]>([]);
 
-  constructor(private fb: FormBuilder, public formSrv: FormService) {}
+  constructor(
+    private fb: FormBuilder,
+    public formSrv: FormService,
+  ) {}
 
   get fa() {
     return this.formGroup.get(this.field.key) as FormArray;
   }
 
-  get options(): FormOption[] {
+  get options(): ShFormOption[] {
     return this.field.options || [];
   }
 
@@ -51,8 +54,8 @@ export class AutocompleteComponent {
           // Default Filter funtion
           this.filterdOptions.set(
             this.options.filter((opt) =>
-              opt.label.toLowerCase().includes(value.toLowerCase())
-            )
+              opt.label.toLowerCase().includes(value.toLowerCase()),
+            ),
           );
         }
       });
@@ -60,7 +63,7 @@ export class AutocompleteComponent {
 
   getOptionLabel(
     value: any,
-    options?: { label: string; value: any }[]
+    options?: { label: string; value: any }[],
   ): string {
     return options?.find((opt) => opt.value === value)?.label || value;
   }

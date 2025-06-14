@@ -1,185 +1,153 @@
 <div
-  tableDirective
-  [shTableSize]="size"
-  [ngClass]="['rounded', 'mat-elevation-z' + z]"
+  [ngClass]="[
+    'relative overflow-x-auto',
+    height ? 'table-height-fixed' : '',
+    headerSticky ? 'table-header-sticky' : '',
+  ]"
+  [ngStyle]="{
+    'height.px': height,
+    height: height,
+    'max-height': maxHeight,
+    'overflow-y': headerSticky ? 'auto' : '',
+  }"
+  #scrollDir="shScroll"
+  shScroll
+  (shScrollCurrent)="onScroll($event)"
+  [style]="tableStyle"
 >
-  <ng-container *ngIf="!hiddenPanel || hasFilterOrActions">
-    <div class="table-panel flex justify-between p-3">
-      <div class="table-filter">
-        <ng-content select="[table-filters]"></ng-content>
-      </div>
-      <div class="table-actions flex justify-end items-center">
-        <ng-content select="[table-actions]"></ng-content>
-        <button
-          mat-icon-button
-          class="table-actions-reload ms-2"
-          (click)="onReload()"
-        >
-          <mat-icon>refresh</mat-icon>
-        </button>
-      </div>
-    </div>
-    <mat-divider></mat-divider>
-  </ng-container>
-
   <div
-    [ngClass]="[
-      'table relative overflow-x-auto',
-      height ? 'table-height-fixed' : '',
-      headerSticy ? 'table-header-sticky' : '',
-    ]"
-    [ngStyle]="{
-      'height.px': height,
-      height: height,
-      'overflow-y': headerSticy ? 'auto' : '',
-    }"
-    (scroll)="onScroll($event)"
+    *ngIf="isLoading"
+    class="table-loading-wrapper absolute bg-overlay flex items-center flex-col w-full h-full"
+    [ngStyle]="{ zIndex: 101 }"
   >
-    <div
-      *ngIf="isLoading"
-      class="table-loading-wrapper absolute bg-overlay flex items-center flex-col w-full h-full"
-      [ngStyle]="{ zIndex: 101 }"
-    >
-      <div class="m-auto text-center loading">
-        <mat-spinner [diameter]="80"></mat-spinner>
-        <h5 class="loading-text">Loading...</h5>
-      </div>
+    <div class="m-auto text-center loading">
+      <mat-spinner [diameter]="80"></mat-spinner>
+      <h5 class="loading-text">Loading...</h5>
     </div>
-    <form [formGroup]="form">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        [ngClass]="{ 'disable-row': disableRow }"
-        formArrayName="rows"
-      >
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef class="cell-select">
-            <mat-checkbox
-              (change)="$event ? toggleAllRows() : null"
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-              [aria-label]="checkboxLabel()"
-            >
-            </mat-checkbox>
+  </div>
+  <form [formGroup]="formGroup">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [ngClass]="{ 'disable-row': disableRow }"
+      formArrayName="rows"
+    >
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="cell-select">
+          <mat-checkbox
+            (change)="$event ? toggleAllRows() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()"
+          >
+          </mat-checkbox>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row; let index = index"
+          class="cell-select"
+        >
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? toggleRow(row) : null"
+            [checked]="selection.isSelected(row)"
+            [aria-label]="checkboxLabel(row)"
+            [disabled]="disabledIndexRows?.includes(index)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container *ngFor="let column of columns; let columnIndex = index">
+        <ng-container [matColumnDef]="column.key">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            [ngStyle]="{
+              'minWidth.px': column.width,
+              'maxWidth.px': column.width,
+            }"
+          >
+            {{ column.label }}
           </th>
           <td
+            [ngClass]="['cell' + column.key]"
             mat-cell
-            *matCellDef="let row; let index = index"
-            class="cell-select"
+            *matCellDef="let row; let rowIndex = index"
+            [ngStyle]="{
+              'minWidth.px': column.width,
+              'maxWidth.px': column.width,
+            }"
+            [formGroupName]="rowIndex"
           >
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? toggleRow(row) : null"
-              [checked]="selection.isSelected(row)"
-              [aria-label]="checkboxLabel(row)"
-              [disabled]="disabledIndexRows?.includes(index)"
-            >
-            </mat-checkbox>
+            @if (column.type !== "custom") {
+              <sh-table-cell
+                [column]="column"
+                [form]="formGroup"
+                [rowIndex]="rowIndex"
+                [row]="row"
+                [customCells]="customCells"
+              ></sh-table-cell>
+            } @else {
+              <ng-container
+                *ngTemplateOutlet="
+                  getTemplate(column.key);
+                  context: {
+                    item: row,
+                    index: rowIndex,
+                    $implicit: row,
+                  }
+                "
+              ></ng-container>
+            }
           </td>
-        </ng-container>
 
-        <ng-container *ngFor="let column of columns; let columnIndex = index">
-          <ng-container [matColumnDef]="column.key">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              [ngStyle]="{
-                'minWidth.px': column.width,
-                'maxWidth.px': column.width,
-              }"
-            >
-              {{ column.label }}
-            </th>
-            <td
-              [ngClass]="['cell' + column.key]"
-              mat-cell
-              *matCellDef="let row; let rowIndex = index"
-              [ngStyle]="{
-                'minWidth.px': column.width,
-                'maxWidth.px': column.width,
-              }"
-              [formGroupName]="rowIndex"
-            >
-              @if (column.type !== "custom") {
-                <sh-table-cell
-                  [column]="column"
-                  [form]="form"
-                  [rowIndex]="rowIndex"
-                  [row]="row"
-                  [customCells]="customCells"
-                ></sh-table-cell>
-              } @else {
-                <ng-container
-                  *ngTemplateOutlet="
-                    getTemplate(column.key);
-                    context: {
-                      item: row,
-                      index: rowIndex,
-                      $implicit: row,
-                    }
-                  "
-                ></ng-container>
-              }
-            </td>
-
-            <!-- <td mat-cell *matCellDef="let row; let index = index">
+          <!-- <td mat-cell *matCellDef="let row; let index = index">
               {{ getFormControl(index, column.key).value }}
             </td> -->
-          </ng-container>
         </ng-container>
+      </ng-container>
 
-        <ng-container matColumnDef="isEdit" *ngIf="isEdit">
-          <th mat-header-cell *matHeaderCellDef class="cell-suffix"></th>
-          <td mat-cell *matCellDef="let row" class="cell-suffix">
-            <mat-icon class="md-18">edit</mat-icon>
-          </td>
-        </ng-container>
-        <tr
-          mat-header-row
-          *matHeaderRowDef="displayedColumns; sticky: headerSticy"
-        ></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          (click)="onRowClick(row)"
-          (dblclick)="onRowDoubleClick(row)"
-          [ngClass]="{ 'cursor-pointer': !disableRow }"
-        ></tr>
-        <tr class="mat-row mat-row-nodata" *matNoDataRow>
-          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-            <sh-empty class="table-empty"></sh-empty>
-          </td>
-        </tr>
-      </table>
-    </form>
-    <ng-container *ngIf="pagination">
-      <mat-divider></mat-divider>
-      <mat-paginator
-        *ngIf="pagination"
-        showFirstLastButtons
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        (page)="onChangePage($event)"
-        [pageSize]="realPagination.pageSize"
-        [pageIndex]="realPagination.page"
-        [length]="realPagination.total"
-        class="my-1"
-      ></mat-paginator>
-    </ng-container>
-  </div>
-
-  <div
-    *ngIf="hasFooter"
-    class="table-footer flex justify-start p-2 border-t gap-2"
-  >
-    <ng-container *ngIf="form?.dirty">
-      <button mat-button (click)="onReset()">Cancel</button>
-      <button mat-flat-button (click)="onSave()">Save</button>
-    </ng-container>
-  </div>
-</div>
-
-<div class="parent overflow-auto relative">
-  <div class="overlay position-sticky"></div>
-  <div class="content"></div>
+      <ng-container matColumnDef="isEdit" *ngIf="isEdit">
+        <th mat-header-cell *matHeaderCellDef class="cell-suffix"></th>
+        <td mat-cell *matCellDef="let row" class="cell-suffix">
+          <mat-icon class="md-18">edit</mat-icon>
+        </td>
+      </ng-container>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: headerSticky"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns; let index = index"
+        (click)="isDisabledRow(index) && onRowClick(row)"
+        (dblclick)="isDisabledRow(index) && onRowDoubleClick(row)"
+        [ngClass]="{
+          'cursor-pointer': isDisabledRow(index),
+          'table-row-disable': disabledIndexRows.includes(index),
+        }"
+        class="table-row"
+      ></tr>
+      <tr class="mat-row mat-row-nodata" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <sh-empty class="table-empty"></sh-empty>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <ng-container *ngIf="pagination">
+    <mat-divider></mat-divider>
+    <mat-paginator
+      *ngIf="pagination"
+      showFirstLastButtons
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onChangePage($event)"
+      [pageSize]="realPagination.pageSize"
+      [pageIndex]="realPagination.page"
+      [length]="realPagination.total"
+      class="my-1"
+    ></mat-paginator>
+  </ng-container>
 </div>

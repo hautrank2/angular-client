@@ -2,18 +2,18 @@ import { Type } from '@angular/core';
 import { FormControlOptions, ValidatorFn } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 
-export type ValidatorOpts =
+export type ShValidatorOpts =
   | ValidatorFn
   | ValidatorFn[]
   | FormControlOptions
   | null;
 
-export type FormOption = {
+export type ShFormOption = {
   value: string;
   label: string;
 };
 
-export interface config {
+export interface ShGridConfig {
   itemLabel?: string;
   cols?: number;
   rowHeight?: number | string;
@@ -22,13 +22,13 @@ export interface config {
   gutter?: number;
 }
 
-export interface FormOptions {
+export interface ShFormOptions {
   appearance?: MatFormFieldAppearance;
   fieldAttrs?: { [key: string]: any };
   isGrid?: boolean;
 }
 
-export const DEFAULT_FORM_OPTIONS: FormOptions = {
+export const SH_DEFAULT_FORM_OPTIONS: ShFormOptions = {
   appearance: 'outline',
   fieldAttrs: {},
   isGrid: false,
@@ -38,12 +38,12 @@ export const DEFAULT_FORM_OPTIONS: FormOptions = {
 // 🧱 Base FormField Interface
 // ─────────────────────────────────────────────
 
-export interface BaseFormField {
+export interface ShBaseFormField {
   key: string;
   label?: string;
   value?: any;
   placeholder?: string;
-  validators?: ValidatorOpts;
+  validators?: ShValidatorOpts;
   componentRef?: Type<any>;
   inputs?: { [key: string]: any };
   col?: number;
@@ -55,49 +55,49 @@ export interface BaseFormField {
 // 🧩 Specialized FormField Types
 // ─────────────────────────────────────────────
 
-export interface TextFormField extends BaseFormField {
+export interface ShTextFormField extends ShBaseFormField {
   type: 'text' | 'number' | 'password' | 'date';
 }
 
-export interface CheckboxFormField extends BaseFormField {
+export interface ShCheckboxFormField extends ShBaseFormField {
   type: 'checkbox';
 }
 
-export interface SelectFormField extends BaseFormField {
+export interface ShSelectFormField extends ShBaseFormField {
   type: 'select';
-  options: FormOption[];
-  filter?: (enterValue: string) => FormOption[];
+  options: ShFormOption[];
+  filter?: (enterValue: string) => ShFormOption[];
   debounceTime?: number;
 }
 
-export interface RadioFormField extends BaseFormField {
+export interface ShRadioFormField extends ShBaseFormField {
   type: 'radio';
-  options: FormOption[];
+  options: ShFormOption[];
 }
 
-export interface AutocompleteFormField extends BaseFormField {
+export interface ShAutocompleteFormField extends ShBaseFormField {
   type: 'autocomplete';
-  options: FormOption[];
-  filter?: (enterValue: string) => FormOption[];
+  options: ShFormOption[];
+  filter?: (enterValue: string) => ShFormOption[];
   debounceTime?: number;
 }
 
-export interface GroupFormField extends BaseFormField {
+export interface ShGroupFormField extends ShBaseFormField {
   type: 'group';
-  fields: FormField[];
+  fields: ShFormField[];
 }
 
-export interface ArrayFormField extends BaseFormField {
+export interface ShArrayFormField extends ShBaseFormField {
   type: 'array';
-  arrayFields: FormField[];
-  config?: config;
+  arrayFields: ShFormField[];
+  config?: ShGridConfig;
 }
 
-export interface CustomFormField extends BaseFormField {
+export interface ShCustomFormField extends ShBaseFormField {
   type: 'custom';
 }
 
-export type FormFieldType =
+export type ShFormFieldType =
   | 'text'
   | 'number'
   | 'password'
@@ -112,12 +112,12 @@ export type FormFieldType =
 // 🔗 Union Type for All FormField Variants
 // ─────────────────────────────────────────────
 
-export type FormField =
-  | TextFormField
-  | SelectFormField
-  | RadioFormField
-  | CheckboxFormField
-  | AutocompleteFormField
-  | GroupFormField
-  | ArrayFormField
-  | CustomFormField;
+export type ShFormField =
+  | ShTextFormField
+  | ShSelectFormField
+  | ShRadioFormField
+  | ShCheckboxFormField
+  | ShAutocompleteFormField
+  | ShGroupFormField
+  | ShArrayFormField
+  | ShCustomFormField;

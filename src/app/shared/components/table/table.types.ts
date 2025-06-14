@@ -6,7 +6,7 @@ export interface ShPagination {
 }
 
 // Shared base interface
-interface BaseColumn {
+export interface ShBaseColumn {
   key: string;
   label: string;
   sortable?: boolean;
@@ -20,68 +20,69 @@ interface BaseColumn {
 }
 
 // 1. Text column
-export interface TextColumn extends BaseColumn {
+export interface ShTextColumn extends ShBaseColumn {
   type: 'text';
   formatter?(value: any, item: any, index: number): any;
 }
 
 // 2. Number column
-export interface NumberColumn extends BaseColumn {
+export interface ShNumberColumn extends ShBaseColumn {
   type: 'number';
 }
 
 // 3. Date column
-export interface DateColumn extends BaseColumn {
+export interface ShDateColumn extends ShBaseColumn {
   type: 'date';
 }
 
 // 4. IconText column
-export interface IconTextColumn extends BaseColumn {
+export interface ShIconTextColumn extends ShBaseColumn {
   type: 'iconText';
   icon?: ShIconConfig;
   actionConfig?: ShActionConfig;
 }
 
 // 5. Status column
-export interface StatusColumn extends BaseColumn {
+export interface ShStatusColumn extends ShBaseColumn {
   type: 'status';
   getConfig(arg: any): { iconName: string; color?: string; label: string };
 }
 
 // 6. StatusList column
-export interface StatusListColumn extends BaseColumn {
+export interface ShStatusListColumn extends ShBaseColumn {
   type: 'statusList';
   statusData: ShStatusConfig;
 }
 
 // 7. Select column
-export interface SelectColumn extends BaseColumn {
+export interface ShSelectColumn extends ShBaseColumn {
   type: 'select';
   options: ShOption[];
 }
 
 // 8. Toggle column
-export interface ToggleColumn extends BaseColumn {
+export interface ShToggleColumn extends ShBaseColumn {
   type: 'toggle';
 }
 
 // 9. Radio column
-export interface RadioColumn extends BaseColumn {
+export interface ShRadioColumn extends ShBaseColumn {
   type: 'radio';
+  options: ShOption[];
 }
 
 // 10. Custom column
-export interface CustomColumn extends BaseColumn {
+export interface ShCustomColumn extends ShBaseColumn {
   type: 'custom';
 }
 
 // 11. Time column
-export interface TimeColumn extends BaseColumn {
+export interface ShTimeColumn extends ShBaseColumn {
   type: 'time';
 }
 
 // 12. Actions column (multiple actions)
-export interface ActionColumn extends BaseColumn {
+export interface ShActionColumn extends ShBaseColumn {
   type: 'actions';
   actionType?: 'menu' | 'list';
   iconName?: string;
@@ -90,18 +91,18 @@ export interface ActionColumn extends BaseColumn {
 
 // 🔀 Union type: dùng cho input hoặc cấu hình bảng
 export type ShColumn =
-  | TextColumn
-  | NumberColumn
-  | DateColumn
-  | IconTextColumn
-  | StatusColumn
-  | StatusListColumn
-  | SelectColumn
-  | ToggleColumn
-  | RadioColumn
-  | CustomColumn
-  | TimeColumn
-  | ActionColumn;
+  | ShTextColumn
+  | ShNumberColumn
+  | ShDateColumn
+  | ShIconTextColumn
+  | ShStatusColumn
+  | ShStatusListColumn
+  | ShSelectColumn
+  | ShToggleColumn
+  | ShRadioColumn
+  | ShCustomColumn
+  | ShTimeColumn
+  | ShActionColumn;
 
 export interface ShOption {
   label: string;

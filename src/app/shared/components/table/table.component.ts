@@ -11,10 +11,14 @@ import {
   Output,
   Renderer2,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ShColumn, ShPagination } from './table.types';
+import { ScrollDirective } from '../../directives/scroll.directive';
+import { FormService } from '../../services/form.service';
+import { ShFormField } from '../form/form.types';
 
 @Component({
   selector: 'sh-table',
@@ -22,14 +26,21 @@ import { ShColumn, ShPagination } from './table.types';
   styleUrl: './table.component.scss',
   standalone: false,
 })
-export class TableComponent implements OnInit, OnChanges, AfterContentInit {
+export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
+  @Input() keyIndex!: string;
   @Input() data: any[] = [];
   @Input() columns: ShColumn[] = [];
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isLoading: boolean = false;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
   @Input() z: number | string = 0;
-  @Input() height: any;
+  @Input() height!: number | string;
+  @Input() maxHeight!: number | string;
+  @Input() formGroup!: FormGroup;
+  isForm: boolean = true;
+
+  // Style
+  @Input() tableStyle: Record<string, any> = {};
 
   // Start ROW:
   @Input() disableRow: boolean = false;
@@ -37,7 +48,7 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   @Output() rowDbClick = new EventEmitter<any>();
 
   // Header
-  @Input() headerSticy: boolean = false;
+  @Input() headerSticky: boolean = false;
 
   // Footer
   @Input() hasFooter: boolean = false;
@@ -51,8 +62,8 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   // Select
   @Input() isSelect: boolean = false;
   @Output() changeSelect = new EventEmitter<any[]>();
-  @Input() defaultSelects: any[] = [];
-  @Input() disabledIndexRows?: number[];
+  @Input() defaultSelects: T[] = [];
+  @Input() disabledIndexRows: number[] = [];
   selection = new SelectionModel<any>(true, []);
 
   // Panel Actions
@@ -64,7 +75,6 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
   // Form
-  form: FormGroup = new FormGroup({});
   @Input() isEdit: boolean = false;
   @Output() valueChanges = new EventEmitter<any>();
   @Output() valueChange = new EventEmitter<{ index: number; data: any }>();
@@ -75,15 +85,15 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   previousScrollTop!: number;
   @Output() onScrollBottom = new EventEmitter<number>();
   @Output() onScrollTop = new EventEmitter<number>();
+  @ViewChild('scrollDir') scrollDir!: ScrollDirective;
 
   constructor(
     private elRef: ElementRef,
     private fb: FormBuilder,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
-  ) {
-    this.initForm();
-  }
+    private formSrv: FormService,
+  ) {}
 
   //#region Hooks
   ngOnInit(): void {
@@ -94,7 +104,10 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
     this.displayedColumns = tempColumns;
     if (this.isEdit) this.displayedColumns.push('isEdit');
 
-    if (!this.rowClick.observers.length) {
+    if (!this.formGroup) {
+      if (this.isForm) {
+        this.formGroup = this.formSrv.buildForm(this.formFields);
+      }
     }
   }
 
@@ -165,22 +178,30 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   }
   //#endregion
 
-  //#region FORM
+  //#region form
+  get formFields(): ShFormField[] {
+    return this.columns.map((col) =>
+      this.formSrv.convertTableColToFormField(col),
+    );
+  }
+
   private initForm() {
-    this.form = this.fb.group({
+    this.formGroup = this.fb.group({
       rows: this.fb.array(this.data.map((row) => this.createRowGroup(row))),
     });
     this.dataSource = new MatTableDataSource(this.data);
 
-    this.form.valueChanges.subscribe((res) => {
+    this.formGroup.valueChanges.subscribe((res) => {
       this.valueChanges.emit(res.rows);
     });
 
-    (this.form.get('rows') as FormArray)?.controls.forEach((control, index) => {
-      control.valueChanges.subscribe((data) => {
-        this.valueChange.emit({ index, data });
-      });
-    });
+    (this.formGroup.get('rows') as FormArray)?.controls.forEach(
+      (control, index) => {
+        control.valueChanges.subscribe((data) => {
+          this.valueChange.emit({ index, data });
+        });
+      },
+    );
   }
 
   createRowGroup(data: any): FormGroup {
@@ -225,6 +246,10 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   //#endregion
 
   //#region utility
+  isDisabledRow(index: number): boolean {
+    return !this.disableRow && !this.disabledIndexRows.includes(index);
+  }
+
   onReload() {
     this.reload.emit();
   }
@@ -238,7 +263,7 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   getFormData(): any {
-    return this.form.value;
+    return this.formGroup.value;
   }
 
   onSave() {
@@ -251,15 +276,13 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
   //#endregion
 
   //#region Scroll
-  onScroll(event: any): void {
-    const element = this.elRef.nativeElement.querySelector('.table');
+  onScroll(scrollTop: number): void {
+    const element = this.scrollDir.elRef.nativeElement;
     const threshold = 200;
     const atBottom =
       element.scrollHeight - element.scrollTop <=
       element.clientHeight + threshold;
-
     const atTop = element.scrollTop <= 20;
-
     if (atBottom) {
       this.onScrollBottom.emit(element.clientHeight);
       this.isOnBottom = true;
@@ -272,8 +295,9 @@ export class TableComponent implements OnInit, OnChanges, AfterContentInit {
       this.onScrollTop.emit(element.clientHeight);
     }
   }
+
   setScrollTop() {
-    const element = this.elRef.nativeElement.querySelector('.table');
+    const element = this.scrollDir.elRef.nativeElement;
     if (element) {
       this.renderer.setProperty(element, 'scrollTop', 40);
     }

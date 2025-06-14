@@ -6,11 +6,12 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
+import { ShFormField, ShFormOption } from '../components/form/form.types';
 import {
-  FormField,
-  FormFieldType,
-  FormOption,
-} from '../components/form/form.types';
+  ShColumn,
+  ShRadioColumn,
+  ShSelectColumn,
+} from '../components/table/table.types';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ import {
 export class FormService {
   constructor(private fb: FormBuilder) {}
 
-  buildForm(fields: FormField[]): FormGroup {
+  buildForm(fields: ShFormField[]): FormGroup {
     const group: any = {};
     for (const field of fields) {
       if (field.type === 'group') {
@@ -31,14 +32,14 @@ export class FormService {
       } else {
         group[field.key] = new FormControl(
           field.value || '',
-          field.validators || []
+          field.validators || [],
         );
       }
     }
     return this.fb.group(group);
   }
 
-  getLabelFromValue(value: string, options: FormOption[]): string {
+  getLabelFromValue(value: string, options: ShFormOption[]): string {
     return options.find((e) => e.value === value)?.label ?? '';
   }
 
@@ -70,14 +71,14 @@ export class FormService {
         } else {
           return new FormControl(item);
         }
-      })
+      }),
     );
   }
 
   buildFormData(
     obj: any,
     formData: FormData = new FormData(),
-    parentKey: string | null = null
+    parentKey: string | null = null,
   ): FormData {
     for (const key in obj) {
       if (!obj.hasOwnProperty(key)) continue;
@@ -112,5 +113,70 @@ export class FormService {
     }
 
     return formData;
+  }
+
+  convertTableColsToFormField(columns: ShColumn[]): ShFormField[] {
+    return columns.map((col) => this.convertTableColToFormField(col));
+  }
+
+  convertTableColToFormField(column: ShColumn): ShFormField {
+    const baseField = {
+      key: column.key,
+      label: column.label,
+      col: 12,
+      row: 1,
+      hidden: false,
+      validators: undefined,
+    };
+
+    switch (column.type) {
+      case 'text':
+      case 'number':
+      case 'date':
+      // case 'password':
+      //   return {
+      //     ...baseField,
+      //     type: column.type,
+      //     placeholder: column.label,
+      //   } as ShFormField;
+
+      case 'select':
+      case 'radio': {
+        const options =
+          (column as ShSelectColumn | ShRadioColumn).options || [];
+
+        return {
+          ...baseField,
+          type: column.type,
+          options: options as ShFormOption[],
+        } as ShFormField;
+      }
+
+      // case 'autocomplete': {
+      //   const ac = column as any; // nếu bạn có thêm autocomplete column riêng
+      //   return {
+      //     ...baseField,
+      //     type: 'autocomplete',
+      //     options: ac.options || [],
+      //     filter: ac.filter,
+      //     debounceTime: ac.debounceTime,
+      //   } as ShAutocompleteFormField;
+      // }
+
+      case 'custom':
+      case 'toggle':
+      case 'status':
+      case 'statusList':
+      case 'iconText':
+      case 'actions':
+      case 'time':
+        return {
+          ...baseField,
+          type: 'text',
+        };
+
+      default:
+        throw new Error(`Unsupported column type: ${(column as any).type}`);
+    }
   }
 }

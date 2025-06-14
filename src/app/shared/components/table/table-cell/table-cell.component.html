@@ -182,21 +182,25 @@
           </button>
         </mat-menu>
       } @else {
-        @for (item of column.actions || []; track item) {
-          <button
-            [matTooltip]="item.label"
-            mat-icon-button
-            (click)="
-              item.onClick(
-                getFormControl(rowIndex, column.key).value,
-                row,
-                rowIndex
-              )
-            "
-          >
-            <mat-icon class="material-icons-outlined">{{ item.icon }}</mat-icon>
-          </button>
-        }
+        <div class="flex items-center gap-2">
+          @for (item of column.actions || []; track item) {
+            <button
+              [matTooltip]="item.label"
+              mat-icon-button
+              (click)="
+                item.onClick(
+                  getFormControl(rowIndex, column.key).value,
+                  row,
+                  rowIndex
+                )
+              "
+            >
+              <mat-icon class="material-icons-outlined">{{
+                item.icon
+              }}</mat-icon>
+            </button>
+          }
+        </div>
       }
     }
     @case ("custom") {

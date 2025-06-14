@@ -18,6 +18,8 @@ import { TableCellComponent } from './components/table/table-cell/table-cell.com
 import { EmptyComponent } from './components/empty/empty.component';
 import { FormatTimePipe } from './pipes/format-time.pipe';
 import { FormatNumberPipe } from './pipes/format-number.pipe';
+import { ScrollDirective } from './directives/scroll.directive';
+import { TableWrapperComponent } from './components/table-wrapper/table-wrapper.component';
 
 const services = [FormService];
 const components = [
@@ -34,6 +36,7 @@ const directives = [
   AttrDirective,
   ImgDirective,
   TableDirective,
+  ScrollDirective,
 ];
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
@@ -43,6 +46,7 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     ...directives,
     InputPasswordComponent,
     EnManComponent,
+    TableWrapperComponent,
   ],
   imports: [ReactiveFormsModule, CommonModule, UiModule, ...pipes],
   exports: [CommonModule, ...components, ...directives, ...pipes],
