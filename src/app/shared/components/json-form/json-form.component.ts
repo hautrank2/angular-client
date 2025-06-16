@@ -14,7 +14,7 @@ import { EditorView, basicSetup } from 'codemirror';
 import { json } from '@codemirror/lang-json';
 
 @Component({
-  selector: 'app-json-form',
+  selector: 'sh-json-form',
   standalone: false,
   templateUrl: './json-form.component.html',
   styleUrl: './json-form.component.scss',
@@ -22,7 +22,7 @@ import { json } from '@codemirror/lang-json';
 export class JsonFormComponent implements AfterViewInit, OnChanges {
   @ViewChild('editorContainer', { static: true }) editorRef!: ElementRef;
 
-  @Input() initValue: string = '';
+  @Input() defaultValue: string = '';
   @Input() value: string = '';
   @Output() onValueChange = new EventEmitter<string>();
 
@@ -30,8 +30,23 @@ export class JsonFormComponent implements AfterViewInit, OnChanges {
   private isInitialized = false;
 
   ngAfterViewInit(): void {
+    this.initEditorContent();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value'] && this.isInitialized) {
+      const newValue = changes['value'].currentValue;
+      const currentEditorContent = this.editorView.state.doc.toString();
+
+      if (newValue !== currentEditorContent) {
+        this.initEditorContent();
+      }
+    }
+  }
+
+  private initEditorContent() {
     this.editorView = new EditorView({
-      doc: this.initValue || '',
+      doc: this.value || this.defaultValue || '',
       extensions: [
         basicSetup,
         json(),
@@ -46,19 +61,7 @@ export class JsonFormComponent implements AfterViewInit, OnChanges {
       ],
       parent: this.editorRef.nativeElement,
     });
-
     this.isInitialized = true;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['value'] && this.isInitialized) {
-      const newValue = changes['value'].currentValue;
-      const currentEditorContent = this.editorView.state.doc.toString();
-
-      if (newValue !== currentEditorContent) {
-        this.setEditorContent(newValue);
-      }
-    }
   }
 
   private setEditorContent(value: string) {

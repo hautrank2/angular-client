@@ -16,6 +16,7 @@ import { ShColumn } from '~/app/shared/components/table/table.types';
 import { FormGroup } from '@angular/forms';
 import { FormService } from '~/app/shared/services/form.service';
 import { ShFormField } from '~/app/shared/components/form/form.types';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-admin-teams',
@@ -37,6 +38,7 @@ export class AdminTeamsComponent {
   dataSource: Team[] = [];
   filter: ApiPaginationQuery = { pageSize: 100, page: 1, isMembers: true };
   form = new FormGroup({});
+  selects = new SelectionModel<Team>(true, []);
 
   constructor(
     private teamSrv: TeamService,
@@ -99,6 +101,21 @@ export class AdminTeamsComponent {
   }
 
   scrollBottom() {}
+
+  deleteSelected() {
+    console.log(this.selects.selected);
+  }
+
+  //#region Selects
+  changeSelect(items: Team[]) {
+    this.selects.clear();
+    this.selects.setSelection(...items);
+  }
+
+  clearSelected() {
+    this.selects.clear();
+  }
+  //#endregion
 
   readonly tbColumns: ShColumn[] = [
     {

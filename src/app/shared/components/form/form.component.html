@@ -1,33 +1,48 @@
+@if (isJsonForm) {
+  <div class="mb-4">
+    <p>
+      <mat-slide-toggle [(ngModel)]="isJsonMode">JSON form</mat-slide-toggle>
+    </p>
+  </div>
+}
+
 <form
   *ngIf="formGroup"
   (ngSubmit)="submit()"
   [formGroup]="formGroup"
-  class="w-full h-full"
+  class="w-full"
 >
-  @if (formOptions.isGrid) {
-    <mat-grid-list cols="12" gutterSize="16px" class="w-full h-auto">
-      @for (field of fields; track $index) {
-        <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
-          <ng-container
-            [ngTemplateOutlet]="fieldTpl"
-            [ngTemplateOutletContext]="{ $implicit: field, field: field }"
-          ></ng-container>
-        </mat-grid-tile>
-      }
-    </mat-grid-list>
-  } @else {
-    <div class="flex flex-col gap-4 w-full">
-      @for (field of fields; track $index) {
-        <div class="w-full">
-          <ng-container
-            [ngTemplateOutlet]="fieldTpl"
-            [ngTemplateOutletContext]="{ $implicit: field, field: field }"
-          ></ng-container>
-        </div>
-      }
-    </div>
-  }
-
+  <div [ngClass]="[isJsonMode ? '' : 'invisible h-0 w-0']">
+    <sh-json-form
+      [value]="valuesStringtify"
+      (onValueChange)="onJsonFormChange($event)"
+    ></sh-json-form>
+  </div>
+  <div [ngClass]="[!isJsonMode ? '' : 'invisible h-0 w-0 overflow-hidden']">
+    @if (formOptions.isGrid) {
+      <mat-grid-list cols="12" gutterSize="16px" class="w-full h-auto">
+        @for (field of fields; track $index) {
+          <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
+            <ng-container
+              [ngTemplateOutlet]="fieldTpl"
+              [ngTemplateOutletContext]="{ $implicit: field, field: field }"
+            ></ng-container>
+          </mat-grid-tile>
+        }
+      </mat-grid-list>
+    } @else {
+      <div class="flex flex-col gap-4 w-full">
+        @for (field of fields; track $index) {
+          <div class="w-full">
+            <ng-container
+              [ngTemplateOutlet]="fieldTpl"
+              [ngTemplateOutletContext]="{ $implicit: field, field: field }"
+            ></ng-container>
+          </div>
+        }
+      </div>
+    }
+  </div>
   <ng-template #fieldTpl let-field>
     @switch (field?.type) {
       @case ("text") {

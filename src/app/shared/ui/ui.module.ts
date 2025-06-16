@@ -31,6 +31,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormsModule } from '@angular/forms';
 
 const materialModules = [
   MatButtonModule,
@@ -66,6 +67,7 @@ const materialModules = [
   MatProgressSpinnerModule,
   MatAutocompleteModule,
   MatSelectModule,
+  FormsModule,
 ];
 
 @NgModule({

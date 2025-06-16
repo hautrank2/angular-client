@@ -3,7 +3,7 @@ import { CrudService } from './crud.service';
 import { Team } from '~/app/types/teams';
 import { Injectable } from '@angular/core';
 import { ShFormField } from '~/app/shared/components/form/form.types';
-import { map, Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { TeamMemberService } from './team-member.service';
 import { Validators } from '@angular/forms';
 
@@ -24,29 +24,15 @@ export class TeamService extends CrudService<Team> {
       type: 'text',
       validators: [Validators.required],
     },
-    {
-      key: 'members',
-      label: 'Members',
-      type: 'autocomplete',
-      options: [],
-    },
   ];
-  constructor(http: HttpClient, private teamMemberSrv: TeamMemberService) {
+  constructor(
+    http: HttpClient,
+    private teamMemberSrv: TeamMemberService,
+  ) {
     super(http, '/recruit/team');
   }
 
   getFormFields(): Observable<ShFormField[]> {
-    return this.teamMemberSrv.find({ pageSize: 10, page: 1 }).pipe(
-      map((res) => {
-        const result = this._fields.slice();
-        if (result[2].type === 'autocomplete') {
-          result[2].options = res.items.map((e) => ({
-            label: e.name,
-            value: e._id,
-          }));
-        }
-        return result;
-      })
-    );
+    return of(this._fields.slice());
   }
 }

@@ -1,25 +1,11 @@
 <h2 mat-dialog-title>{{ data.title || "Team form" }}</h2>
 <mat-dialog-content>
-  <div class="mb-4">
-    <p>
-      <mat-slide-toggle [(ngModel)]="isJsonForm">JSON form</mat-slide-toggle>
-    </p>
-  </div>
-
-  @if(isJsonForm) {
-  <app-json-form
-    [ngClass]="[isJsonForm ? 'block' : 'hidden']"
-    [value]="jsonValue"
-    (onValueChange)="onJsonValueChange($event)"
-  ></app-json-form>
-  } @else {
   <app-form
     [formGroup]="form"
     [fields]="formFields"
     [hideFooter]="true"
+    [isJsonForm]="true"
   ></app-form>
-
-  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

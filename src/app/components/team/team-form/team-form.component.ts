@@ -1,8 +1,7 @@
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { Team, TeamMember } from '~/app/types/teams';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { SharedModule } from '~/app/shared/shared.module';
 import { API_REPONSE_BASE, PaginationResponse } from '~/app/types/query';
 import { UiModule } from '~/app/shared/ui/ui.module';
@@ -16,13 +15,7 @@ type TeamFormData = {
 };
 @Component({
   selector: 'app-team-form',
-  imports: [
-    SharedModule,
-    FormsModule,
-    MatFormFieldModule,
-    UiModule,
-    ReactiveFormsModule,
-  ],
+  imports: [SharedModule, UiModule],
   templateUrl: './team-form.component.html',
   styleUrl: './team-form.component.scss',
 })
@@ -77,13 +70,5 @@ export class TeamFormComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-  }
-
-  get jsonValue(): string {
-    return JSON.stringify(this.form.getRawValue(), null, 2);
-  }
-
-  onJsonValueChange(value: string): void {
-    this.form.patchValue(JSON.parse(value));
   }
 }

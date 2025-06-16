@@ -61,10 +61,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
 
   // Select
   @Input() isSelect: boolean = false;
-  @Output() changeSelect = new EventEmitter<any[]>();
+  @Output() changeSelect = new EventEmitter<T[]>();
   @Input() defaultSelects: T[] = [];
   @Input() disabledIndexRows: number[] = [];
-  selection = new SelectionModel<any>(true, []);
+  selection = new SelectionModel<T>(true, []);
 
   // Panel Actions
   @Output() reload = new EventEmitter<void>();

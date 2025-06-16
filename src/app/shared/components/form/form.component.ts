@@ -18,6 +18,8 @@ export class FormWrapperComponent {
     fieldAttrs: {},
   };
   @Input() hideFooter: boolean = false;
+  @Input() isJsonForm: boolean = false;
+  isJsonMode: boolean = false;
 
   constructor(public formSrv: FormService) {}
 
@@ -28,6 +30,14 @@ export class FormWrapperComponent {
         console.log('Form changes:', res);
       });
     }
+  }
+
+  get valuesStringtify() {
+    return JSON.stringify(this.values, null, 2);
+  }
+
+  get values() {
+    return this.formGroup.getRawValue();
   }
 
   get appearance() {
@@ -70,6 +80,14 @@ export class FormWrapperComponent {
     const array = this.getFormArray(name);
     array.removeAt(index);
   }
+
+  //#region JSON FORM
+  onJsonFormChange(value: string) {
+    console.log('onJsonFormChange', value);
+    this.formGroup.patchValue(JSON.parse(value));
+  }
+
+  //#endregion
 
   // createInjector(field: ShFormField): Injector {
   //   const tokens = new WeakMap();
