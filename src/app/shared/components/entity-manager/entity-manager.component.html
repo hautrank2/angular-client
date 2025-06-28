@@ -1,5 +1,4 @@
-<p>entity-manager works!</p>
-<div class="sticky top-12 z-10 rounded-full overflow-hidden mb-4">
+<div class="sticky top-12 z-10 rounded-xl overflow-hidden mb-4">
   @if (selects.hasValue()) {
     <div [ngClass]="['p-2', 'flex items-center gap-4 bg-primary/10']">
       <div class="flex items-center gap-2">
@@ -34,14 +33,20 @@
 
 <section class="overflow-y-auto shadow-[var(--mat-sys-level2)]" tabindex="0">
   <sh-table
-    [isSelect]="true"
     [data]="dataSource"
-    [columns]="tbColumns"
+    [columns]="_tbColumns"
     (onScrollBottom)="scrollBottom()"
     [maxHeight]="'64vh'"
     [headerSticky]="true"
     [formGroup]="form"
+    [isSelect]="tbSelect"
     (changeSelect)="changeSelect($event)"
     [defaultSelects]="selects.selected"
+    [pagination]="{
+      page: filter.page,
+      pageSize: filter.pageSize,
+      total: data().total,
+    }"
+    (changePagination)="changePagination($event)"
   ></sh-table>
 </section>

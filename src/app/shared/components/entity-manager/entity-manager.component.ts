@@ -5,6 +5,7 @@ import {
   inject,
   Input,
   OnChanges,
+  OnInit,
   signal,
   SimpleChanges,
 } from '@angular/core';
@@ -14,49 +15,54 @@ import { MatDialog } from '@angular/material/dialog';
 import { API_REPONSE_BASE } from '~/app/types/query';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
-import { ShColumn } from '../table/table.types';
-import { ShEntityFilter, ShEntityResponse } from './entity-manager.types';
+import {
+  ShColumn,
+  ShPaginationEmit,
+  ShTableAction,
+} from '../table/table.types';
+import {
+  ShEntityAction,
+  ShEntityFilter,
+  ShEntityResponse,
+} from './entity-manager.types';
 import { EntityFormComponent } from '../entity-form/entity-form.component';
 import { catchError, concat, finalize, Observable, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KEY_NAME } from '../../constants/common';
 
 @Component({
-  selector: 'app-entity-manager',
+  selector: 'sh-entity-manager',
   standalone: false,
   templateUrl: './entity-manager.component.html',
   styleUrl: './entity-manager.component.scss',
 })
 export class EntityManagerComponent<T extends { [key: string]: any }>
-  implements OnChanges
+  implements OnInit, OnChanges
 {
   @Input({ required: true }) entityName: string = '';
-  @Input({ required: true }) keyName: string = KEY_NAME;
+  @Input() keyName: string = KEY_NAME;
   @Input() findEntities!: (
     filters: ShEntityFilter,
   ) => Observable<ShEntityResponse<T>>;
-  @Input() deleteEntity!: (item: T) => Observable<T>;
+  @Input() deleteEntity!: (id: any) => Observable<T>;
   @Input() putEntity!: (id: any, entity: T) => Observable<T>;
   @Input() postEntity!: (entity: T) => Observable<T>;
 
   // Table config
   @Input({ required: true }) tbColumns: ShColumn[] = [];
   @Input() tbColumnsDisplay!: string[];
+  @Input() tbActions: ShEntityAction[] = [];
+  @Input() tbSelect: boolean = false;
+  @Input() tbPagination: boolean = false;
 
   // Form config
-  @Input({ required: true }) formFields: ShFormField[] = [];
+  @Input() formFields!: ShFormField[];
+
   readonly dialog = inject(MatDialog);
   layout: 'grid' | 'table' = 'table';
-  displayedColumns: string[] = [
-    'name',
-    'description',
-    'membersCount',
-    'createdAt',
-    'actions',
-  ];
   data = signal<ShEntityResponse<T>>(API_REPONSE_BASE);
   dataSource: T[] = [];
-  filter: ShEntityFilter = { pageSize: 100, page: 1, isMembers: true };
+  filter: ShEntityFilter = { pageSize: 10, page: 1, isMembers: true };
   form = new FormGroup({});
   selects = new SelectionModel<T>(true, []);
   private snackBar = inject(MatSnackBar);
@@ -71,12 +77,48 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     });
   }
 
+  get _tbColumns(): ShColumn[] {
+    const result = this.tbColumns.slice();
+    const actions: ShTableAction[] = [];
+    this.tbActions.forEach((action) => {
+      switch (action) {
+        case 'edit':
+          actions.push({
+            label: 'Edit',
+            icon: 'edit',
+            type: 'btn',
+            onClick: (_, item) => {
+              this.openDialog(item);
+            },
+          });
+          break;
+        case 'delete':
+          actions.push({
+            label: 'Delete',
+            icon: 'delete',
+            type: 'btn',
+            onClick: (_, item) => {
+              this.remove(item);
+            },
+          });
+          break;
+      }
+    });
+    if (actions.length > 0) {
+      result.push({ key: 'action', label: '', type: 'actions', actions });
+    }
+    return result;
+  }
+
   get _formFields(): ShFormField[] {
-    return this.formSrv.convertTableColsToFormField(this.tbColumns);
+    return (
+      this.formFields ||
+      this.formSrv.convertTableColsToFormField(this.tbColumns)
+    );
   }
 
   get displayColumns(): string[] {
-    return this.tbColumnsDisplay || this.tbColumns.map((col) => col.key);
+    return this.tbColumnsDisplay || this._tbColumns.map((col) => col.key);
   }
 
   ngOnInit(): void {
@@ -89,6 +131,14 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     this.findEntities(this.filter).subscribe((res) => {
       this.data.set(res);
     });
+  }
+
+  changePagination(pagination: ShPaginationEmit) {
+    this.filter = {
+      ...this.filter,
+      ...pagination,
+    };
+    this.fetchData();
   }
 
   changeLayout(event: MatButtonToggleChange) {
@@ -108,7 +158,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
             ? `Edit ${this.entityName}`
             : `Create ${this.entityName}`,
           defaultValues,
-          formFields: this.formFields || this.formFields,
+          formFields: this._formFields,
           putEntity: this.putEntity,
           postEntity: this.postEntity,
         },
@@ -123,7 +173,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   }
 
   remove(item: T) {
-    this.deleteEntity(item).subscribe(() => {
+    this.deleteEntity(item[this.keyName]).subscribe(() => {
       this.fetchData();
     });
   }

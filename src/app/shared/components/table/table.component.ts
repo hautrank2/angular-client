@@ -15,11 +15,12 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ShColumn, ShPagination } from './table.types';
+import { ShColumn, ShPagination, ShPaginationEmit } from './table.types';
 import { ScrollDirective } from '../../directives/scroll.directive';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'sh-table',
@@ -55,10 +56,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() hasFooter: boolean = false;
   // Pagination
   @Input() pagination!: ShPagination;
-  @Output() changePagination = new EventEmitter<{
-    pageSize: number;
-    page: number;
-  }>();
+  @Output() changePagination = new EventEmitter<ShPaginationEmit>();
 
   // Select
   @Input() isSelect: boolean = false;
@@ -72,7 +70,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() hiddenPanel: boolean = false;
   hasFilterOrActions: boolean = false;
 
-  displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
   // Form
@@ -102,13 +99,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
 
   //#region Hooks
   ngOnInit(): void {
-    const tempColumns = this.columns.map((column) => column.key);
-    if (this.isSelect) {
-      tempColumns.unshift('select');
-    }
-    this.displayedColumns = tempColumns;
-    if (this.isEdit) this.displayedColumns.push('isEdit');
-
     if (!this.formGroup) {
       if (this.isForm) {
         this.formGroup = this.formSrv.buildTableForm(this.columns);
@@ -117,10 +107,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
 
   ngOnChanges(changes: any): void {
-    if (changes['columns']) {
-      this.displayedColumns = this.columns.map((column) => column.key);
-    }
-
     if (changes['data']) {
       if (this.data) {
         this.cdr.detectChanges();
@@ -144,6 +130,17 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     }
   }
 
+  get isFixedHeight() {
+    return !!this.maxHeight || !!this.height;
+  }
+
+  get displayedColumns(): string[] {
+    const colKeys = this.columns.map((column) => column.key).slice();
+    if (this.isSelect) colKeys.unshift('select');
+    if (this.isEdit) colKeys.push('isEdit');
+    return colKeys;
+  }
+
   ngDoCheck() {}
 
   ngAfterContentInit(): void {
@@ -164,18 +161,11 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   //#endregion
 
   //#region Pagination
-  get realPagination(): ShPagination {
-    return {
-      ...(this.pagination || {}),
-      page: this.pagination.page,
-    };
-  }
-
-  onChangePage(value: any): void {
-    let { pageSize, page } = value;
-    page += 1;
-    this.pagination['page'] = page;
-    this.routerNavigate(page, pageSize);
+  onChangePage(value: PageEvent): void {
+    let { pageSize, pageIndex } = value;
+    pageIndex += 1;
+    this.pagination['page'] = pageIndex;
+    this.routerNavigate(pageIndex, pageSize);
   }
 
   routerNavigate(page: number, pageSize: number): void {

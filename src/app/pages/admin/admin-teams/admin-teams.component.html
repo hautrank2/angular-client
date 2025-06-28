@@ -1,46 +1,12 @@
-<div class="sticky top-12 z-10 rounded-full overflow-hidden mb-4">
-  @if (selects.hasValue()) {
-    <div [ngClass]="['p-2', 'flex items-center gap-4 bg-primary/10']">
-      <div class="flex items-center gap-2">
-        <button
-          mat-icon-button
-          (click)="clearSelected()"
-          class="selected-clear-btn"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        <p appTypography="body-lg">
-          selected {{ selects.selected.length }} items
-        </p>
-      </div>
-      <button mat-icon-button (click)="deleteSelected()">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
-    </div>
-  } @else {
-    <div
-      [ngClass]="['p-2', 'panel flex justify-between items-center rounded-lg']"
-    >
-      <div></div>
-      <div class="flex gap-2 items-center">
-        <button mat-mini-fab extended (click)="openTeamDialog()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-  }
-</div>
-
-<section class="overflow-y-auto shadow-[var(--mat-sys-level2)]" tabindex="0">
-  <sh-table
-    [isSelect]="true"
-    [data]="dataSource"
-    [columns]="tbColumns"
-    (onScrollBottom)="scrollBottom()"
-    [maxHeight]="'64vh'"
-    [headerSticky]="true"
-    [formGroup]="form"
-    (changeSelect)="changeSelect($event)"
-    [defaultSelects]="selects.selected"
-  ></sh-table>
-</section>
+<sh-entity-manager
+  entityName="team"
+  [formFields]="teamSrv.formFields"
+  [tbColumns]="tbColumns"
+  [findEntities]="teamSrv.find.bind(teamSrv)"
+  [putEntity]="teamSrv.update.bind(teamSrv)"
+  [deleteEntity]="teamSrv.delete.bind(teamSrv)"
+  [postEntity]="teamSrv.create.bind(teamSrv)"
+  [tbActions]="['edit', 'delete']"
+  [tbSelect]="true"
+  [tbPagination]="true"
+></sh-entity-manager>

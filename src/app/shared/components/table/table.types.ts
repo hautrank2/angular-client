@@ -1,7 +1,6 @@
 export interface ShPagination {
   page: number;
   pageSize: number;
-  totalPage: number;
   total: number;
 }
 
@@ -139,4 +138,9 @@ export interface ShActionConfig {
     color?: string;
     onClick(...arg: any): any;
   }[];
+}
+
+export interface ShPaginationEmit {
+  page: number;
+  pageSize: number;
 }

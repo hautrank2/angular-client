@@ -4,7 +4,7 @@ import { ShFormField, ShFormOptions } from './form.types';
 import { FormService } from '../../services/form.service';
 
 @Component({
-  selector: 'app-form',
+  selector: 'sh-form',
   standalone: false,
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss',

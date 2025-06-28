@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { environment } from '~/environments/environment';
 
 export type PaginationResponse<T> = {
-  totalCount: number;
+  total: number;
   totalPage: number;
   pageSize: number;
   page: number;
@@ -26,7 +26,7 @@ export interface HttpPostOptions {
 }
 
 export const API_REPONSE_BASE: PaginationResponse<any> = {
-  totalCount: 0,
+  total: 0,
   totalPage: 0,
   pageSize: 0,
   page: 0,
@@ -46,7 +46,7 @@ export class CrudService<T> {
   apiEndpoint: string = '';
   constructor(
     protected http: HttpClient,
-    @Inject('API_ENDPOINT') protected apiTag: string
+    @Inject('API_ENDPOINT') protected apiTag: string,
   ) {
     this.apiEndpoint = environment.apiUrl + apiTag;
   }
@@ -69,7 +69,7 @@ export class CrudService<T> {
     return this.http.patch<T>(`${this.apiEndpoint}/${_id}`, dto);
   }
 
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiEndpoint}/${id}`);
+  delete(id: string): Observable<T> {
+    return this.http.delete<T>(`${this.apiEndpoint}/${id}`);
   }
 }

@@ -32,6 +32,10 @@ export class TeamService extends CrudService<Team> {
     super(http, '/recruit/team');
   }
 
+  get formFields() {
+    return this._fields;
+  }
+
   getFormFields(): Observable<ShFormField[]> {
     return of(this._fields.slice());
   }

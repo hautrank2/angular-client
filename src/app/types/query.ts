@@ -1,5 +1,5 @@
 export type PaginationResponse<T> = {
-  totalCount: number;
+  total: number;
   totalPage: number;
   pageSize: number;
   page: number;
@@ -7,7 +7,7 @@ export type PaginationResponse<T> = {
 };
 
 export const API_REPONSE_BASE = {
-  totalCount: 0,
+  total: 0,
   totalPage: 0,
   pageSize: 0,
   page: 0,

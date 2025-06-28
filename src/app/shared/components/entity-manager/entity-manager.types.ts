@@ -1,5 +1,5 @@
 export interface ShEntityResponse<T> {
-  totalCount: number;
+  total: number;
   totalPage: number;
   pageSize: number;
   page: number;
@@ -11,3 +11,5 @@ export interface ShEntityFilter {
   pageSize: number;
   [key: string]: any;
 }
+
+export type ShEntityAction = 'edit' | 'delete';
