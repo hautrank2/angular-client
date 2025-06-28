@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TypographyDirective } from './directives/typography.directive';
 import { FormWrapperComponent } from './components/form/form.component';
 import { UiModule } from './ui/ui.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { JsonFormComponent } from './components/json-form/json-form.component';
 import { AttrDirective } from './directives/attr.directive';
@@ -11,7 +11,6 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { InputPasswordComponent } from './components/form/input-password/input-password.component';
 import { FormService } from './services/form.service';
 import { ImgDirective } from './directives/img.directive';
-import { EnManComponent } from './components/en-man/en-man.component';
 import { TableComponent } from './components/table/table.component';
 import { TableDirective } from './components/table/table.directive';
 import { TableCellComponent } from './components/table/table-cell/table-cell.component';
@@ -20,6 +19,8 @@ import { FormatTimePipe } from './pipes/format-time.pipe';
 import { FormatNumberPipe } from './pipes/format-number.pipe';
 import { ScrollDirective } from './directives/scroll.directive';
 import { TableWrapperComponent } from './components/table-wrapper/table-wrapper.component';
+import { EntityFormComponent } from './components/entity-form/entity-form.component';
+import { EntityManagerComponent } from './components/entity-manager/entity-manager.component';
 
 const services = [FormService];
 const components = [
@@ -30,6 +31,10 @@ const components = [
   TableComponent,
   TableCellComponent,
   EmptyComponent,
+  EntityManagerComponent,
+  EntityFormComponent,
+  InputPasswordComponent,
+  TableWrapperComponent,
 ];
 const directives = [
   TypographyDirective,
@@ -41,13 +46,7 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [
-    ...components,
-    ...directives,
-    InputPasswordComponent,
-    EnManComponent,
-    TableWrapperComponent,
-  ],
+  declarations: [...components, ...directives],
   imports: [ReactiveFormsModule, CommonModule, UiModule, ...pipes],
   exports: [CommonModule, ...components, ...directives, ...pipes],
   providers: [...services],

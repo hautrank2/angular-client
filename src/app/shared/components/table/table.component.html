@@ -31,6 +31,10 @@
       [dataSource]="dataSource"
       [ngClass]="{ 'disable-row': disableRow }"
       formArrayName="rows"
+      matSort
+      (matSortChange)="sort($event)"
+      [matSortActive]="sortData?.active || ''"
+      [matSortDirection]="sortData?.direction || ''"
     >
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">

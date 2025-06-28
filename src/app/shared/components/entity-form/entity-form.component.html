@@ -1,0 +1,22 @@
+<p>entity-form works!</p>
+<h2 mat-dialog-title>{{ data.title || "Team form" }}</h2>
+<mat-dialog-content>
+  <app-form
+    [formGroup]="form"
+    [fields]="data.formFields"
+    [hideFooter]="true"
+    [isJsonForm]="true"
+  ></app-form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="submit()"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

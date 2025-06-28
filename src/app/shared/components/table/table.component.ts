@@ -19,6 +19,7 @@ import { ShColumn, ShPagination } from './table.types';
 import { ScrollDirective } from '../../directives/scroll.directive';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'sh-table',
@@ -86,6 +87,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Output() onScrollBottom = new EventEmitter<number>();
   @Output() onScrollTop = new EventEmitter<number>();
   @ViewChild('scrollDir') scrollDir!: ScrollDirective;
+
+  //Sort
+  @Input() sortData: Sort | undefined;
+  @Output() onSort = new EventEmitter<Sort>();
 
   constructor(
     private elRef: ElementRef,
@@ -301,6 +306,12 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     if (element) {
       this.renderer.setProperty(element, 'scrollTop', 40);
     }
+  }
+  //#endregion
+
+  //#region Sort
+  sort(sort: Sort) {
+    this.onSort.emit(sort);
   }
   //#endregion
 
