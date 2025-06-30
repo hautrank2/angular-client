@@ -1,22 +1,24 @@
 import { Component } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
 import { SharedModule } from '~/app/shared/shared.module';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
-import { FormService } from '~/app/shared/services/form.service';
+import { ShEntityFilter } from '~/app/shared/components/entity-manager/entity-manager.types';
 
 @Component({
   selector: 'app-admin-teams',
-  imports: [MatTableModule, SharedModule, UiModule],
+  imports: [SharedModule, UiModule],
+  providers: [TeamService],
   templateUrl: './admin-teams.component.html',
   styleUrl: './admin-teams.component.scss',
 })
 export class AdminTeamsComponent {
-  constructor(
-    public teamSrv: TeamService,
-    public formSrv: FormService,
-  ) {}
+  constructor(public teamSrv: TeamService) {}
+
+  findTeams(filters: ShEntityFilter) {
+    console.log(this.teamSrv);
+    return this.teamSrv.find(filters);
+  }
 
   readonly tbColumns: ShColumn[] = [
     {

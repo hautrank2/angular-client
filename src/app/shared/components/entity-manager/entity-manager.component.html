@@ -43,8 +43,8 @@
     (changeSelect)="changeSelect($event)"
     [defaultSelects]="selects.selected"
     [pagination]="{
-      page: filter.page,
-      pageSize: filter.pageSize,
+      page: filter().page,
+      pageSize: filter().pageSize,
       total: data().total,
     }"
     (changePagination)="changePagination($event)"

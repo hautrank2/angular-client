@@ -80,7 +80,12 @@ export interface ShTimeColumn extends ShBaseColumn {
   type: 'time';
 }
 
-// 12. Actions column (multiple actions)
+// 12. Avatar column (multiple actions)
+export interface ShImgColumn extends ShBaseColumn {
+  type: 'img';
+}
+
+// 13. Actions column (multiple actions)
 export interface ShActionColumn extends ShBaseColumn {
   type: 'actions';
   actionType?: 'menu' | 'list';
@@ -101,6 +106,7 @@ export type ShColumn =
   | ShRadioColumn
   | ShCustomColumn
   | ShTimeColumn
+  | ShImgColumn
   | ShActionColumn;
 
 export interface ShOption {

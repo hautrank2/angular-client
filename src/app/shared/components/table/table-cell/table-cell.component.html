@@ -27,7 +27,7 @@
     @case ("status") {
       <div
         *ngIf="getFormControl(rowIndex, column.key).value && column.getConfig"
-        class="flex items-center space-x-0-5"
+        class="table-cell-status flex items-center space-x-0-5"
       >
         <mat-icon
           class="cell-status-icon md-30"
@@ -56,7 +56,7 @@
       {{ getFormControl(rowIndex, column.key).value | shFormatTime }}
     }
     @case ("iconText") {
-      <div class="flex items-center space-x-0-5">
+      <div class="table-cell-iconText flex items-center space-x-0-5">
         <mat-icon
           *ngIf="column.icon"
           class="md-30"
@@ -75,7 +75,7 @@
     @case ("statusList") {
       <mat-chip-listbox
         aria-label="Status List"
-        class="status-list"
+        class="status-list table-cell-statusList"
         [formArrayName]="column.key"
       >
         <mat-chip
@@ -114,7 +114,7 @@
       <mat-form-field
         *ngIf="getFormControl(rowIndex, column.key).value"
         appearance="outline"
-        class="no-subscript text sm"
+        class="table-cell-select no-subscript text sm"
         (click)="$event.stopPropagation()"
         style="font-size: 14px"
       >
@@ -136,6 +136,7 @@
     }
     @case ("toggle") {
       <mat-slide-toggle
+        class="table-cell-slide"
         color="primary"
         (click)="$event.stopPropagation()"
         [checked]="getFormControl(rowIndex, column.key).value"
@@ -149,6 +150,7 @@
     }
     @case ("radio") {
       <mat-radio-button
+        class="table-cell-radio"
         (click)="$event.stopPropagation()"
         (change)="
           column.onChange && column.onChange($event.value, row, rowIndex)
@@ -160,6 +162,15 @@
         *ngFor="let key of objectKeys(column.props)"
         [attr.[key]]="column.props && column.props[key]"
       ></mat-radio-button>
+    }
+    @case ("img") {
+      <img
+        shImg
+        class="table-cell-img"
+        width="40"
+        height="40"
+        [shImgSrc]="getFormControl(rowIndex, column.key).value"
+      />
     }
     @case ("actions") {
       @if (column.actionType === "menu") {

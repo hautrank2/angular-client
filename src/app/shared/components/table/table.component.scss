@@ -3,10 +3,22 @@
 }
 
 .table-wrapper {
+  overflow: auto;
+  position: relative;
+
   &.table-height-fixed {
     .pagination {
       position: sticky;
       bottom: 0;
     }
+  }
+
+  .table-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 101;
   }
 }

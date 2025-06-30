@@ -2,19 +2,19 @@ import { Directive, ElementRef, Input } from '@angular/core';
 import { environment } from '~/environments/environment';
 
 @Directive({
-  selector: '[appImg]',
+  selector: '[shImg]',
   standalone: false,
 })
 export class ImgDirective {
-  @Input() appImgSrc = '';
+  @Input() shImgSrc = '';
 
   private prefix = environment.assetPrefix;
 
   constructor(private el: ElementRef<HTMLImageElement>) {}
 
   ngOnChanges() {
-    this.el.nativeElement.src = this.appImgSrc
-      ? this.prefix + this.appImgSrc
+    this.el.nativeElement.src = this.shImgSrc
+      ? this.prefix + this.shImgSrc
       : '';
   }
 }

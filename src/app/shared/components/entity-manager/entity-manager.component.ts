@@ -26,7 +26,15 @@ import {
   ShEntityResponse,
 } from './entity-manager.types';
 import { EntityFormComponent } from '../entity-form/entity-form.component';
-import { catchError, concat, finalize, Observable, of, tap } from 'rxjs';
+import {
+  catchError,
+  concat,
+  finalize,
+  Observable,
+  of,
+  single,
+  tap,
+} from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KEY_NAME } from '../../constants/common';
 
@@ -62,7 +70,8 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   layout: 'grid' | 'table' = 'table';
   data = signal<ShEntityResponse<T>>(API_REPONSE_BASE);
   dataSource: T[] = [];
-  filter: ShEntityFilter = { pageSize: 10, page: 1, isMembers: true };
+  filter = signal<ShEntityFilter>({ pageSize: 10, page: 1 });
+  loading = signal<boolean>(false);
   form = new FormGroup({});
   selects = new SelectionModel<T>(true, []);
   private snackBar = inject(MatSnackBar);
@@ -72,8 +81,10 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     this.form.valueChanges.subscribe((res) => {
       console.log('change form', res);
     });
+
     effect(() => {
       this.dataSource = this.data().items;
+      this.selects.clear();
     });
   }
 
@@ -128,16 +139,23 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   ngOnChanges(changes: SimpleChanges): void {}
 
   private fetchData() {
-    this.findEntities(this.filter).subscribe((res) => {
+    this.findEntities(this.filter()).subscribe((res) => {
       this.data.set(res);
+      if (res.items.length === 0) {
+        const maxPage = Math.ceil(res.total / this.filter().pageSize);
+        if (maxPage > 0 && this.filter().page > maxPage) {
+          this.filter().page = maxPage;
+          this.fetchData();
+        }
+      }
     });
   }
 
   changePagination(pagination: ShPaginationEmit) {
-    this.filter = {
-      ...this.filter,
+    this.filter.update((e) => ({
+      ...e,
       ...pagination,
-    };
+    }));
     this.fetchData();
   }
 
@@ -167,7 +185,10 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       .subscribe((result) => {
         if (result?.success) {
           this.fetchData();
-          this.snackBar.open(`${isEdit ? 'Edit' : 'Add'} successfully`);
+          this.snackBar.open(
+            `${isEdit ? 'Edit' : 'Add'} successfully`,
+            'Close',
+          );
         }
       });
   }
@@ -184,7 +205,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     const successItems: any[] = [];
     const failItems: any[] = [];
     const deleteObservables = this.selects.selected.map((item) =>
-      this.deleteEntity(item).pipe(
+      this.deleteEntity(item[this.keyName]).pipe(
         tap((e) => {
           successItems.push(e[this.keyName]);
         }),
@@ -195,19 +216,27 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       ),
     );
 
-    concat(...deleteObservables).pipe(
-      finalize(() => {
-        if (successItems.length > 0) {
-          this.snackBar.open(`Delete successfully: ${successItems.join(', ')}`);
-        }
-        if (failItems.length > 0) {
-          this.snackBar.open(`Delete failed: ${failItems.join(', ')}`);
-        }
+    concat(...deleteObservables)
+      .pipe(
+        finalize(() => {
+          if (successItems.length > 0) {
+            this.snackBar.open(
+              `Delete successfully: ${successItems.join(', ')}`,
+              'Close',
+            );
+          }
+          if (failItems.length > 0) {
+            this.snackBar.open(
+              `Delete failed: ${failItems.join(', ')}`,
+              'Close',
+            );
+          }
 
-        this.fetchData();
-        this.selects.clear();
-      }),
-    );
+          this.fetchData();
+          this.selects.clear();
+        }),
+      )
+      .subscribe();
   }
 
   //#region Selects

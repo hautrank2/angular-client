@@ -1,9 +1,10 @@
 <div
   [ngClass]="[
-    'table-wrapper relative overflow-x-auto',
+    'table-wrapper',
     isFixedHeight ? 'table-height-fixed' : '',
     !!headerSticky ? 'table-header-sticky' : '',
   ]"
+  [class.table-wrapper-loading]="isLoading"
   [ngStyle]="{
     'height.px': height,
     height: height,
@@ -15,14 +16,10 @@
   (shScrollCurrent)="onScroll($event)"
   [style]="tableStyle"
 >
-  <div
-    *ngIf="isLoading"
-    class="table-loading-wrapper absolute bg-overlay flex items-center flex-col w-full h-full"
-    [ngStyle]="{ zIndex: 101 }"
-  >
-    <div class="m-auto text-center loading">
-      <mat-spinner [diameter]="80"></mat-spinner>
-      <h5 class="loading-text">Loading...</h5>
+  <div *ngIf="isLoading" class="table-loading">
+    <div class="table-loading-wrapper">
+      <mat-spinner class="table-loading-spin" [diameter]="80"></mat-spinner>
+      <h5 class="table-loading-text">Loading...</h5>
     </div>
   </div>
   <form [formGroup]="formGroup">

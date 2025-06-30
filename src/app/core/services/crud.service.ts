@@ -51,9 +51,9 @@ export class CrudService<T> {
     this.apiEndpoint = environment.apiUrl + apiTag;
   }
 
-  find(query: ApiPaginationQuery): Observable<PaginationResponse<T>> {
+  find(params: ApiPaginationQuery): Observable<PaginationResponse<T>> {
     return this.http.get<PaginationResponse<T>>(this.apiEndpoint, {
-      params: query,
+      params,
     });
   }
 
