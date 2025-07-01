@@ -85,6 +85,11 @@ export interface ShImgColumn extends ShBaseColumn {
   type: 'img';
 }
 
+// 13. Chips column (multiple actions)
+export interface ShChipColumn extends ShBaseColumn {
+  type: 'chips';
+}
+
 // 13. Actions column (multiple actions)
 export interface ShActionColumn extends ShBaseColumn {
   type: 'actions';
@@ -107,6 +112,7 @@ export type ShColumn =
   | ShCustomColumn
   | ShTimeColumn
   | ShImgColumn
+  | ShChipColumn
   | ShActionColumn;
 
 export interface ShOption {

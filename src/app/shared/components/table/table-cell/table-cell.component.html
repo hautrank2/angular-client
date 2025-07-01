@@ -172,6 +172,20 @@
         [shImgSrc]="getFormControl(rowIndex, column.key).value"
       />
     }
+    @case ("chips") {
+      <mat-chip-listbox
+        aria-label="Status List"
+        class="status-list table-cell-statusList"
+        [formArrayName]="column.key"
+      >
+        <mat-chip
+          class="status-item chip-prefix outlined"
+          *ngFor="let item of getFormControl(rowIndex, column.key).value"
+        >
+          {{ item }}
+        </mat-chip>
+      </mat-chip-listbox>
+    }
     @case ("actions") {
       @if (column.actionType === "menu") {
         <button mat-icon-button [matMenuTriggerFor]="menuBtn">

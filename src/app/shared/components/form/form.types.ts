@@ -87,8 +87,12 @@ export interface ShGroupFormField extends ShBaseFormField {
   fields: ShFormField[];
 }
 
-export interface ShArrayFormField extends ShBaseFormField {
+export interface ShArrayFormField extends ShBaseFormField, ShGridConfig {
   type: 'array';
+}
+
+export interface ShGroupArrayFormField extends ShBaseFormField {
+  type: 'groupArray';
   arrayFields: ShFormField[];
   config?: ShGridConfig;
 }
@@ -106,7 +110,8 @@ export type ShFormFieldType =
   | 'select'
   | 'radio'
   | 'group'
-  | 'array';
+  | 'array'
+  | 'groupArray';
 
 // ─────────────────────────────────────────────
 // 🔗 Union Type for All FormField Variants
@@ -120,4 +125,5 @@ export type ShFormField =
   | ShAutocompleteFormField
   | ShGroupFormField
   | ShArrayFormField
+  | ShGroupArrayFormField
   | ShCustomFormField;

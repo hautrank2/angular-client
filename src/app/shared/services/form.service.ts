@@ -25,7 +25,7 @@ export class FormService {
       if (field.type === 'group') {
         group[field.key] = this.buildForm(field.fields || []);
       } else if (
-        (field.type === 'array' && field.arrayFields) ||
+        (field.type === 'groupArray' && field.arrayFields) ||
         field.type === 'autocomplete'
       ) {
         group[field.key] = this.fb.array([]);
@@ -120,7 +120,7 @@ export class FormService {
     const formFields: ShFormField[] = [
       {
         key: 'rows',
-        type: 'array',
+        type: 'groupArray',
         arrayFields: this.convertTableColsToFormField(columns),
       },
     ];
@@ -187,6 +187,11 @@ export class FormService {
           type: 'text',
         };
 
+      case 'chips':
+        return {
+          ...baseField,
+          type: 'array',
+        };
       default:
         throw new Error(`Unsupported column type: ${(column as any).type}`);
     }

@@ -20,15 +20,24 @@ export class AdminMembersComponent {
       type: 'img',
     },
     {
-      key: 'description',
-      label: 'Description',
+      key: 'name',
+      label: 'Name',
       type: 'text',
     },
     {
-      key: 'members',
-      label: 'Members',
+      key: 'nickname',
+      label: 'Nickname',
       type: 'text',
-      formatter: (value) => value.length,
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      type: 'text',
+    },
+    {
+      key: 'roles',
+      label: 'Roles',
+      type: 'chips',
     },
   ];
 }
