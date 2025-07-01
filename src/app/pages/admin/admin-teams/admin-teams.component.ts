@@ -13,11 +13,11 @@ import { ShEntityFilter } from '~/app/shared/components/entity-manager/entity-ma
   styleUrl: './admin-teams.component.scss',
 })
 export class AdminTeamsComponent {
-  constructor(public teamSrv: TeamService) {}
+  constructor(public teamSrv: TeamService) {
+  }
 
-  findTeams(filters: ShEntityFilter) {
-    console.log(this.teamSrv);
-    return this.teamSrv.find(filters);
+  findTeams = (filters: ShEntityFilter) => {
+    return this.teamSrv.find({...filters, isMembers: true})
   }
 
   readonly tbColumns: ShColumn[] = [
