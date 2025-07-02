@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormArray } from '@angular/forms';
 import { ShFormField, ShFormOptions } from './form.types';
 import { FormService } from '../../services/form.service';
@@ -8,6 +8,7 @@ import { FormService } from '../../services/form.service';
   standalone: false,
   templateUrl: './form.component.html',
   styleUrl: './form.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class FormWrapperComponent {
   @Input() fields: ShFormField[] = [];

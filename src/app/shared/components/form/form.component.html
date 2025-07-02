@@ -20,7 +20,7 @@
   </div>
   <div [ngClass]="[!isJsonMode ? '' : 'invisible h-0 w-0 overflow-hidden']">
     @if (formOptions.isGrid) {
-      <mat-grid-list cols="12" gutterSize="16px" class="w-full h-auto">
+      <mat-grid-list cols="12" rowHeight="72px" gutterSize="16px" class="w-full h-auto">
         @for (field of fields; track $index) {
           <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
             <ng-container
@@ -50,7 +50,9 @@
         [appAttr]="fieldAttrs"
         class="form-field-array"
       >
-        <label class="form-field-array">{{ field.label }}</label>
+        <label appTypography="body-lg" class="form-field-array">{{
+          field.label
+        }}</label>
         @if (getFormArray(field.key).controls.length > 0) {
           <mat-grid-list
             [cols]="field.arrayConfig?.cols ?? 1"

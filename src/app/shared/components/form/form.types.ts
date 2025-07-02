@@ -49,7 +49,7 @@ export interface ShBaseFormField {
   col?: number;
   row?: number;
   hidden?: boolean;
-  
+
   isArray?: boolean;
   arrayConfig?: ShGridConfig;
 }
@@ -94,6 +94,7 @@ export interface ShGroupArrayFormField extends ShBaseFormField {
   type: 'groupArray';
   arrayFields: ShFormField[];
   config?: ShGridConfig;
+  formOptions?: ShFormOptions;
 }
 
 export interface ShCustomFormField extends ShBaseFormField {

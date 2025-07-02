@@ -1,16 +1,24 @@
 import { Component, Input } from '@angular/core';
 import { ShFormField, ShFormOptions } from '../form/form.types';
-import { FormArray, FormGroup } from '@angular/forms';
+import {
+  ControlContainer,
+  FormArray,
+  FormGroup,
+  FormGroupDirective,
+} from '@angular/forms';
 import { FormService } from '../../services/form.service';
 
 @Component({
   selector: 'sh-form-field',
   standalone: false,
   templateUrl: './form-field.component.html',
-  styleUrl: './form-field.component.scss'
+  styleUrl: './form-field.component.scss',
+  viewProviders: [
+    { provide: ControlContainer, useExisting: FormGroupDirective },
+  ],
 })
 export class FormFieldComponent {
-  @Input({required: true}) field!: ShFormField;
+  @Input({ required: true }) field!: ShFormField;
   @Input() formGroup!: FormGroup;
   @Input() formOptions: ShFormOptions = {
     appearance: 'outline',
@@ -18,7 +26,7 @@ export class FormFieldComponent {
     fieldAttrs: {},
   };
 
-  constructor(private formSrv: FormService){}
+  constructor(private formSrv: FormService) {}
 
   get appearance() {
     return this.formOptions.appearance || 'fill';
@@ -37,9 +45,12 @@ export class FormFieldComponent {
   }
 
   addArrayItem(field: ShFormField) {
+    console.log(field);
     if (field.type === 'groupArray') {
       const array = this.getFormArray(field.key);
+      console.log(array);
       const newGroup = this.formSrv.buildForm(field.arrayFields);
+      console.log(newGroup);
       array.push(newGroup);
     }
   }
@@ -50,6 +61,6 @@ export class FormFieldComponent {
   }
 
   toString(number: number) {
-    return String(number).toString()
+    return String(number).toString();
   }
 }
