@@ -162,7 +162,7 @@ export class TeamsComponent {
     {
       key: 'contacts',
       label: 'Emergency Contacts',
-      type: 'array',
+      type: 'groupArray',
       config: {
         itemLabel: 'Contact',
         cols: 3,

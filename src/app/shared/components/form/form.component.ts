@@ -69,7 +69,7 @@ export class FormWrapperComponent {
   }
 
   addArrayItem(field: ShFormField) {
-    if (field.type === 'array') {
+    if (field.type === 'groupArray') {
       const array = this.getFormArray(field.key);
       const newGroup = this.formSrv.buildForm(field.arrayFields);
       array.push(newGroup);

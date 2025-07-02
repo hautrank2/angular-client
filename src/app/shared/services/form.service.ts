@@ -6,7 +6,11 @@ import {
   FormControl,
   FormBuilder,
 } from '@angular/forms';
-import { ShFormField, ShFormOption } from '../components/form/form.types';
+import {
+  ShFormField,
+  ShFormOption,
+  ShGroupFormField,
+} from '../components/form/form.types';
 import {
   ShColumn,
   ShRadioColumn,
@@ -22,18 +26,25 @@ export class FormService {
   buildForm(fields: ShFormField[]): FormGroup {
     const group: any = {};
     for (const field of fields) {
-      if (field.type === 'group') {
-        group[field.key] = this.buildForm(field.fields || []);
-      } else if (
-        (field.type === 'groupArray' && field.arrayFields) ||
-        field.type === 'autocomplete'
-      ) {
+      if (field.isArray) {
         group[field.key] = this.fb.array([]);
       } else {
-        group[field.key] = new FormControl(
-          field.value || '',
-          field.validators || [],
-        );
+        switch (field.type) {
+          case 'group':
+            group[field.key] = this.buildForm(
+              (field as ShGroupFormField).fields || [],
+            );
+            break;
+          case 'groupArray':
+            group[field.key] = this.fb.array([]);
+            break;
+
+          default:
+            group[field.key] = new FormControl(
+              field.value ?? '',
+              field.validators || [],
+            );
+        }
       }
     }
     return this.fb.group(group);
@@ -124,6 +135,7 @@ export class FormService {
         arrayFields: this.convertTableColsToFormField(columns),
       },
     ];
+    console.log(formFields);
     return this.buildForm(formFields);
   }
 
@@ -190,7 +202,8 @@ export class FormService {
       case 'chips':
         return {
           ...baseField,
-          type: 'array',
+          type: 'text',
+          isArray: true,
         };
       default:
         throw new Error(`Unsupported column type: ${(column as any).type}`);

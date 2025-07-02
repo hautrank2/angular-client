@@ -21,6 +21,7 @@ import { ScrollDirective } from './directives/scroll.directive';
 import { TableWrapperComponent } from './components/table-wrapper/table-wrapper.component';
 import { EntityFormComponent } from './components/entity-form/entity-form.component';
 import { EntityManagerComponent } from './components/entity-manager/entity-manager.component';
+import { FormFieldComponent } from './components/form-field/form-field.component';
 
 const services = [FormService];
 const components = [
@@ -46,7 +47,7 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [...components, ...directives],
+  declarations: [...components, ...directives, FormFieldComponent],
   imports: [ReactiveFormsModule, CommonModule, UiModule, ...pipes],
   exports: [CommonModule, ...components, ...directives, ...pipes],
   providers: [...services],

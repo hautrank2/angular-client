@@ -49,6 +49,9 @@ export interface ShBaseFormField {
   col?: number;
   row?: number;
   hidden?: boolean;
+  
+  isArray?: boolean;
+  arrayConfig?: ShGridConfig;
 }
 
 // ─────────────────────────────────────────────
@@ -87,10 +90,6 @@ export interface ShGroupFormField extends ShBaseFormField {
   fields: ShFormField[];
 }
 
-export interface ShArrayFormField extends ShBaseFormField, ShGridConfig {
-  type: 'array';
-}
-
 export interface ShGroupArrayFormField extends ShBaseFormField {
   type: 'groupArray';
   arrayFields: ShFormField[];
@@ -110,7 +109,6 @@ export type ShFormFieldType =
   | 'select'
   | 'radio'
   | 'group'
-  | 'array'
   | 'groupArray';
 
 // ─────────────────────────────────────────────
@@ -124,6 +122,5 @@ export type ShFormField =
   | ShCheckboxFormField
   | ShAutocompleteFormField
   | ShGroupFormField
-  | ShArrayFormField
   | ShGroupArrayFormField
   | ShCustomFormField;
