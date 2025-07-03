@@ -20,7 +20,12 @@
   </div>
   <div [ngClass]="[!isJsonMode ? '' : 'invisible h-0 w-0 overflow-hidden']">
     @if (formOptions.isGrid) {
-      <mat-grid-list cols="12" rowHeight="72px" gutterSize="16px" class="w-full h-auto">
+      <mat-grid-list
+        cols="12"
+        rowHeight="76px"
+        gutterSize="16px"
+        class="w-full h-auto"
+      >
         @for (field of fields; track $index) {
           <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
             <ng-container
@@ -102,6 +107,7 @@
       </div>
     } @else {
       <sh-form-field
+        class="form-field-wrapper"
         [field]="field"
         [formGroup]="formGroup"
         [formOptions]="formOptions"

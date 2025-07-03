@@ -66,7 +66,7 @@ export class TeamMemberService extends CrudService<TeamMember> {
         col: 1,
         row: 1,
         gutter: 8,
-        rowHeight: 244,
+        rowHeight: 158,
       },
       formOptions: {
         isGrid: true,
