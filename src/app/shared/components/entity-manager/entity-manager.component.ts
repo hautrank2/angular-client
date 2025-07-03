@@ -26,15 +26,7 @@ import {
   ShEntityResponse,
 } from './entity-manager.types';
 import { EntityFormComponent } from '../entity-form/entity-form.component';
-import {
-  catchError,
-  concat,
-  finalize,
-  Observable,
-  of,
-  single,
-  tap,
-} from 'rxjs';
+import { catchError, concat, finalize, Observable, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KEY_NAME } from '../../constants/common';
 
@@ -78,7 +70,6 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
 
   constructor(private formSrv: FormService) {
     this.form = this.formSrv.buildTableForm(this.tbColumns);
-    console.log('table form', this.form);
     this.form.valueChanges.subscribe((res) => {
       console.log('change form', res);
     });

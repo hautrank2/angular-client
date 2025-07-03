@@ -9,6 +9,7 @@ import {
 import {
   ShFormField,
   ShFormOption,
+  ShGroupArrayFormField,
   ShGroupFormField,
 } from '../components/form/form.types';
 import {
@@ -23,6 +24,7 @@ import {
 export class FormService {
   constructor(private fb: FormBuilder) {}
 
+  //#region Build form
   buildForm(fields: ShFormField[]): FormGroup {
     const group: any = {};
     for (const field of fields) {
@@ -125,6 +127,84 @@ export class FormService {
 
     return formData;
   }
+  //#endregion
+
+  //#region change value form
+  patchForm(
+    form: FormGroup,
+    values: Record<string, any>,
+    fields: ShFormField[],
+  ) {
+    fields.forEach((field) => {
+      this.patchFormValue(form, values, field);
+    });
+  }
+
+  patchFormValue(
+    form: FormGroup,
+    values: Record<string, any>,
+    field: ShFormField,
+  ) {
+    if (field.isArray) {
+      this.patchFormArray(form, values[field.key], field);
+    } else {
+      switch (field.type) {
+        case 'group':
+          this.patchForm(form, values[field.key], field.fields);
+          break;
+        case 'groupArray':
+          this.patchFormGroupArray(form, values[field.key], field);
+          break;
+        default:
+          this.appendValueToForm(form, values[field.key], field);
+      }
+    }
+  }
+
+  patchFormArray(form: FormGroup, values: any[], field: ShFormField) {
+    const formArray = form.get(field.key) as FormArray;
+    if (Array.isArray(values)) {
+      values.forEach((value) => {
+        formArray.push(new FormControl(value, field.validators));
+      });
+    }
+  }
+
+  patchFormGroupArray(
+    form: FormGroup,
+    values: Record<string, any>[],
+    field: ShGroupArrayFormField,
+  ) {
+    const formArray = form.get(field.key) as FormArray;
+    if (Array.isArray(values)) {
+      values.forEach((value) => {
+        const formGroup = this.buildForm(field.arrayFields);
+        formGroup.patchValue(value);
+        formArray.push(formGroup);
+      });
+    }
+  }
+
+  appendValueToForm(form: FormGroup, value: any, field: ShFormField) {
+    const control = form.get(field.key) as FormControl;
+    if (!control) {
+      console.error('Form dont have control name is ', field.key);
+    }
+    switch (field.type) {
+      case 'number':
+        if (typeof value === 'number') {
+          control.setValue(value);
+        } else {
+          console.error(`Value is not a number with key: ${field.key}`);
+        }
+        break;
+      default:
+        control.setValue(value);
+        break;
+    }
+  }
+
+  //#endregion
 
   //#region Table form
   buildTableForm(columns: ShColumn[]): FormGroup {

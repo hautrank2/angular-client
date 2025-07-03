@@ -41,7 +41,11 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   ngOnInit(): void {
     this.form = this.formSrv.buildForm(this.data.formFields);
     if (this.data.defaultValues) {
-      this.form.patchValue(this.data.defaultValues);
+      this.formSrv.patchForm(
+        this.form,
+        this.data.defaultValues,
+        this.data.formFields,
+      );
     }
   }
 

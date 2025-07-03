@@ -30,11 +30,28 @@ export class TeamMemberService extends CrudService<TeamMember> {
       validators: [Validators.required, Validators.email],
     },
     {
+      key: 'birthday',
+      label: 'Birthday',
+      type: 'date',
+      validators: [Validators.required],
+    },
+    {
       key: 'roles',
       label: 'Roles',
       type: 'text',
       isArray: true,
-      validators: [],
+      arrayConfig: {
+        cols: 2,
+      },
+    },
+    {
+      key: 'hobbies',
+      label: 'Hobbies',
+      type: 'text',
+      isArray: true,
+      arrayConfig: {
+        cols: 2,
+      },
     },
     {
       key: 'socials',

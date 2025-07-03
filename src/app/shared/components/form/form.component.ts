@@ -1,5 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { ShFormField, ShFormOptions } from './form.types';
 import { FormService } from '../../services/form.service';
 
@@ -25,6 +25,7 @@ export class FormWrapperComponent {
   constructor(public formSrv: FormService) {}
 
   ngOnInit() {
+    console.log(this.formGroup.getRawValue());
     if (!this.formGroup) {
       this.formGroup = this.formSrv.buildForm(this.fields);
       this.formGroup.valueChanges.subscribe((res) => {
@@ -70,10 +71,9 @@ export class FormWrapperComponent {
   }
 
   addArrayItem(field: ShFormField) {
-    if (field.type === 'groupArray') {
+    if (field.isArray) {
       const array = this.getFormArray(field.key);
-      const newGroup = this.formSrv.buildForm(field.arrayFields);
-      array.push(newGroup);
+      array.push(new FormControl('', field.validators));
     }
   }
 

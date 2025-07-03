@@ -55,14 +55,16 @@
         [appAttr]="fieldAttrs"
         class="form-field-array"
       >
-        <label appTypography="body-lg" class="form-field-array">{{
+        <label appTypography="body-lg" extraClass="form-field-array-label">{{
           field.label
         }}</label>
+
         @if (getFormArray(field.key).controls.length > 0) {
           <mat-grid-list
             [cols]="field.arrayConfig?.cols ?? 1"
             [gutterSize]="field.arrayConfig?.gutter ?? 8"
-            [rowHeight]="field.arrayConfig?.rowHeight ?? 'fit'"
+            [rowHeight]="field.arrayConfig?.rowHeight ?? '82px'"
+            class="form-field-array-list"
           >
             @for (
               ctrl of getFormArray(field.key).controls;
@@ -72,38 +74,33 @@
               <mat-grid-tile
                 [colspan]="field.arrayConfig?.col ?? 1"
                 [rowspan]="field.arrayConfig?.row ?? 1"
+                class="form-field-array-item"
               >
-                <mat-card
-                  appearance="outlined"
-                  [formGroupName]="i"
-                  class="min-h-fit w-full"
+                <sh-form-field
+                  class="form-field-array-input"
+                  [field]="field"
+                  [formGroup]="formGroup"
+                  [formOptions]="formOptions"
+                ></sh-form-field>
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeArrayItem(field.key, i)"
                 >
-                  <mat-card-header
-                    class="flex justify-between items-center mb-2"
-                  >
-                    <p mat-card-title appTypography="label-md">
-                      {{ field.config?.itemLabel ?? "Item" }} {{ i + 1 }}
-                    </p>
-                    <button
-                      mat-icon-button
-                      type="button"
-                      (click)="removeArrayItem(field.key, i)"
-                    >
-                      <mat-icon>close</mat-icon>
-                    </button>
-                  </mat-card-header>
-                  <mat-card-content>
-                    <sh-form-field
-                      [field]="field"
-                      [formGroup]="formGroup"
-                      [formOptions]="formOptions"
-                    ></sh-form-field>
-                  </mat-card-content>
-                </mat-card>
+                  <mat-icon>close</mat-icon>
+                </button>
               </mat-grid-tile>
             }
           </mat-grid-list>
         }
+        <button
+          class="form-field-array-add mt-2"
+          type="button"
+          mat-stroked-button
+          (click)="addArrayItem(field)"
+        >
+          <mat-icon>add</mat-icon> Add
+        </button>
       </div>
     } @else {
       <sh-form-field
