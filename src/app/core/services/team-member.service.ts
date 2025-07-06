@@ -109,4 +109,8 @@ export class TeamMemberService extends CrudService<TeamMember> {
       },
     ];
   }
+
+  get updateFormFields(): ShFormField[] {
+    return this.formFields.filter((e) => e.key !== 'image');
+  }
 }

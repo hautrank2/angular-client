@@ -1,6 +1,8 @@
 <sh-entity-manager
   entityName="team"
   [formFields]="teamMemberSrv.formFields"
+  [postFormFields]="teamMemberSrv.formFields"
+  [putFormFields]="teamMemberSrv.updateFormFields"
   [tbColumns]="tbColumns"
   [findEntities]="teamMemberSrv.find.bind(teamMemberSrv)"
   [putEntity]="teamMemberSrv.update.bind(teamMemberSrv)"

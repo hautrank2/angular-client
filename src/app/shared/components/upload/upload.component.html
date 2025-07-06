@@ -23,7 +23,7 @@
     @for (file of fileUrls(); track $index; let index = $index) {
       <sh-image
         [src]="file"
-        srcPrefix="false"
+        [prefix]="false"
         [alt]="'form-field-upload-' + index"
         [imgClass]="'upload-previews-item'"
       ></sh-image>

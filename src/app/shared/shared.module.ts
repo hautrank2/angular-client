@@ -25,7 +25,6 @@ import { FormFieldComponent } from './components/form-field/form-field.component
 import { UploadComponent } from './components/upload/upload.component';
 import { UploadService } from './services/upload.service';
 import { ImageComponent } from './components/image/image.component';
-import { ImagePreviewComponent } from './components/image/image-preview/image-preview.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 const services = [FormService, UploadService];
@@ -58,7 +57,6 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     FormFieldComponent,
     UploadComponent,
     ImageComponent,
-    ImagePreviewComponent,
   ],
   imports: [
     ReactiveFormsModule,

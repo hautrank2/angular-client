@@ -6,6 +6,7 @@ import {
   OnInit,
   signal,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ShUploadFormField } from '../form/form.types';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -17,6 +18,7 @@ import { Subscription } from 'rxjs';
   standalone: false,
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit, OnDestroy {
   @Input() formGroup!: FormGroup;
@@ -26,9 +28,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   private sub = new Subscription();
   fileUrls = signal<string[]>([]);
 
-  constructor(private formSrv: FormService) {
-    console.log(this.field, this.control);
-  }
+  constructor(private formSrv: FormService) {}
 
   ngOnInit(): void {
     if (this.control) {
@@ -97,7 +97,7 @@ export class UploadComponent implements OnInit, OnDestroy {
     }
     const files: File[] = Array.from(fileList);
     if (this.multiple) {
-      this.control.setValue(files);
+      this.control.setValue([...this.files, ...files]);
     } else {
       this.control.setValue(files[0]);
     }

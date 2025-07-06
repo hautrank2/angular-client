@@ -59,14 +59,18 @@ export class ImageComponent {
   ) {}
 
   ngAfterViewInit(): void {
-    const wrapper = this.el.nativeElement.querySelector('.sh-img-wrapper');
-    const overlay = this.el.nativeElement.querySelector('.sh-img-overlay');
-    this.renderer.listen(wrapper, 'mouseenter', () => {
-      this.renderer.setStyle(overlay, 'opacity', '1');
-    });
-    this.renderer.listen(wrapper, 'mouseleave', () => {
-      this.renderer.setStyle(overlay, 'opacity', '0');
-    });
+    const wrapper = this.el.nativeElement.querySelector('.sh-image-wrapper');
+
+    if (wrapper) {
+      this.renderer.listen(wrapper, 'mouseenter', () => {
+        this.hover.set(true);
+      });
+      this.renderer.listen(wrapper, 'mouseleave', () => {
+        this.hover.set(false);
+      });
+    } else {
+      console.warn('sh-img-wrapper not found');
+    }
   }
 
   isPreview() {

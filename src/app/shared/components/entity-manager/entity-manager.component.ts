@@ -57,6 +57,8 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
 
   // Form config
   @Input() formFields!: ShFormField[];
+  @Input() postFormFields!: ShFormField[];
+  @Input() putFormFields!: ShFormField[];
 
   readonly dialog = inject(MatDialog);
   layout: 'grid' | 'table' = 'table';
@@ -120,6 +122,14 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     );
   }
 
+  get _putFormFields(): ShFormField[] {
+    return this.putFormFields || this._formFields;
+  }
+
+  get _postFormFields(): ShFormField[] {
+    return this.postFormFields || this._formFields;
+  }
+
   get displayColumns(): string[] {
     return this.tbColumnsDisplay || this._tbColumns.map((col) => col.key);
   }
@@ -168,7 +178,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
             ? `Edit ${this.entityName}`
             : `Create ${this.entityName}`,
           defaultValues,
-          formFields: this._formFields,
+          formFields: isEdit ? this._putFormFields : this._postFormFields,
           putEntity: this.putEntity,
           postEntity: this.postEntity,
         },
