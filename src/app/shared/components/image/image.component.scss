@@ -1,0 +1,18 @@
+.sh-image-wrapper {
+  position: relative;
+  .sh-img-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &.sh-image-wrapper-hover {
+    .sh-img-overlay {
+      display: flex;
+    }
+  }
+}

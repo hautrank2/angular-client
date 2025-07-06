@@ -1,151 +1,311 @@
-@switch (field.type) {
-  @case ("text") {
-    <mat-form-field
-      style="width: 100%"
-      [appearance]="appearance"
-      [appAttr]="fieldAttrs"
-    >
-      <mat-label>{{ field.label }}</mat-label>
-      <input matInput [type]="field.type" [formControlName]="field.key" />
-    </mat-form-field>
-  }
-  @case ("number") {
-    <mat-form-field
-      style="width: 100%"
-      [appearance]="appearance"
-      [appAttr]="fieldAttrs"
-    >
-      <mat-label>{{ field.label }}</mat-label>
-      <input matInput [type]="field.type" [formControlName]="field.key" />
-    </mat-form-field>
-  }
-  @case ("password") {
-    <app-input-password
-      [field]="field"
-      [formGroup]="formGroup"
-      [formOptions]="formOptions"
-    ></app-input-password>
-  }
-  @case ("select") {
-    <mat-form-field
-      style="width: 100%"
-      [appearance]="appearance"
-      [appAttr]="fieldAttrs"
-    >
-      <mat-label>{{ field.label }}</mat-label>
-      <mat-select [formControlName]="field.key">
-        <mat-option *ngFor="let opt of field.options" [value]="opt.value">
-          {{ opt.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  }
-  @case ("autocomplete") {
-    <app-autocomplete
-      [field]="field"
-      [formGroup]="formGroup"
-      [formOptions]="formOptions"
-    ></app-autocomplete>
-  }
-  @case ("radio") {
-    <div class="form-field" [appAttr]="fieldAttrs">
-      <label>{{ field.label }}</label>
-      <mat-radio-group [formControlName]="field.key">
-        <mat-radio-button *ngFor="let opt of field.options" [value]="opt.value">
-          {{ opt.label }}
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-  }
-  @case ("checkbox") {
-    <div class="form-field" [appAttr]="fieldAttrs">
-      <mat-checkbox [formControlName]="field.key">
-        {{ field.label }}
-      </mat-checkbox>
-    </div>
-  }
-  @case ("date") {
-    <mat-form-field
-      style="width: 100%"
-      [appearance]="appearance"
-      [appAttr]="fieldAttrs"
-    >
-      <mat-label>{{ field.label }}</mat-label>
-      <input matInput [matDatepicker]="picker" [formControlName]="field.key" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  }
-  @case ("groupArray") {
-    <div
-      [formArrayName]="field.key"
-      [appAttr]="fieldAttrs"
-      class="form-field form-field-group-array gap-2"
-    >
-      <label class="form-field-group-array-label" appTypography="body-lg">{{
-        field.label
-      }}</label>
-      @if (getFormArray(field.key).controls.length > 0) {
-        <mat-grid-list
-          [cols]="field.config?.cols ?? 1"
-          [gutterSize]="toString(field.config?.gutter ?? 8)"
-          [rowHeight]="field.config?.rowHeight ?? 'fit'"
-          class="form-field-group-array-grid"
-        >
-          @for (
-            ctrl of getFormArray(field.key).controls;
-            track $index;
-            let i = $index
-          ) {
-            <mat-grid-tile
-              [colspan]="field.config?.col ?? 1"
-              [rowspan]="field.config?.row ?? 1"
-              class="form-field-group-array-tile"
-            >
-              <mat-card
-                appearance="outlined"
-                [formGroupName]="i"
-                class="form-field-group-array-card min-h-fit w-full"
-              >
-                <mat-card-header
-                  class="form-field-group-array-card-header flex justify-between items-center mb-2"
+@if (field.isArray) {
+  <div
+    [formArrayName]="field.key"
+    [appAttr]="fieldAttrs"
+    class="form-field-array"
+  >
+    <label appTypography="body-lg" extraClass="form-field-array-label">{{
+      field.label
+    }}</label>
+
+    @if (getFormArray(field.key).controls.length > 0) {
+      <mat-grid-list
+        [cols]="field.arrayConfig?.cols ?? 1"
+        [gutterSize]="toString(field.arrayConfig?.gutter ?? 8)"
+        [rowHeight]="field.arrayConfig?.rowHeight ?? '82px'"
+        class="form-field-array-list"
+      >
+        @for (
+          ctrl of getFormArray(field.key).controls;
+          track $index;
+          let i = $index
+        ) {
+          <mat-grid-tile
+            [colspan]="field.arrayConfig?.col ?? 1"
+            [rowspan]="field.arrayConfig?.row ?? 1"
+            class="form-field-array-item"
+          >
+            @switch (field.type) {
+              @case ("text") {
+                <mat-form-field
+                  style="width: 100%"
+                  [appearance]="appearance"
+                  [appAttr]="fieldAttrs"
                 >
-                  <p
-                    class="form-field-group-array-card-title"
-                    mat-card-title
-                    appTypography="body-md"
-                  >
-                    {{ field.config?.itemLabel ?? "Item" }} {{ i + 1 }}
-                  </p>
-                  <button
-                    mat-icon-button
-                    type="button"
-                    (click)="removeArrayItem(field.key, i)"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </mat-card-header>
-                <mat-card-content class="form-field-group-array-card-content">
-                  <sh-form
-                    [fields]="field.arrayFields || []"
-                    [formGroup]="getFormArrayGroup(field.key, i)"
-                    [hideFooter]="true"
-                    [formOptions]="field.formOptions || {}"
-                  ></sh-form>
-                </mat-card-content>
-              </mat-card>
-            </mat-grid-tile>
-          }
-        </mat-grid-list>
-      }
-      <div>
-        <button type="button" mat-stroked-button (click)="addArrayItem(field)">
-          <mat-icon>add</mat-icon> Add
-        </button>
-      </div>
-    </div>
-  }
-  @default {
-    <!-- Có thể thêm xử lý mặc định -->
-  }
+                  <mat-label>{{ field.label }}</mat-label>
+                  <input matInput [type]="field.type" [formControlName]="i" />
+                </mat-form-field>
+              }
+              @case ("number") {
+                <mat-form-field
+                  style="width: 100%"
+                  [appearance]="appearance"
+                  [appAttr]="fieldAttrs"
+                >
+                  <mat-label>{{ field.label }}</mat-label>
+                  <input matInput [type]="field.type" [formControlName]="i" />
+                </mat-form-field>
+              }
+              @case ("password") {
+                <app-input-password
+                  [field]="field"
+                  [formGroup]="formGroup"
+                  [formOptions]="formOptions"
+                ></app-input-password>
+              }
+              @case ("select") {
+                <mat-form-field
+                  style="width: 100%"
+                  [appearance]="appearance"
+                  [appAttr]="fieldAttrs"
+                >
+                  <mat-label>{{ field.label }}</mat-label>
+                  <mat-select [formControlName]="i">
+                    <mat-option
+                      *ngFor="let opt of field.options"
+                      [value]="opt.value"
+                    >
+                      {{ opt.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              }
+              @case ("autocomplete") {
+                <app-autocomplete
+                  [field]="field"
+                  [formGroup]="formGroup"
+                  [formOptions]="formOptions"
+                ></app-autocomplete>
+              }
+              @case ("radio") {
+                <div class="form-field" [appAttr]="fieldAttrs">
+                  <label>{{ field.label }}</label>
+                  <mat-radio-group [formControlName]="i">
+                    <mat-radio-button
+                      *ngFor="let opt of field.options"
+                      [value]="opt.value"
+                    >
+                      {{ opt.label }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              }
+              @case ("checkbox") {
+                <div class="form-field" [appAttr]="fieldAttrs">
+                  <mat-checkbox [formControlName]="i">
+                    {{ field.label }}
+                  </mat-checkbox>
+                </div>
+              }
+              @case ("date") {
+                <mat-form-field
+                  style="width: 100%"
+                  [appearance]="appearance"
+                  [appAttr]="fieldAttrs"
+                >
+                  <mat-label>{{ field.label }}</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    [formControlName]="i"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              }
+              @default {
+                <!-- Có thể thêm xử lý mặc định -->
+              }
+            }
+            <button
+              mat-icon-button
+              type="button"
+              (click)="removeArrayItem(field.key, i)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-grid-tile>
+        }
+      </mat-grid-list>
+    }
+    <button
+      class="form-field-array-add"
+      type="button"
+      mat-button
+      (click)="addArrayItem(field)"
+    >
+      <mat-icon>add</mat-icon> Add
+    </button>
+  </div>
+} @else {
+  <ng-container
+    [ngTemplateOutlet]="fieldTpl"
+    [ngTemplateOutletContext]="{
+      field: field,
+      name: field.key,
+    }"
+  ></ng-container>
 }
+
+<ng-template #fieldTpl let-field="field" let-name="name">
+  @switch (field.type) {
+    @case ("text") {
+      <mat-form-field
+        style="width: 100%"
+        [appearance]="appearance"
+        [appAttr]="fieldAttrs"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [type]="field.type" [formControlName]="name" />
+      </mat-form-field>
+    }
+    @case ("number") {
+      <mat-form-field
+        style="width: 100%"
+        [appearance]="appearance"
+        [appAttr]="fieldAttrs"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [type]="field.type" [formControlName]="name" />
+      </mat-form-field>
+    }
+    @case ("password") {
+      <app-input-password
+        [field]="field"
+        [formGroup]="formGroup"
+        [formOptions]="formOptions"
+      ></app-input-password>
+    }
+    @case ("select") {
+      <mat-form-field
+        style="width: 100%"
+        [appearance]="appearance"
+        [appAttr]="fieldAttrs"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <mat-select [formControlName]="name">
+          <mat-option *ngFor="let opt of field.options" [value]="opt.value">
+            {{ opt.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    }
+    @case ("autocomplete") {
+      <app-autocomplete
+        [field]="field"
+        [formGroup]="formGroup"
+        [formOptions]="formOptions"
+      ></app-autocomplete>
+    }
+    @case ("radio") {
+      <div class="form-field" [appAttr]="fieldAttrs">
+        <label>{{ field.label }}</label>
+        <mat-radio-group [formControlName]="name">
+          <mat-radio-button
+            *ngFor="let opt of field.options"
+            [value]="opt.value"
+          >
+            {{ opt.label }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    }
+    @case ("checkbox") {
+      <div class="form-field" [appAttr]="fieldAttrs">
+        <mat-checkbox [formControlName]="name">
+          {{ field.label }}
+        </mat-checkbox>
+      </div>
+    }
+    @case ("date") {
+      <mat-form-field
+        style="width: 100%"
+        [appearance]="appearance"
+        [appAttr]="fieldAttrs"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [matDatepicker]="picker" [formControlName]="name" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    }
+    @case ("upload") {
+      <sh-upload [formGroup]="formGroup" [field]="field"></sh-upload>
+    }
+    @case ("groupArray") {
+      <div
+        [formArrayName]="field.key"
+        [appAttr]="fieldAttrs"
+        class="form-field form-field-group-array gap-2"
+      >
+        <label class="form-field-group-array-label" appTypography="body-lg">{{
+          field.label
+        }}</label>
+        @if (getFormArray(field.key).controls.length > 0) {
+          <mat-grid-list
+            [cols]="field.config?.cols ?? 1"
+            [gutterSize]="toString(field.config?.gutter ?? 8)"
+            [rowHeight]="field.config?.rowHeight ?? 'fit'"
+            class="form-field-group-array-grid"
+          >
+            @for (
+              ctrl of getFormArray(field.key).controls;
+              track $index;
+              let i = $index
+            ) {
+              <mat-grid-tile
+                [colspan]="field.config?.col ?? 1"
+                [rowspan]="field.config?.row ?? 1"
+                class="form-field-group-array-tile"
+              >
+                <mat-card
+                  appearance="outlined"
+                  [formGroupName]="i"
+                  class="form-field-group-array-card min-h-fit w-full"
+                >
+                  <mat-card-header
+                    class="form-field-group-array-card-header flex justify-between items-center mb-2"
+                  >
+                    <p
+                      class="form-field-group-array-card-title"
+                      mat-card-title
+                      appTypography="body-md"
+                    >
+                      {{ field.config?.itemLabel ?? "Item" }} {{ i + 1 }}
+                    </p>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="removeArrayItem(field.key, i)"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-card-header>
+                  <mat-card-content class="form-field-group-array-card-content">
+                    <sh-form
+                      [fields]="field.arrayFields || []"
+                      [formGroup]="getFormArrayGroup(field.key, i)"
+                      [hideFooter]="true"
+                      [formOptions]="field.formOptions || {}"
+                    ></sh-form>
+                  </mat-card-content>
+                </mat-card>
+              </mat-grid-tile>
+            }
+          </mat-grid-list>
+        }
+        <div>
+          <button type="button" mat-button (click)="addGroupArrayItem(field)">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+      </div>
+    }
+    @default {
+      <!-- Có thể thêm xử lý mặc định -->
+    }
+  }
+</ng-template>

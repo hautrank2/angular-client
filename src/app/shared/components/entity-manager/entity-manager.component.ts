@@ -180,6 +180,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
           this.snackBar.open(
             `${isEdit ? 'Edit' : 'Add'} successfully`,
             'Close',
+            { duration: 2000 },
           );
         }
       });

@@ -22,8 +22,11 @@ import { TableWrapperComponent } from './components/table-wrapper/table-wrapper.
 import { EntityFormComponent } from './components/entity-form/entity-form.component';
 import { EntityManagerComponent } from './components/entity-manager/entity-manager.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
+import { UploadComponent } from './components/upload/upload.component';
+import { UploadService } from './services/upload.service';
+import { ImageComponent } from './components/image/image.component';
 
-const services = [FormService];
+const services = [FormService, UploadService];
 const components = [
   FormWrapperComponent,
   FileUploadComponent,
@@ -47,7 +50,13 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [...components, ...directives, FormFieldComponent],
+  declarations: [
+    ...components,
+    ...directives,
+    FormFieldComponent,
+    UploadComponent,
+    ImageComponent,
+  ],
   imports: [ReactiveFormsModule, CommonModule, UiModule, ...pipes],
   exports: [CommonModule, ...components, ...directives, ...pipes],
   providers: [...services],

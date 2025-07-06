@@ -85,6 +85,17 @@ export interface ShAutocompleteFormField extends ShBaseFormField {
   debounceTime?: number;
 }
 
+export interface ShUploadFormField extends ShBaseFormField {
+  type: 'upload';
+  isArray?: false;
+  variant?: 'default' | 'custom';
+  multiple: boolean;
+  accept?: string[]; // example:  ['image/jpeg', 'application/pdf']
+  maxFileSize?: number; //Byte
+  showPreview?: boolean;
+  showProgress?: boolean;
+}
+
 export interface ShGroupFormField extends ShBaseFormField {
   type: 'group';
   fields: ShFormField[];
@@ -109,6 +120,7 @@ export type ShFormFieldType =
   | 'autocomplete'
   | 'select'
   | 'radio'
+  | 'upload'
   | 'group'
   | 'groupArray';
 
@@ -123,5 +135,6 @@ export type ShFormField =
   | ShCheckboxFormField
   | ShAutocompleteFormField
   | ShGroupFormField
+  | ShUploadFormField
   | ShGroupArrayFormField
   | ShCustomFormField;

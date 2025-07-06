@@ -1,0 +1,30 @@
+<div
+  class="sh-image-wrapper"
+  [ngClass]="{ 'sh-image-wrapper-hover': hover() }"
+  #wrapper
+  (mouseover)="onHover(true)"
+  (mouseleave)="onHover(false)"
+>
+  <ng-content select="[shImage]" class="sh-image"></ng-content>
+  <div class="sh-img-overlay">
+    @for (action of shImageActions; track action) {
+      <button
+        *ngIf="action === 'preview'"
+        mat-icon-button
+        (click)="onPreview()"
+        aria-label="Preview"
+      >
+        <mat-icon>visibility</mat-icon>
+      </button>
+
+      <button
+        *ngIf="action === 'remove'"
+        mat-icon-button
+        (click)="onRemove()"
+        aria-label="Remove"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+</div>

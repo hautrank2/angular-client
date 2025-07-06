@@ -3,6 +3,7 @@ import { ShFormField, ShFormOptions } from '../form/form.types';
 import {
   ControlContainer,
   FormArray,
+  FormControl,
   FormGroup,
   FormGroupDirective,
 } from '@angular/forms';
@@ -20,6 +21,7 @@ import { FormService } from '../../services/form.service';
 export class FormFieldComponent {
   @Input({ required: true }) field!: ShFormField;
   @Input() formGroup!: FormGroup;
+  @Input() fieldIndex!: number;
   @Input() formOptions: ShFormOptions = {
     appearance: 'outline',
     isGrid: false,
@@ -45,12 +47,17 @@ export class FormFieldComponent {
   }
 
   addArrayItem(field: ShFormField) {
-    console.log(field);
+    if (field.isArray) {
+      const array = this.getFormArray(field.key);
+      const control = new FormControl('', field.validators);
+      array.push(control);
+    }
+  }
+
+  addGroupArrayItem(field: ShFormField) {
     if (field.type === 'groupArray') {
       const array = this.getFormArray(field.key);
-      console.log(array);
       const newGroup = this.formSrv.buildForm(field.arrayFields);
-      console.log(newGroup);
       array.push(newGroup);
     }
   }

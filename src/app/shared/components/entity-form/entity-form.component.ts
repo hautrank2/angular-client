@@ -28,7 +28,6 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   readonly dialogRef = inject(MatDialogRef<EntityFormComponent<T>>);
   readonly data = inject<EntityFormData<T>>(MAT_DIALOG_DATA);
   readonly currentMember = model('');
-  isEdit: boolean = false;
 
   form: FormGroup = new FormGroup({});
   membersFormValue = signal<string[]>([]);
@@ -49,6 +48,10 @@ export class EntityFormComponent<T extends { [key: string]: any }>
     }
   }
 
+  get isEdit() {
+    return !!this.data.defaultValues;
+  }
+
   get keyName(): string {
     return this.data.keyName || KEY_NAME;
   }
@@ -56,7 +59,7 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   submit() {
     if (this.form.valid) {
       const values = this.form.value;
-      delete values['memberInput'];
+      console.log('values', values, this.isEdit, this.data);
       if (this.isEdit && this.data.defaultValues) {
         this.data
           .putEntity(this.data.defaultValues[this.keyName], values)

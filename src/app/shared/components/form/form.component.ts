@@ -25,7 +25,6 @@ export class FormWrapperComponent {
   constructor(public formSrv: FormService) {}
 
   ngOnInit() {
-    console.log(this.formGroup.getRawValue());
     if (!this.formGroup) {
       this.formGroup = this.formSrv.buildForm(this.fields);
       this.formGroup.valueChanges.subscribe((res) => {
@@ -73,7 +72,8 @@ export class FormWrapperComponent {
   addArrayItem(field: ShFormField) {
     if (field.isArray) {
       const array = this.getFormArray(field.key);
-      array.push(new FormControl('', field.validators));
+      const control = new FormControl('', field.validators);
+      array.push(control);
     }
   }
 

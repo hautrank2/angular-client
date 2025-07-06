@@ -215,7 +215,6 @@ export class FormService {
         arrayFields: this.convertTableColsToFormField(columns),
       },
     ];
-    console.log(formFields);
     return this.buildForm(formFields);
   }
 
@@ -291,4 +290,33 @@ export class FormService {
   }
 
   //#endregion
+
+  //#region Validate
+  filesValidate() {
+    return (control: FormControl) => {
+      const value = control.value;
+      if (value && value.length === 0) {
+        return { noFiles: 'At least one file must be selected' }; // Lỗi nếu không chọn file
+      }
+      if (!Array.isArray(value)) {
+        return { invalidType: 'Files must be an array' };
+      }
+
+      return null;
+    };
+  }
+
+  fileValidator() {
+    return (control: FormControl) => {
+      const value = control.value;
+      if (Array.isArray(value) && value.length > 1) {
+        return { multipleFiles: 'Only one file can be selected' }; // Lỗi nếu chọn nhiều hơn 1 file
+      }
+      if (value && !(value instanceof File)) {
+        return { invalidType: 'You must select a single file' }; // Lỗi nếu không phải là File
+      }
+      return null;
+    };
+  }
+  //#endregion Validate
 }

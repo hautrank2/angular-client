@@ -1,0 +1,36 @@
+<input
+  #fileInput
+  type="file"
+  id="fileInput"
+  name="files"
+  [multiple]="multiple"
+  [accept]="accept"
+  (change)="handleFileSelect($event)"
+  hidden
+  [attr.maxSize]="maxFileSize"
+/>
+<div class="upload-wrapper">
+  @switch (field.variant) {
+    @default {
+      <button type="button" mat-raised-button (click)="onUpload()">
+        <mat-icon>upload</mat-icon>
+        Upload
+      </button>
+    }
+  }
+
+  <div class="upload-previews">
+    @for (file of fileUrls(); track $index; let index = $index) {
+      <sh-image>
+        <img
+          shImage
+          shImg
+          [shImgSrc]="file"
+          [shImgPrefix]="false"
+          [alt]="'form-field-upload-' + index"
+          class="upload-previews-item"
+        />
+      </sh-image>
+    }
+  </div>
+</div>
