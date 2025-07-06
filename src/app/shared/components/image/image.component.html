@@ -5,26 +5,63 @@
   (mouseover)="onHover(true)"
   (mouseleave)="onHover(false)"
 >
-  <ng-content select="[shImage]" class="sh-image"></ng-content>
-  <div class="sh-img-overlay">
-    @for (action of shImageActions; track action) {
-      <button
-        *ngIf="action === 'preview'"
-        mat-icon-button
-        (click)="onPreview()"
-        aria-label="Preview"
-      >
-        <mat-icon>visibility</mat-icon>
-      </button>
+  <img
+    shImg
+    [shImgSrc]="src"
+    [shImgPrefix]="prefix"
+    [alt]="alt"
+    [ngClass]="{ imgClass: true }"
+    [ngStyle]="imgStyle"
+  />
+  @if (hover()) {
+    <div class="sh-img-overlay">
+      @for (action of shImageActions; track action) {
+        <button
+          *ngIf="action === 'preview'"
+          mat-icon-button
+          (click)="onPreview()"
+          aria-label="Preview"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
 
-      <button
-        *ngIf="action === 'remove'"
-        mat-icon-button
-        (click)="onRemove()"
-        aria-label="Remove"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    }
-  </div>
+        <button
+          *ngIf="action === 'remove'"
+          mat-icon-button
+          (click)="onRemove()"
+          aria-label="Remove"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+  }
+
+  <ng-template #previewTpl>
+    <div class="img-preview" (wheel)="onWheel($event)">
+      <img
+        shImg
+        [shImgSrc]="src"
+        [shImgPrefix]="prefix"
+        [alt]="alt"
+        [style.transform]="transformStyle"
+        [style.transition]="'transform 0.3s ease'"
+      />
+
+      <div class="img-preview-actions">
+        @for (btn of imgPreviewActions; track $index) {
+          <button
+            mat-icon-button
+            (click)="btn.action()"
+            [attr.aria-label]="btn.label"
+            [matTooltip]="btn.label"
+          >
+            <mat-icon [fontSet]="btn.iconSet || 'material-icons'">{{
+              btn.icon
+            }}</mat-icon>
+          </button>
+        }
+      </div>
+    </div>
+  </ng-template>
 </div>

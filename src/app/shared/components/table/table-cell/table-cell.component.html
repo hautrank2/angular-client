@@ -164,12 +164,11 @@
       ></mat-radio-button>
     }
     @case ("img") {
-      <img
+      <sh-image
         shImg
-        class="table-cell-img"
-        width="40"
-        height="40"
-        [shImgSrc]="getFormControl(rowIndex, column.key).value"
+        imgClass="table-cell-img"
+        [imgStyle]="{ width: '40px', height: '40px', borderRadius: '100%' }"
+        [src]="getFormControl(rowIndex, column.key).value"
       />
     }
     @case ("chips") {

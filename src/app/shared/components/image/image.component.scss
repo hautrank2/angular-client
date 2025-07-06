@@ -1,18 +1,36 @@
 .sh-image-wrapper {
+  --img-overlay: rgba(255, 255, 255, 0.6);
   position: relative;
   .sh-img-overlay {
-    display: none;
+    display: flex;
     position: absolute;
     inset: 0;
+    width: fit-content;
     justify-content: center;
     align-items: center;
     border-radius: 16px;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: var(--img-overlay);
   }
+}
 
-  &.sh-image-wrapper-hover {
-    .sh-img-overlay {
+.img-preview-panel {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .img-preview {
+    img {
+      width: 40vw;
+    }
+
+    .img-preview-actions {
       display: flex;
+      align-items: center;
+      gap: 4px;
+      position: absolute;
+      bottom: 2vh;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 }

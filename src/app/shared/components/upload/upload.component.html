@@ -21,16 +21,12 @@
 
   <div class="upload-previews">
     @for (file of fileUrls(); track $index; let index = $index) {
-      <sh-image>
-        <img
-          shImage
-          shImg
-          [shImgSrc]="file"
-          [shImgPrefix]="false"
-          [alt]="'form-field-upload-' + index"
-          class="upload-previews-item"
-        />
-      </sh-image>
+      <sh-image
+        [src]="file"
+        srcPrefix="false"
+        [alt]="'form-field-upload-' + index"
+        [imgClass]="'upload-previews-item'"
+      ></sh-image>
     }
   </div>
 </div>
