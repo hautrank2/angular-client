@@ -88,6 +88,9 @@ export class FormService {
     );
   }
 
+  //#endregion
+
+  //#region FORMDATA
   buildFormData(
     obj: any,
     formData: FormData = new FormData(),

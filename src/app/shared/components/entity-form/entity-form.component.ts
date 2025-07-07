@@ -12,8 +12,8 @@ export interface EntityFormData<T extends { [key: string]: any }> {
 
   keyName?: string;
   formFields: ShFormField[];
-  putEntity: (id: any, entity: T) => Observable<T>;
-  postEntity: (entity: T) => Observable<T>;
+  putEntity: (id: any, entity: T | FormData) => Observable<T>;
+  postEntity: (entity: T | FormData) => Observable<T>;
 }
 
 @Component({
@@ -59,15 +59,15 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   submit() {
     if (this.form.valid) {
       const values = this.form.value;
-      console.log('values', values, this.isEdit, this.data);
+      const formData = this.formSrv.buildFormData(values);
       if (this.isEdit && this.data.defaultValues) {
         this.data
-          .putEntity(this.data.defaultValues[this.keyName], values)
+          .putEntity(this.data.defaultValues[this.keyName], formData)
           .subscribe(() => {
             this.dialogRef.close({ success: true });
           });
       } else {
-        this.data.postEntity(values).subscribe(() => {
+        this.data.postEntity(formData).subscribe(() => {
           this.dialogRef.close({ success: true });
         });
       }

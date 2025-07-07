@@ -84,7 +84,6 @@ export class FormWrapperComponent {
 
   //#region JSON FORM
   onJsonFormChange(value: string) {
-    console.log('onJsonFormChange', value);
     this.formGroup.patchValue(JSON.parse(value));
   }
 
