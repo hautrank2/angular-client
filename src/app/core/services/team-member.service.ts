@@ -6,6 +6,7 @@ import { Validators } from '@angular/forms';
 import { SOCIALS } from '~/app/constant/social';
 import { FormService } from '~/app/shared/services/form.service';
 import { ShFormField } from '~/app/shared/components/form/form.types';
+import { ROLES } from '~/app/constant/role';
 
 @Injectable({
   providedIn: 'root',
@@ -55,11 +56,12 @@ export class TeamMemberService extends CrudService<TeamMember> {
       {
         key: 'roles',
         label: 'Roles',
-        type: 'text',
+        type: 'select',
         isArray: true,
         arrayConfig: {
           cols: 2,
         },
+        options: ROLES.map((e) => ({ label: e, value: e })),
       },
       {
         key: 'hobbies',

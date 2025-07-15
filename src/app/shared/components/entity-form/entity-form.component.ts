@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 import { FormService } from '~/app/shared/services/form.service';
 import { ShFormField } from '~/app/shared/components/form/form.types';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { KEY_NAME } from '../../constants/common';
 
 export interface EntityFormData<T extends { [key: string]: any }> {
@@ -29,6 +29,7 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   readonly data = inject<EntityFormData<T>>(MAT_DIALOG_DATA);
   readonly currentMember = model('');
 
+  loading = signal<boolean>(false);
   form: FormGroup = new FormGroup({});
   membersFormValue = signal<string[]>([]);
 
@@ -60,16 +61,21 @@ export class EntityFormComponent<T extends { [key: string]: any }>
     if (this.form.valid) {
       const values = this.form.value;
       const formData = this.formSrv.buildFormData(values);
+      this.loading.set(true);
       if (this.isEdit && this.data.defaultValues) {
         this.data
           .putEntity(this.data.defaultValues[this.keyName], formData)
+          .pipe(finalize(() => this.loading.set(false)))
           .subscribe(() => {
             this.dialogRef.close({ success: true });
           });
       } else {
-        this.data.postEntity(formData).subscribe(() => {
-          this.dialogRef.close({ success: true });
-        });
+        this.data
+          .postEntity(formData)
+          .pipe(finalize(() => this.loading.set(false)))
+          .subscribe(() => {
+            this.dialogRef.close({ success: true });
+          });
       }
     }
   }

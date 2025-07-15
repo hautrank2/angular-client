@@ -91,7 +91,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   handleFileSelect(event: Event) {
     const input = event.target as HTMLInputElement | null;
     const fileList = input?.files;
-    if (!fileList) {
+    if (!fileList || fileList?.length === 0) {
       console.error('Upload failed: files not found');
       return;
     }

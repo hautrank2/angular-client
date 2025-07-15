@@ -4,6 +4,7 @@ import {
   Input,
   PipeTransform,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ShColumn } from '../table.types';
@@ -13,6 +14,7 @@ import { ShColumn } from '../table.types';
   templateUrl: './table-cell.component.html',
   styleUrl: './table-cell.component.scss',
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class TableCellComponent {
   @Input() column!: ShColumn;
@@ -41,7 +43,7 @@ export class TableCellComponent {
 
   getFormControl(rowIndex: number, controlName: string) {
     return (this.rows.at(rowIndex) as FormGroup).get(
-      controlName
+      controlName,
     ) as FormControl;
   }
   //#endregion
@@ -49,11 +51,11 @@ export class TableCellComponent {
   //#endregion PIPE
   transformValue(
     value: any,
-    pipe: { name: string; props?: Record<string, any> }
+    pipe: { name: string; props?: Record<string, any> },
   ): any {
     if (pipe.name) {
       const pipeInstance = this.injector.get<PipeTransform>(
-        this.getPipeClass(pipe.name)
+        this.getPipeClass(pipe.name),
       );
       return pipeInstance.transform(value, pipe.props);
     }
