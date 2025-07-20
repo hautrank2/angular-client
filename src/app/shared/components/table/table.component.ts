@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
   Renderer2,
+  signal,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -32,6 +33,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() keyIndex!: string;
   @Input() data: any[] = [];
   @Input() columns: ShColumn[] = [];
+  columnData = signal<ShColumn[]>([]);
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isLoading: boolean = false;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
@@ -39,7 +41,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() height!: number | string;
   @Input() maxHeight!: number | string;
   @Input() formGroup!: FormGroup;
-  isForm: boolean = true;
+  @Input() isForm: boolean = false;
 
   // Style
   @Input() tableStyle: Record<string, any> = {};
@@ -95,7 +97,9 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private formSrv: FormService,
-  ) {}
+  ) {
+    this.columnData.set(this.columns);
+  }
 
   //#region Hooks
   ngOnInit(): void {
@@ -107,11 +111,16 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
 
   ngOnChanges(changes: any): void {
+    console.log('ngOnChanges', changes);
     if (changes['data']) {
       if (this.data) {
         this.cdr.detectChanges();
         this.initForm();
       }
+    }
+
+    if (changes['columns']) {
+      this.columnData.set(changes['columns'].currentValue);
     }
 
     if (changes['defaultSelects']) {
@@ -135,7 +144,9 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
 
   get displayedColumns(): string[] {
-    const colKeys = this.columns.map((column) => column.key).slice();
+    const colKeys = this.columnData()
+      .map((column) => column.key)
+      .slice();
     if (this.isSelect) colKeys.unshift('select');
     if (this.isEdit) colKeys.push('isEdit');
     return colKeys;
@@ -181,10 +192,12 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
 
   private initForm() {
+    this.dataSource = new MatTableDataSource(this.data);
+
+    if (!this.isForm) return;
     this.formGroup = this.fb.group({
       rows: this.fb.array(this.data.map((row) => this.createRowGroup(row))),
     });
-    this.dataSource = new MatTableDataSource(this.data);
 
     this.formGroup.valueChanges.subscribe((res) => {
       this.valueChanges.emit(res.rows);

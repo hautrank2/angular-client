@@ -18,7 +18,10 @@ export class TypographyDirective implements OnChanges {
   @Input() align: 'left' | 'center' | 'right' = 'left';
   @Input() extraClass: string = '';
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.applyClasses();
@@ -28,18 +31,18 @@ export class TypographyDirective implements OnChanges {
       this.renderer.setStyle(
         this.el.nativeElement,
         'fontWeight',
-        this.fontWeight
+        this.fontWeight,
       );
     }
   }
 
   private applyClasses(): void {
     const baseClasses = [
+      this.extraClass,
       this.color,
       this.fontWeight,
       `text-${this.align}`,
       // this.mapVariantToFontSize(this.variant),
-      this.extraClass,
     ]
       .filter(Boolean)
       .join(' ')
@@ -53,7 +56,7 @@ export class TypographyDirective implements OnChanges {
     this.renderer.setStyle(
       this.el.nativeElement,
       'font',
-      `var(${font.cssVar})`
+      `var(${font.cssVar})`,
     );
   }
 

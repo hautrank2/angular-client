@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -37,7 +36,6 @@ export class JsonFormComponent implements AfterViewInit, OnChanges {
     if (changes['value'] && this.isInitialized) {
       const newValue = changes['value'].currentValue;
       const currentEditorContent = this.editorView.state.doc.toString();
-
       if (newValue !== currentEditorContent) {
         this.initEditorContent();
       }

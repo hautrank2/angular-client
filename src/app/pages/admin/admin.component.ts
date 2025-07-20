@@ -1,25 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { SharedModule } from '~/app/shared/shared.module';
 import { RouterOutlet } from '@angular/router';
 import { Location } from '@angular/common';
+import { UiModule } from '~/app/shared/ui/ui.module';
 
 @Component({
   selector: 'app-admin',
-  imports: [
-    MatTableModule,
-    SharedModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatButtonModule,
-    RouterOutlet,
-  ],
+  imports: [SharedModule, UiModule, RouterOutlet],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })

@@ -1,5 +1,5 @@
 <ng-container *ngIf="column.pipe">
-  {{ transformValue(getFormControl(rowIndex, column.key).value, column.pipe) }}
+  {{ transformValue(cellValue, column.pipe) }}
 </ng-container>
 
 <ng-container *ngIf="!column.pipe">
@@ -7,42 +7,29 @@
     @case ("text") {
       {{
         column.formatter
-          ? column.formatter(
-              getFormControl(rowIndex, column.key).value,
-              row,
-              rowIndex
-            )
-          : getFormControl(rowIndex, column.key).value
+          ? column.formatter(cellValue, row, rowIndex)
+          : cellValue
       }}
     }
     @case ("number") {
-      {{ getFormControl(rowIndex, column.key).value | shFormatNumber }}
+      {{ cellValue | shFormatNumber }}
     }
     @case ("date") {
-      {{
-        getFormControl(rowIndex, column.key).value
-          | date: "dd/MM/yyyy, HH:mm:ss"
-      }}
+      {{ cellValue | date: "dd/MM/yyyy, HH:mm:ss" }}
     }
     @case ("status") {
       <div
-        *ngIf="getFormControl(rowIndex, column.key).value && column.getConfig"
-        class="table-cell-status flex items-center space-x-0-5"
+        *ngIf="cellValue && column.getConfig"
+        class="table-cell-status flex items-center gap-2"
       >
         <mat-icon
           class="cell-status-icon md-30"
-          [attr.color]="
-            column.getConfig(getFormControl(rowIndex, column.key).value).color
-          "
-          >{{
-            column.getConfig(getFormControl(rowIndex, column.key).value)
-              .iconName
-          }}</mat-icon
+          [attr.color]="column.getConfig(cellValue).color"
+          [ngStyle]="{ color: column.getConfig(cellValue).color }"
+          >{{ column.getConfig(cellValue).iconName }}</mat-icon
         >
         <div class="cell-status-text">
-          {{
-            column.getConfig(getFormControl(rowIndex, column.key).value).label
-          }}
+          {{ column.getConfig(cellValue).label }}
         </div>
       </div>
     }
@@ -53,23 +40,17 @@
         [formControl]="getFormControl(rowIndex, column.key)"
         placeholder="Enter {{ column.label }}"
       />
-      {{ getFormControl(rowIndex, column.key).value | shFormatTime }}
+      {{ cellValue | shFormatTime }}
     }
     @case ("iconText") {
       <div class="table-cell-iconText flex items-center space-x-0-5">
         <mat-icon
           *ngIf="column.icon"
           class="md-30"
-          [ngClass]="[
-            column.icon.getClass &&
-              column.icon.getClass(getFormControl(rowIndex, column.key).value),
-          ]"
-          >{{
-            column.icon.getIcon &&
-              column.icon.getIcon(getFormControl(rowIndex, column.key).value)
-          }}</mat-icon
+          [ngClass]="[column.icon.getClass && column.icon.getClass(cellValue)]"
+          >{{ column.icon.getIcon && column.icon.getIcon(cellValue) }}</mat-icon
         >
-        <span>{{ getFormControl(rowIndex, column.key).value }}</span>
+        <span>{{ cellValue }}</span>
       </div>
     }
     @case ("statusList") {
@@ -80,46 +61,28 @@
       >
         <mat-chip
           class="status-item chip-prefix outlined"
-          *ngFor="
-            let statusItem of getFormControl(rowIndex, column.key).value;
-            let index = index
-          "
+          *ngFor="let statusItem of cellValue; let index = index"
         >
           <mat-icon
             *ngIf="column.statusData?.getIcon"
             class="prefix me-1 md-30"
-            [ngClass]="[
-              column.statusData?.getClass(
-                getFormControl(rowIndex, column.key).value[index],
-                row
-              ),
-            ]"
-            >{{
-              column.statusData?.getIcon(
-                getFormControl(rowIndex, column.key).value[index],
-                row
-              )
-            }}</mat-icon
+            [ngClass]="[column.statusData?.getClass(cellValue[index], row)]"
+            >{{ column.statusData?.getIcon(cellValue[index], row) }}</mat-icon
           >
-          {{
-            column.statusData?.getName(
-              getFormControl(rowIndex, column.key).value[index],
-              row
-            )
-          }}
+          {{ column.statusData?.getName(cellValue[index], row) }}
         </mat-chip>
       </mat-chip-listbox>
     }
     @case ("select") {
       <mat-form-field
-        *ngIf="getFormControl(rowIndex, column.key).value"
+        *ngIf="cellValue"
         appearance="outline"
         class="table-cell-select no-subscript text sm"
         (click)="$event.stopPropagation()"
         style="font-size: 14px"
       >
         <mat-select
-          [value]="getFormControl(rowIndex, column.key).value"
+          [value]="cellValue"
           (selectionChange)="
             column.onChange && column.onChange($event.value, row, rowIndex)
           "
@@ -139,8 +102,8 @@
         class="table-cell-slide"
         color="primary"
         (click)="$event.stopPropagation()"
-        [checked]="getFormControl(rowIndex, column.key).value"
-        [aria-label]="getFormControl(rowIndex, column.key).value"
+        [checked]="cellValue"
+        [aria-label]="cellValue"
         (change)="
           column.onChange && column.onChange($event.checked, row, rowIndex)
         "
@@ -149,26 +112,30 @@
       ></mat-slide-toggle>
     }
     @case ("radio") {
+      <mat-radio-group aria-label="Radio button" [value]="cellValue">
+        @for (opt of column.options; track $index) {
+          <mat-radio-button [value]="opt.value">{{
+            opt.label
+          }}</mat-radio-button>
+        }
+      </mat-radio-group>
+
       <mat-radio-button
         class="table-cell-radio"
         (click)="$event.stopPropagation()"
         (change)="
           column.onChange && column.onChange($event.value, row, rowIndex)
         "
-        [checked]="getFormControl(rowIndex, column.key).value"
+        [checked]="cellValue"
         aria-label="Radio row"
-        [value]="getFormControl(rowIndex, column.key).value"
+        [value]="cellValue"
         [formControl]="getFormControl(rowIndex, column.key)"
         *ngFor="let key of objectKeys(column.props)"
         [attr.[key]]="column.props && column.props[key]"
       ></mat-radio-button>
     }
     @case ("img") {
-      <sh-image
-        shImg
-        imgClass="table-cell-img"
-        [src]="getFormControl(rowIndex, column.key).value"
-      />
+      <sh-image shImg imgClass="table-cell-img" [src]="cellValue" />
     }
     @case ("chips") {
       <mat-chip-listbox
@@ -177,7 +144,7 @@
       >
         <mat-chip
           class="status-item chip-prefix outlined"
-          *ngFor="let item of getFormControl(rowIndex, column.key).value"
+          *ngFor="let item of cellValue"
         >
           {{ item }}
         </mat-chip>
@@ -190,13 +157,7 @@
         </button>
         <mat-menu #menuBtn="matMenu">
           <button
-            (click)="
-              btnMenuItem.onClick(
-                getFormControl(rowIndex, column.key).value,
-                row,
-                rowIndex
-              )
-            "
+            (click)="btnMenuItem.onClick(cellValue, row, rowIndex)"
             mat-menu-item
             *ngFor="let btnMenuItem of column.actions || []"
           >
@@ -209,13 +170,7 @@
             <button
               [matTooltip]="item.label"
               mat-icon-button
-              (click)="
-                item.onClick(
-                  getFormControl(rowIndex, column.key).value,
-                  row,
-                  rowIndex
-                )
-              "
+              (click)="item.onClick(cellValue, row, rowIndex)"
             >
               <mat-icon class="material-icons-outlined">{{
                 item.icon
@@ -230,7 +185,7 @@
         [ngTemplateOutlet]="getTemplate(column.key)"
         [ngTemplateOutletContext]="{
           control: getFormControl(rowIndex, column.key),
-          value: getFormControl(rowIndex, column.key).value,
+          value: cellValue,
           item: row,
           index: rowIndex,
         }"

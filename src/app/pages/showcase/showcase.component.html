@@ -1,4 +1,8 @@
-<mat-drawer-container class="bg-transparent!" autosize>
+<mat-drawer-container
+  class="bg-transparent!"
+  autosize
+  [ngStyle]="{ height: 'calc(100vh - var(--header-height) - 40px)' }"
+>
   <mat-drawer
     #drawer
     [opened]="sidebarOpened()"
@@ -17,8 +21,13 @@
             'hover:bg-primary/10',
             activeRoute() === route.path ? 'text-primary' : '',
           ]"
+          matRipple
         >
-          <mat-icon>{{ route.icon }}</mat-icon>
+          <mat-icon
+            class="material-icons-outlined"
+            fontSet="material-icons-outlined"
+            >{{ route.icon }}</mat-icon
+          >
           <span>{{ route.title }}</span>
         </a>
       }
@@ -36,7 +45,7 @@
       <button type="button" mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <h3 appTypography="body-lg" extraClass="text-primary">Admin page</h3>
+      <h3 appTypography="body-lg" extraClass="text-primary">Showcase</h3>
     </div>
   </header>
   <div class="container mx-auto px-4 pb-8">

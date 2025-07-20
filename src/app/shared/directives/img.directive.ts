@@ -28,9 +28,17 @@ export class ImgDirective implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['shImgSrc'] || changes['shImgPrefix']) {
       if (this.shImgPrefix) {
-        this.el.nativeElement.src = this.shImgSrc
-          ? this.prefix + this.shImgSrc
-          : '';
+        const isFullUrl =
+          /^(https?:)?\/\//.test(this.shImgSrc) ||
+          this.shImgSrc.startsWith('data:');
+
+        if (isFullUrl) {
+          this.el.nativeElement.src = this.shImgSrc;
+        } else {
+          this.el.nativeElement.src = this.shImgSrc
+            ? this.prefix + this.shImgSrc
+            : '';
+        }
       } else {
         this.el.nativeElement.src = this.shImgSrc;
       }

@@ -1,0 +1,32 @@
+<section>
+  <div class="flex justify-between items-center">
+    <h1 appTypography="headline-sm">Columns</h1>
+    @if (this.columnControl.dirty) {
+      <div class="flex items-center gap-2">
+        @if (columnControl.getError("isJson")) {
+          <p appTypography="body-lg" color="text-error">
+            Column is not valid json
+          </p>
+        }
+        @if (this.formGroup.valid && this.formGroup.value) {
+          <button mat-flat-button (click)="changeColumns()">Save</button>
+        }
+      </div>
+    }
+  </div>
+  <div class="json-form column-form">
+    <div #columnsEditor></div>
+  </div>
+</section>
+
+<section>
+  <h1 appTypography="headline-sm">Result</h1>
+  <sh-table
+    [columns]="columns()"
+    [data]="data().items"
+    [maxHeight]="'64vh'"
+    [headerSticky]="true"
+    [isSelect]="tbSelect()"
+    [isForm]="tbIsForm()"
+  ></sh-table>
+</section>
