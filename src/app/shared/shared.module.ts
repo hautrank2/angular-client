@@ -40,6 +40,7 @@ const components = [
   EntityFormComponent,
   InputPasswordComponent,
   TableWrapperComponent,
+  FormFieldComponent,
 ];
 const directives = [
   TypographyDirective,
@@ -51,13 +52,7 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [
-    ...components,
-    ...directives,
-    FormFieldComponent,
-    UploadComponent,
-    ImageComponent,
-  ],
+  declarations: [...components, ...directives, UploadComponent, ImageComponent],
   imports: [
     ReactiveFormsModule,
     CommonModule,

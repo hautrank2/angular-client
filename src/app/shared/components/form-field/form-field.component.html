@@ -36,6 +36,20 @@
                   <input matInput [type]="field.type" [formControlName]="i" />
                 </mat-form-field>
               }
+              @case ("text") {
+                <mat-form-field
+                  style="width: 100%"
+                  [appearance]="appearance"
+                  [appAttr]="fieldAttrs"
+                >
+                  <mat-label>{{ field.label }}</mat-label>
+                  <textarea
+                    matInput
+                    [type]="field.type"
+                    [formControlName]="i"
+                  ></textarea>
+                </mat-form-field>
+              }
               @case ("number") {
                 <mat-form-field
                   style="width: 100%"
@@ -95,6 +109,13 @@
                   <mat-checkbox [formControlName]="i">
                     {{ field.label }}
                   </mat-checkbox>
+                </div>
+              }
+              @case ("toggle") {
+                <div class="form-field" [appAttr]="fieldAttrs">
+                  <mat-slide-toggle [formControlName]="i">
+                    {{ field.label }}
+                  </mat-slide-toggle>
                 </div>
               }
               @case ("date") {
@@ -162,6 +183,20 @@
         <input matInput [type]="field.type" [formControlName]="name" />
       </mat-form-field>
     }
+    @case ("area") {
+      <mat-form-field
+        style="width: 100%"
+        [appearance]="appearance"
+        [appAttr]="fieldAttrs"
+      >
+        <mat-label>{{ field.label }}</mat-label>
+        <textarea
+          matInput
+          [type]="field.type"
+          [formControlName]="name"
+        ></textarea>
+      </mat-form-field>
+    }
     @case ("number") {
       <mat-form-field
         style="width: 100%"
@@ -218,6 +253,13 @@
         <mat-checkbox [formControlName]="name">
           {{ field.label }}
         </mat-checkbox>
+      </div>
+    }
+    @case ("toggle") {
+      <div class="form-field" [appAttr]="fieldAttrs">
+        <mat-slide-toggle [formControlName]="name">
+          {{ field.label }}
+        </mat-slide-toggle>
       </div>
     }
     @case ("date") {

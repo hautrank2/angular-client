@@ -1,5 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import {
   ShAutocompleteFormField,
@@ -24,13 +24,14 @@ export class AutocompleteComponent {
   autoInputCtrl = new FormControl('');
   filterdOptions = signal<ShFormOption[]>([]);
 
-  constructor(
-    private fb: FormBuilder,
-    public formSrv: FormService,
-  ) {}
+  constructor(public formSrv: FormService) {}
 
-  get fa() {
-    return this.formGroup.get(this.field.key) as FormArray;
+  get formControl() {
+    return this.formGroup.get(this.field.key) as FormControl<any[]>;
+  }
+
+  get value() {
+    return this.formControl.value as any[];
   }
 
   get options(): ShFormOption[] {
@@ -73,11 +74,14 @@ export class AutocompleteComponent {
   }
 
   addItem(event: MatAutocompleteSelectedEvent) {
-    this.fa.push(this.fb.control(event.option.value));
+    const selectedValue = event.option.value;
+    this.formControl.setValue([...this.value, selectedValue]);
     this.autoInputCtrl.setValue('');
   }
 
   removeArrayItem(index: number) {
-    this.fa.removeAt(index);
+    const result = this.value.slice();
+    result.splice(index, 1);
+    this.formControl.setValue(result);
   }
 }

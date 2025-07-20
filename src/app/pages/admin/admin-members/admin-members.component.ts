@@ -3,6 +3,9 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { TeamMemberService } from '~/app/core/services/team-member.service';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { ShColumn } from '~/app/shared/components/table/table.types';
+import { FormService } from '~/app/shared/services/form.service';
+import { Observable } from 'rxjs';
+import { TeamMember } from '~/app/types/teams';
 
 @Component({
   selector: 'app-admin-members',
@@ -11,7 +14,10 @@ import { ShColumn } from '~/app/shared/components/table/table.types';
   styleUrl: './admin-members.component.scss',
 })
 export class AdminMembersComponent {
-  constructor(public teamMemberSrv: TeamMemberService) {}
+  constructor(
+    public teamMemberSrv: TeamMemberService,
+    private formSrv: FormService,
+  ) {}
 
   readonly tbColumns: ShColumn[] = [
     {

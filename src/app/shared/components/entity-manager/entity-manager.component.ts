@@ -29,6 +29,7 @@ import { EntityFormComponent } from '../entity-form/entity-form.component';
 import { catchError, concat, finalize, Observable, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { KEY_NAME } from '../../constants/common';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'sh-entity-manager',
@@ -60,6 +61,8 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   @Input() postFormFields!: ShFormField[];
   @Input() putFormFields!: ShFormField[];
 
+  @Input() filterAsSearchParams: boolean = true;
+
   readonly dialog = inject(MatDialog);
   layout: 'grid' | 'table' = 'table';
   data = signal<ShEntityResponse<T>>(API_REPONSE_BASE);
@@ -70,10 +73,26 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   selects = new SelectionModel<T>(true, []);
   private snackBar = inject(MatSnackBar);
 
-  constructor(private formSrv: FormService) {
+  constructor(
+    private formSrv: FormService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
     this.form = this.formSrv.buildTableForm(this.tbColumns);
     this.form.valueChanges.subscribe((res) => {
       console.log('change form', res);
+    });
+
+    this.route.queryParams.subscribe((params: Params) => {
+      if (this.filterAsSearchParams) {
+        this.filter.update((pre) => {
+          return {
+            ...pre,
+            ...params,
+          };
+        });
+        this.fetchData();
+      }
     });
 
     effect(() => {
@@ -141,24 +160,34 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   ngOnChanges(changes: SimpleChanges): void {}
 
   private fetchData() {
-    this.findEntities(this.filter()).subscribe((res) => {
-      this.data.set(res);
-      if (res.items.length === 0) {
-        const maxPage = Math.ceil(res.total / this.filter().pageSize);
-        if (maxPage > 0 && this.filter().page > maxPage) {
-          this.filter().page = maxPage;
-          this.fetchData();
+    // this.findEntities: nullable
+    if (this.findEntities) {
+      this.findEntities(this.filter()).subscribe((res) => {
+        this.data.set(res);
+        if (res.items.length === 0) {
+          const maxPage = Math.ceil(res.total / this.filter().pageSize);
+          if (maxPage > 0 && this.filter().page > maxPage) {
+            this.filter().page = maxPage;
+            this.fetchData();
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   changePagination(pagination: ShPaginationEmit) {
-    this.filter.update((e) => ({
-      ...e,
-      ...pagination,
-    }));
-    this.fetchData();
+    if (this.filterAsSearchParams) {
+      this.router.navigate([], {
+        queryParams: pagination,
+        queryParamsHandling: 'merge',
+      });
+    } else {
+      this.filter.update((e) => ({
+        ...e,
+        ...pagination,
+      }));
+      this.fetchData();
+    }
   }
 
   changeLayout(event: MatButtonToggleChange) {

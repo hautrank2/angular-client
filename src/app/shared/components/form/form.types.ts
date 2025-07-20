@@ -59,11 +59,15 @@ export interface ShBaseFormField {
 // ─────────────────────────────────────────────
 
 export interface ShTextFormField extends ShBaseFormField {
-  type: 'text' | 'number' | 'password' | 'date';
+  type: 'text' | 'number' | 'password' | 'date' | 'area';
 }
 
 export interface ShCheckboxFormField extends ShBaseFormField {
   type: 'checkbox';
+}
+
+export interface ShToggleFormField extends ShBaseFormField {
+  type: 'toggle';
 }
 
 export interface ShSelectFormField extends ShBaseFormField {
@@ -114,12 +118,14 @@ export interface ShCustomFormField extends ShBaseFormField {
 
 export type ShFormFieldType =
   | 'text'
+  | 'area'
   | 'number'
   | 'password'
   | 'date'
   | 'autocomplete'
   | 'select'
   | 'radio'
+  | 'toggle'
   | 'upload'
   | 'group'
   | 'groupArray';
@@ -133,6 +139,7 @@ export type ShFormField =
   | ShSelectFormField
   | ShRadioFormField
   | ShCheckboxFormField
+  | ShToggleFormField
   | ShAutocompleteFormField
   | ShGroupFormField
   | ShUploadFormField

@@ -6,13 +6,13 @@
 >
   <mat-label>{{ field.label }}</mat-label>
   <mat-chip-grid #chipGrid aria-label="Auto-complete label">
-    @for (item of fa.value; track $index; let index = $index) {
-    <mat-chip-row (removed)="removeArrayItem(index)">
-      {{ formSrv.getLabelFromValue(item, filterdOptions()) }}
-      <button matChipRemove [attr.aria-label]="'remove ' + item">
-        <mat-icon>cancel</mat-icon>
-      </button>
-    </mat-chip-row>
+    @for (item of value; track $index; let index = $index) {
+      <mat-chip-row (removed)="removeArrayItem(index)">
+        {{ formSrv.getLabelFromValue(item, filterdOptions()) }}
+        <button matChipRemove [attr.aria-label]="'remove ' + item">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
     }
   </mat-chip-grid>
   <input
@@ -26,7 +26,11 @@
   />
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItem($event)">
     @for (option of filterdOptions(); track $index) {
-    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      <mat-option
+        [value]="option.value"
+        [disabled]="value.includes(option.value)"
+        >{{ option.label }}</mat-option
+      >
     }
   </mat-autocomplete>
 </mat-form-field>

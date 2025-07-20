@@ -6,9 +6,17 @@
     <div class="branching-logo"><img src="/svg/logo.svg" class="h-12" /></div>
     <h1 appTypography="headline-sm">hautrank2</h1>
   </div>
-  <div class="page-header-extra flex px-8 gap-2">
-    <a mat-button href="/jobs">Jobs</a>
-    <a mat-button href="/teams">Teams</a>
-    <a mat-button href="/admin">Admin</a>
+  <div class="page-header-extra flex px-8 gap-4">
+    <div class="flex items-center gap-2">
+      <a mat-button href="/jobs">Jobs</a>
+      <a mat-button href="/teams">Teams</a>
+      <a mat-button href="/admin">Admin</a>
+    </div>
+
+    <button mat-icon-button type="button" (click)="toggleMode()">
+      <mat-icon>{{
+        appMode === "light" ? "light_mode" : "dark_mode"
+      }}</mat-icon>
+    </button>
   </div>
 </div>

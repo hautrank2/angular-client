@@ -60,18 +60,17 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   submit() {
     if (this.form.valid) {
       const values = this.form.value;
-      const formData = this.formSrv.buildFormData(values);
       this.loading.set(true);
       if (this.isEdit && this.data.defaultValues) {
         this.data
-          .putEntity(this.data.defaultValues[this.keyName], formData)
+          .putEntity(this.data.defaultValues[this.keyName], values)
           .pipe(finalize(() => this.loading.set(false)))
           .subscribe(() => {
             this.dialogRef.close({ success: true });
           });
       } else {
         this.data
-          .postEntity(formData)
+          .postEntity(values)
           .pipe(finalize(() => this.loading.set(false)))
           .subscribe(() => {
             this.dialogRef.close({ success: true });

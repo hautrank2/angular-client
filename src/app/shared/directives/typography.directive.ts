@@ -13,7 +13,7 @@ import {
 })
 export class TypographyDirective implements OnChanges {
   @Input('appTypography') variant: TypogoraphyFont = 'body-md';
-  @Input() color: string = 'text-black';
+  @Input() color: string = 'text-foreground';
   @Input() fontWeight!: string | number;
   @Input() align: 'left' | 'center' | 'right' = 'left';
   @Input() extraClass: string = '';

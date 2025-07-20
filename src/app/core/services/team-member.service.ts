@@ -19,6 +19,10 @@ export class TeamMemberService extends CrudService<TeamMember> {
     super(http, '/recruit/team-member');
   }
 
+  createMember(values: any) {
+    return this.create(this.formSrv.buildFormData(values));
+  }
+
   get formFields(): ShFormField[] {
     return [
       {
