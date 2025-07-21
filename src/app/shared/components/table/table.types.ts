@@ -16,6 +16,8 @@ export interface ShBaseColumn {
   };
   props?: Record<string, any>;
   onChange?(value: any, item: any, index: number): void;
+  sticky?: boolean;
+  stickyEnd?: boolean;
 }
 
 // 1. Text column
@@ -34,23 +36,10 @@ export interface ShDateColumn extends ShBaseColumn {
   type: 'date';
 }
 
-// 4. IconText column
-export interface ShIconTextColumn extends ShBaseColumn {
-  type: 'iconText';
-  icon?: ShIconConfig;
-  actionConfig?: ShActionConfig;
-}
-
 // 5. Status column
 export interface ShStatusColumn extends ShBaseColumn {
   type: 'status';
   getConfig(arg: any): { iconName: string; color?: string; label: string };
-}
-
-// 6. StatusList column
-export interface ShStatusListColumn extends ShBaseColumn {
-  type: 'statusList';
-  statusData: ShStatusConfig;
 }
 
 // 7. Select column
@@ -103,9 +92,7 @@ export type ShColumn =
   | ShTextColumn
   | ShNumberColumn
   | ShDateColumn
-  | ShIconTextColumn
   | ShStatusColumn
-  | ShStatusListColumn
   | ShSelectColumn
   | ShToggleColumn
   | ShRadioColumn
@@ -123,7 +110,6 @@ export interface ShOption {
 export interface ShTableAction {
   label: string;
   icon: string;
-  type: string | 'btn';
   onClick: (value: any, item: any, index: number) => void;
 }
 

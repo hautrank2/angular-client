@@ -26,6 +26,7 @@ import { UploadComponent } from './components/upload/upload.component';
 import { UploadService } from './services/upload.service';
 import { ImageComponent } from './components/image/image.component';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ZDirective } from './directives/z.directive';
 
 const services = [FormService, UploadService];
 const components = [
@@ -48,6 +49,7 @@ const directives = [
   ImgDirective,
   TableDirective,
   ScrollDirective,
+  ZDirective,
 ];
 const pipes = [FormatTimePipe, FormatNumberPipe];
 

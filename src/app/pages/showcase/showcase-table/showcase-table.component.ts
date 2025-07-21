@@ -42,9 +42,8 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
   @ViewChild('columnsEditor', { static: true }) editorRef!: ElementRef;
   isInitializedColumnForm = false;
   columnControl = new FormControl('', [Validators.required, jsonValidator()]);
-  //#endregion END JSON FORM
-
   private editorView!: EditorView;
+  //#endregion END JSON FORM
 
   readonly apiEndpoint: string = '/data/users.json';
   constructor(private apiFakerSrv: ApiFakerService<any>) {
@@ -66,11 +65,6 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
   }
 
   changeColumns() {
-    console.log(
-      'changeColumns',
-      this.columnControl.valid,
-      this.columnControl.value,
-    );
     try {
       if (this.columnControl.valid && this.columnControl.value) {
         const value = JSON.parse(this.columnControl.value) as ShColumn[];

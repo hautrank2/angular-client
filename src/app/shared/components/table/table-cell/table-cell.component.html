@@ -42,37 +42,6 @@
       />
       {{ cellValue | shFormatTime }}
     }
-    @case ("iconText") {
-      <div class="table-cell-iconText flex items-center space-x-0-5">
-        <mat-icon
-          *ngIf="column.icon"
-          class="md-30"
-          [ngClass]="[column.icon.getClass && column.icon.getClass(cellValue)]"
-          >{{ column.icon.getIcon && column.icon.getIcon(cellValue) }}</mat-icon
-        >
-        <span>{{ cellValue }}</span>
-      </div>
-    }
-    @case ("statusList") {
-      <mat-chip-listbox
-        aria-label="Status List"
-        class="status-list table-cell-statusList"
-        [formArrayName]="column.key"
-      >
-        <mat-chip
-          class="status-item chip-prefix outlined"
-          *ngFor="let statusItem of cellValue; let index = index"
-        >
-          <mat-icon
-            *ngIf="column.statusData?.getIcon"
-            class="prefix me-1 md-30"
-            [ngClass]="[column.statusData?.getClass(cellValue[index], row)]"
-            >{{ column.statusData?.getIcon(cellValue[index], row) }}</mat-icon
-          >
-          {{ column.statusData?.getName(cellValue[index], row) }}
-        </mat-chip>
-      </mat-chip-listbox>
-    }
     @case ("select") {
       <mat-form-field
         *ngIf="cellValue"

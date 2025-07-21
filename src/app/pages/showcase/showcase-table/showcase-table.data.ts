@@ -13,17 +13,10 @@ export const jsonValidator = (): ValidatorFn => {
 };
 
 export const TABLE_COLUMNS: ShColumn[] = [
-  { key: 'id', label: 'ID', type: 'text' },
-  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'id', label: 'ID', type: 'text', sticky: true },
+  { key: 'name', label: 'Name', type: 'text', sticky: true },
   { key: 'age', label: 'Age', type: 'number' },
   { key: 'createdAt', label: 'Created Date', type: 'date' },
-  // {
-  //   key: 'iconText',
-  //   label: 'Info',
-  //   type: 'iconText',
-  //   icon: { name: 'info', color: 'primary' },
-  //   actionConfig: { type: 'button', action: (item) => console.log(item) },
-  // },
   {
     key: 'status',
     label: 'Status',
@@ -39,16 +32,6 @@ export const TABLE_COLUMNS: ShColumn[] = [
       }
     },
   },
-  // {
-  //   key: 'statuses',
-  //   label: 'Multiple Status',
-  //   type: 'statusList',
-  //   statusData: {
-  //     active: { iconName: 'check', label: 'Active', color: 'green' },
-  //     warning: { iconName: 'warning', label: 'Warning', color: 'orange' },
-  //     error: { iconName: 'error', label: 'Error', color: 'red' },
-  //   },
-  // },
   {
     key: 'role',
     label: 'Role',
@@ -67,22 +50,22 @@ export const TABLE_COLUMNS: ShColumn[] = [
   { key: 'loginTime', label: 'Login Time', type: 'time' },
   { key: 'avatarUrl', label: 'Avatar', type: 'img' },
   { key: 'tags', label: 'Tags', type: 'chips' },
-  // {
-  //   key: 'actions',
-  //   label: 'Actions',
-  //   type: 'actions',
-  //   actionType: 'menu',
-  //   actions: [
-  //     {
-  //       icon: 'edit',
-  //       label: 'Edit',
-  //       callback: (item) => console.log('Edit', item),
-  //     },
-  //     {
-  //       icon: 'delete',
-  //       label: 'Delete',
-  //       callback: (item) => console.log('Delete', item),
-  //     },
-  //   ],
-  // },
+  {
+    key: 'actions',
+    label: 'Actions',
+    type: 'actions',
+    actions: [
+      {
+        icon: 'edit',
+        label: 'Edit',
+        onClick: (item) => console.log('Edit', item),
+      },
+      {
+        icon: 'delete',
+        label: 'Delete',
+        onClick: (item) => console.log('Delete', item),
+      },
+    ],
+    stickyEnd: true,
+  },
 ];

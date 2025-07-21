@@ -110,7 +110,6 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
           actions.push({
             label: 'Edit',
             icon: 'edit',
-            type: 'btn',
             onClick: (_, item) => {
               this.openDialog(item);
             },
@@ -120,7 +119,6 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
           actions.push({
             label: 'Delete',
             icon: 'delete',
-            type: 'btn',
             onClick: (_, item) => {
               this.remove(item);
             },

@@ -272,8 +272,6 @@ export class FormService {
       case 'custom':
       case 'toggle':
       case 'status':
-      case 'statusList':
-      case 'iconText':
       case 'actions':
       case 'time':
         return {
