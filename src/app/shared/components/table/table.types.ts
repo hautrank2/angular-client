@@ -1,3 +1,4 @@
+export type ShTableSelect = string | number;
 export interface ShPagination {
   page: number;
   pageSize: number;

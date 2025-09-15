@@ -41,8 +41,7 @@
     [headerSticky]="true"
     [formGroup]="form"
     [isSelect]="tbSelect"
-    (changeSelect)="changeSelect($event)"
-    [defaultSelects]="selects.selected"
+    [selection]="selects"
     [pagination]="{
       page: filter().page,
       pageSize: filter().pageSize,

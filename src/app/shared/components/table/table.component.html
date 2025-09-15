@@ -59,10 +59,10 @@
         >
           <mat-checkbox
             (click)="$event.stopPropagation()"
-            (change)="$event ? toggleRow(row) : null"
-            [checked]="selection.isSelected(row)"
-            [aria-label]="checkboxLabel(row)"
-            [disabled]="disabledIndexRows.includes(index)"
+            (change)="$event ? toggleRow(row[keyName]) : null"
+            [checked]="selection.isSelected(row[keyName])"
+            [aria-label]="checkboxLabel(row[keyName])"
+            [disabled]="disabledIndexRows.includes(row[keyName])"
           >
           </mat-checkbox>
         </td>

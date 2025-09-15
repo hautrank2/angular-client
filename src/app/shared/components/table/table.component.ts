@@ -17,12 +17,18 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ShColumn, ShPagination, ShPaginationEmit } from './table.types';
+import {
+  ShColumn,
+  ShPagination,
+  ShPaginationEmit,
+  ShTableSelect,
+} from './table.types';
 import { ScrollDirective } from '../../directives/scroll.directive';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
+import { KEY_NAME } from '../../constants/common';
 
 @Component({
   selector: 'sh-table',
@@ -31,7 +37,7 @@ import { PageEvent } from '@angular/material/paginator';
   standalone: false,
 })
 export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
-  @Input() keyIndex!: string;
+  @Input() keyName: string = KEY_NAME;
   @Input() data: T[] = [];
   @Input() columns: ShColumn<T>[] = [];
   columnData = signal<ShColumn<T>[]>([]);
@@ -65,10 +71,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   // Select
   readonly selectName = 'SELECT_NAME';
   @Input() isSelect: boolean = false;
-  @Output() changeSelect = new EventEmitter<T[]>();
+  @Output() changeSelect = new EventEmitter<ShTableSelect[]>();
   @Input() disabledIndexRows: number[] = [];
-  @Input() defaultSelects: T[] = [];
-  selection = new SelectionModel<T>(true, []);
+  @Input() defaultSelects: ShTableSelect[] = [];
+  @Input() selection = new SelectionModel<ShTableSelect>(true, []);
 
   // Number column
   readonly countName = 'COUNT_NAME';
@@ -103,7 +109,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input({ required: true }) defaultDisplayColumns: string[] = [];
   @Input() hasPanel: boolean = false;
   @Input() hasColumnFilter: boolean = false;
-  @Output() onDeleteSelected = new EventEmitter<T[]>();
+  @Output() onDeleteSelected = new EventEmitter<ShTableSelect[]>();
   displayColumns = new SelectionModel<string>(true, []);
 
   @HostBinding('style.position') @Input() position: string = 'relative';
@@ -374,6 +380,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   //#endregion
 
   //#region select
+  getSelection() {
+    return this.selection;
+  }
+
   isAllSelected() {
     return (
       this.selection.selected.length ===
@@ -389,14 +399,14 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     }
 
     this.selection.select(
-      ...this.dataSource.data.filter(
-        (_, index: number) => !this.disabledIndexRows?.includes(index),
-      ),
+      ...this.dataSource.data
+        .filter((_, index: number) => !this.disabledIndexRows?.includes(index))
+        .map((e) => e[this.keyName]),
     );
     this.emitSelectedRows();
   }
 
-  toggleRow(e: any) {
+  toggleRow(e: ShTableSelect) {
     this.selection.toggle(e);
     this.emitSelectedRows();
   }
@@ -419,6 +429,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.selection.clear();
     this.emitSelectedRows();
   }
+
   //#endregion
 
   //#region Filter column

@@ -19,6 +19,7 @@ import {
   ShColumn,
   ShPaginationEmit,
   ShTableAction,
+  ShTableSelect,
 } from '../table/table.types';
 import {
   ShEntityAction,
@@ -70,7 +71,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   filter = signal<ShEntityFilter>({ pageSize: 10, page: 1 });
   loading = signal<boolean>(false);
   form = new FormGroup({});
-  selects = new SelectionModel<T>(true, []);
+  selects = new SelectionModel<ShTableSelect>(true, []);
   private snackBar = inject(MatSnackBar);
 
   constructor(
@@ -227,8 +228,8 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       });
   }
 
-  remove(item: T) {
-    this.deleteEntity(item[this.keyName]).subscribe(() => {
+  remove(item: ShTableSelect) {
+    this.deleteEntity(item).subscribe(() => {
       this.fetchData();
     });
   }
@@ -239,7 +240,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     const successItems: any[] = [];
     const failItems: any[] = [];
     const deleteObservables = this.selects.selected.map((item) =>
-      this.deleteEntity(item[this.keyName]).pipe(
+      this.deleteEntity(item).pipe(
         tap((e) => {
           successItems.push(e[this.keyName]);
         }),
@@ -274,7 +275,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   }
 
   //#region Selects
-  changeSelect(items: T[]) {
+  changeSelect(items: ShTableSelect[]) {
     this.selects.clear();
     this.selects.setSelection(...items);
   }
