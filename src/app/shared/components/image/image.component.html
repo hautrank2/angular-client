@@ -4,6 +4,10 @@
   #wrapper
   (mouseover)="onHover(true)"
   (mouseleave)="onHover(false)"
+  [ngStyle]="{
+    width,
+    height,
+  }"
 >
   <img
     shImg
@@ -11,6 +15,7 @@
     [shImgPrefix]="prefix"
     [alt]="alt"
     [ngClass]="[imgClass]"
+    style="width: 100%; height: 100%"
     [ngStyle]="imgStyle"
   />
   @if (hover()) {

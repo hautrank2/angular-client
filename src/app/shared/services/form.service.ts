@@ -210,7 +210,7 @@ export class FormService {
   //#endregion
 
   //#region Table form
-  buildTableForm(columns: ShColumn[]): FormGroup {
+  buildTableForm<T = any>(columns: ShColumn<T>[]): FormGroup {
     const formFields: ShFormField[] = [
       {
         key: 'rows',
@@ -221,11 +221,11 @@ export class FormService {
     return this.buildForm(formFields);
   }
 
-  convertTableColsToFormField(columns: ShColumn[]): ShFormField[] {
+  convertTableColsToFormField<T = any>(columns: ShColumn<T>[]): ShFormField[] {
     return columns.map((col) => this.convertTableColToFormField(col));
   }
 
-  convertTableColToFormField(column: ShColumn): ShFormField {
+  convertTableColToFormField<T = any>(column: ShColumn<T>): ShFormField {
     const baseField = {
       key: column.key,
       label: column.label,
@@ -249,7 +249,7 @@ export class FormService {
       case 'select':
       case 'radio': {
         const options =
-          (column as ShSelectColumn | ShRadioColumn).options || [];
+          (column as ShSelectColumn<T> | ShRadioColumn<T>).options || [];
 
         return {
           ...baseField,

@@ -3,6 +3,7 @@ import { SharedModule } from '~/app/shared/shared.module';
 import { UiModule } from '~/app/shared/ui/ui.module';
 import { ShColumn } from '~/app/shared/components/table/table.types';
 import { JobService } from '~/app/core/services/job.service';
+import { Job } from '~/app/types/job';
 
 @Component({
   selector: 'app-admin-jobs',
@@ -12,7 +13,7 @@ import { JobService } from '~/app/core/services/job.service';
 })
 export class AdminJobsComponent {
   constructor(public jobSrv: JobService) {}
-  readonly tbColumns: ShColumn[] = [
+  readonly tbColumns: ShColumn<Job>[] = [
     {
       key: 'title',
       label: 'Job Title',

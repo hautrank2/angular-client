@@ -28,7 +28,7 @@ import { json } from '@codemirror/lang-json';
   styleUrl: './showcase-table.component.scss',
 })
 export class ShowcaseTableComponent implements OnInit, AfterViewInit {
-  columns = signal<ShColumn[]>([]);
+  columns = signal<ShColumn<any>[]>([]);
   data = signal<PaginationResponse<any>>(API_REPONSE_BASE);
   filters = signal<ApiPaginationQuery>({ page: 1, pageSize: 10 });
   formGroup = new FormGroup({});
@@ -67,7 +67,7 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
   changeColumns() {
     try {
       if (this.columnControl.valid && this.columnControl.value) {
-        const value = JSON.parse(this.columnControl.value) as ShColumn[];
+        const value = JSON.parse(this.columnControl.value) as ShColumn<any>[];
         this.columns.set([...value]);
       }
     } catch (err) {
@@ -77,6 +77,10 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
 
   get columnJson() {
     return JSON.stringify(this.columns(), null, 2);
+  }
+
+  get defaultDisplayColumns() {
+    return this.columns().map((e) => e.key);
   }
 
   //#region JSON form

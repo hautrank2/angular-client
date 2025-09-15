@@ -1,6 +1,7 @@
 .sh-image-wrapper {
   --img-overlay: rgba(255, 255, 255, 0.6);
   position: relative;
+  overflow: hidden;
   .sh-img-overlay {
     display: flex;
     position: absolute;

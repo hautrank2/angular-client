@@ -18,7 +18,6 @@ import { EmptyComponent } from './components/empty/empty.component';
 import { FormatTimePipe } from './pipes/format-time.pipe';
 import { FormatNumberPipe } from './pipes/format-number.pipe';
 import { ScrollDirective } from './directives/scroll.directive';
-import { TableWrapperComponent } from './components/table-wrapper/table-wrapper.component';
 import { EntityFormComponent } from './components/entity-form/entity-form.component';
 import { EntityManagerComponent } from './components/entity-manager/entity-manager.component';
 import { FormFieldComponent } from './components/form-field/form-field.component';
@@ -27,6 +26,7 @@ import { UploadService } from './services/upload.service';
 import { ImageComponent } from './components/image/image.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ZDirective } from './directives/z.directive';
+import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 
 const services = [FormService, UploadService];
 const components = [
@@ -40,7 +40,6 @@ const components = [
   EntityManagerComponent,
   EntityFormComponent,
   InputPasswordComponent,
-  TableWrapperComponent,
   FormFieldComponent,
 ];
 const directives = [
@@ -60,6 +59,9 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     CommonModule,
     OverlayModule,
     UiModule,
+    CdkMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
     ...pipes,
   ],
   exports: [CommonModule, ...components, ...directives, ...pipes],

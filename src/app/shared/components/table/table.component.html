@@ -42,7 +42,7 @@
       [attr.formArrayName]="isForm ? 'rows' : null"
     >
       <!-- Checkbox Column -->
-      <ng-container matColumnDef="select" sticky>
+      <ng-container [matColumnDef]="selectName" sticky>
         <th mat-header-cell *matHeaderCellDef class="cell-select">
           <mat-checkbox
             (change)="$event ? toggleAllRows() : null"

@@ -35,6 +35,7 @@
   <sh-table
     [data]="dataSource"
     [columns]="_tbColumns"
+    [defaultDisplayColumns]="defaultDisplayColumns"
     (onScrollBottom)="scrollBottom()"
     [maxHeight]="'64vh'"
     [headerSticky]="true"

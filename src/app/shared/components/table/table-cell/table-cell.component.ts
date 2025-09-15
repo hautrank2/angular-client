@@ -20,24 +20,27 @@ import { ShColumn } from '../table.types';
   encapsulation: ViewEncapsulation.None,
 })
 export class TableCellComponent<T> implements OnChanges, DoCheck {
-  @Input() column!: ShColumn;
+  @Input() column!: ShColumn<T>;
   @Input() form: FormGroup = new FormGroup({});
   @Input() rowIndex: number = 0;
   @Input({ required: true }) row!: T;
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isForm = false;
+  @Input() rowValues!: T;
   constructor(private injector: Injector) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   ngDoCheck(): void {}
 
   get cellValue() {
-    if (this.isForm) {
-      return this.getFormControl(this.rowIndex, this.column.key);
+    const value = this.isForm
+      ? this.getFormControl(this.rowIndex, this.column.key)
+      : (this.row as Record<string, any>)[this.column.key];
+    if (this.column.render) {
+      return this.column.render(value, this.rowValues, this.rowIndex);
     }
-    return (this.row as Record<string, any>)[this.column.key];
+    return value;
   }
 
   //#region Ultility

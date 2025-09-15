@@ -50,7 +50,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   @Input() postEntity!: (entity: T) => Observable<T>;
 
   // Table config
-  @Input({ required: true }) tbColumns: ShColumn[] = [];
+  @Input({ required: true }) tbColumns: ShColumn<T>[] = [];
   @Input() tbColumnsDisplay!: string[];
   @Input() tbActions: ShEntityAction[] = [];
   @Input() tbSelect: boolean = false;
@@ -101,7 +101,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     });
   }
 
-  get _tbColumns(): ShColumn[] {
+  get _tbColumns(): ShColumn<T>[] {
     const result = this.tbColumns.slice();
     const actions: ShTableAction[] = [];
     this.tbActions.forEach((action) => {
@@ -130,6 +130,10 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       result.push({ key: 'action', label: '', type: 'actions', actions });
     }
     return result;
+  }
+
+  get defaultDisplayColumns(): string[] {
+    return this._tbColumns.map((e) => e.key);
   }
 
   get _formFields(): ShFormField[] {

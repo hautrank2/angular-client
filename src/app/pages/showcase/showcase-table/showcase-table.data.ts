@@ -12,7 +12,7 @@ export const jsonValidator = (): ValidatorFn => {
   };
 };
 
-export const TABLE_COLUMNS: ShColumn[] = [
+export const TABLE_COLUMNS: ShColumn<any>[] = [
   { key: 'id', label: 'ID', type: 'text', sticky: true },
   { key: 'name', label: 'Name', type: 'text', sticky: true },
   { key: 'age', label: 'Age', type: 'number' },

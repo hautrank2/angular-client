@@ -4,6 +4,7 @@ import { UiModule } from '~/app/shared/ui/ui.module';
 import { TeamService } from '~/app/core/services/team.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
 import { ShEntityFilter } from '~/app/shared/components/entity-manager/entity-manager.types';
+import { Team } from '~/app/types/teams';
 
 @Component({
   selector: 'app-admin-teams',
@@ -19,7 +20,7 @@ export class AdminTeamsComponent {
     return this.teamSrv.find({ ...filters, isMembers: true });
   };
 
-  readonly tbColumns: ShColumn[] = [
+  readonly tbColumns: ShColumn<Team>[] = [
     {
       key: 'name',
       label: 'Name',

@@ -19,7 +19,7 @@ export class AdminMembersComponent {
     private formSrv: FormService,
   ) {}
 
-  readonly tbColumns: ShColumn[] = [
+  readonly tbColumns: ShColumn<TeamMember>[] = [
     {
       key: 'avatar',
       label: 'Avatar',

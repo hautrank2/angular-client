@@ -37,6 +37,8 @@ export class ImageComponent {
   @Input() prefix = true;
   @Input() imgClass = '';
   @Input() imgStyle = {};
+  @Input() width!: number | string;
+  @Input() height!: number | string;
 
   @Output() preview = new EventEmitter<void>();
   @Output() remove = new EventEmitter<void>();

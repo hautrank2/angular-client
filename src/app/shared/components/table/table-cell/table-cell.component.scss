@@ -1,6 +1,9 @@
-.table-cell-img {
+.sh-image-wrapper {
   border-radius: 100%;
-  object-fit: cover;
   width: 40px;
   height: 40px;
+
+  .table-cell-img {
+    object-fit: cover;
+  }
 }

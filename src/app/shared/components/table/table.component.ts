@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   Input,
   OnChanges,
   OnInit,
@@ -31,9 +32,9 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() keyIndex!: string;
-  @Input() data: any[] = [];
-  @Input() columns: ShColumn[] = [];
-  columnData = signal<ShColumn[]>([]);
+  @Input() data: T[] = [];
+  @Input() columns: ShColumn<T>[] = [];
+  columnData = signal<ShColumn<T>[]>([]);
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isLoading: boolean = false;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
@@ -56,16 +57,22 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
 
   // Footer
   @Input() hasFooter: boolean = false;
+
   // Pagination
   @Input() pagination!: ShPagination;
   @Output() changePagination = new EventEmitter<ShPaginationEmit>();
 
   // Select
+  readonly selectName = 'SELECT_NAME';
   @Input() isSelect: boolean = false;
   @Output() changeSelect = new EventEmitter<T[]>();
-  @Input() defaultSelects: T[] = [];
   @Input() disabledIndexRows: number[] = [];
+  @Input() defaultSelects: T[] = [];
   selection = new SelectionModel<T>(true, []);
+
+  // Number column
+  readonly countName = 'COUNT_NAME';
+  @Input() hasColumnCount = false;
 
   // Panel Actions
   @Output() reload = new EventEmitter<void>();
@@ -75,6 +82,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
 
   // Form
+  readonly editName = 'EDIT_NAME';
   @Input() isEdit: boolean = false;
   @Output() valueChanges = new EventEmitter<any>();
   @Output() valueChange = new EventEmitter<{ index: number; data: any }>();
@@ -90,6 +98,15 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   //Sort
   @Input() sortData: Sort | undefined;
   @Output() onSort = new EventEmitter<Sort>();
+
+  // Panel
+  @Input({ required: true }) defaultDisplayColumns: string[] = [];
+  @Input() hasPanel: boolean = false;
+  @Input() hasColumnFilter: boolean = false;
+  @Output() onDeleteSelected = new EventEmitter<T[]>();
+  displayColumns = new SelectionModel<string>(true, []);
+
+  @HostBinding('style.position') @Input() position: string = 'relative';
 
   constructor(
     private elRef: ElementRef,
@@ -108,10 +125,17 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
         this.formGroup = this.formSrv.buildTableForm(this.columns);
       }
     }
+
+    this.displayColumns.setSelection(
+      ...(this.defaultDisplayColumns
+        ? this.defaultDisplayColumns
+            .slice()
+            .filter((e) => this.canFilterColumnKeys.includes(e))
+        : this.canFilterColumnKeys),
+    );
   }
 
   ngOnChanges(changes: any): void {
-    console.log('ngOnChanges', changes);
     if (changes['data']) {
       if (this.data) {
         this.cdr.detectChanges();
@@ -137,6 +161,16 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     if (changes['isEdit']) {
       if (this.isEdit) this.displayedColumns.push('isEdit');
     }
+
+    if (changes['defaultDisplayColumns']) {
+      this.displayColumns.setSelection(
+        ...(this.defaultDisplayColumns
+          ? this.defaultDisplayColumns
+              .slice()
+              .filter((e) => this.canFilterColumnKeys.includes(e))
+          : this.canFilterColumnKeys),
+      );
+    }
   }
 
   get isFixedHeight() {
@@ -144,12 +178,25 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
 
   get displayedColumns(): string[] {
-    const colKeys = this.columnData()
-      .map((column) => column.key)
-      .slice();
-    if (this.isSelect) colKeys.unshift('select');
-    if (this.isEdit) colKeys.push('isEdit');
-    return colKeys;
+    // Lọc theo đúng thứ tự this.columns
+    const colKeys = this.columns
+      .filter((c) => c.lock || this.displayColumns.isSelected(c.key))
+      .map((c) => c.key);
+
+    // Pinned trái (giữ đúng thứ tự bạn muốn xuất hiện từ trái sang phải)
+    const left: string[] = [];
+    // Ví dụ muốn COUNT ngoài cùng trái rồi tới SELECT:
+    if (this.hasColumnCount && !colKeys.includes(this.countName))
+      left.push(this.countName);
+    if (this.isSelect && !colKeys.includes(this.selectName))
+      left.push(this.selectName);
+
+    // Pinned phải
+    const right: string[] = [];
+    if (this.isEdit && !colKeys.includes(this.editName))
+      right.push(this.editName);
+
+    return [...left, ...colKeys, ...right];
   }
 
   ngDoCheck() {}
@@ -169,6 +216,14 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   getTemplate(key: string): TemplateRef<any> | null {
     return this.customCells[key] || null;
   }
+
+  getNumberCount(index: number): number {
+    // Check pagination
+    if (this.pagination) {
+      return (this.pagination.page - 1) * this.pagination.pageSize + index + 1;
+    }
+    return index;
+  }
   //#endregion
 
   //#region Pagination
@@ -179,8 +234,8 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.routerNavigate(pageIndex, pageSize);
   }
 
-  routerNavigate(page: number, pageSize: number): void {
-    this.changePagination.emit({ pageSize, page });
+  routerNavigate(pageIndex: number, pageSize: number): void {
+    this.changePagination.emit({ pageSize, pageIndex });
   }
   //#endregion
 
@@ -262,7 +317,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.reload.emit();
   }
 
-  onRowClick(row: any) {
+  onRowClick(row: T) {
     this.rowClick.emit(row);
   }
 
@@ -358,6 +413,54 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       row.position + 1
     }`;
+  }
+
+  clearSelect() {
+    this.selection.clear();
+    this.emitSelectedRows();
+  }
+  //#endregion
+
+  //#region Filter column
+  get canFilterColumnKeys(): string[] {
+    return this.columns.filter((e) => !e.lock).map((e) => e.key);
+  }
+
+  get isIndeterminateFilterColumn(): boolean {
+    return (
+      !this.canFilterColumnKeys.every((e) =>
+        this.displayColumns.isSelected(e),
+      ) && this.displayColumns.hasValue()
+    );
+  }
+
+  get isAllFilterColumn(): boolean {
+    return (
+      this.displayColumns.hasValue() &&
+      this.canFilterColumnKeys.every((e) => this.displayColumns.isSelected(e))
+    );
+  }
+
+  toggleAllColumnFilter(checked: boolean) {
+    if (checked) {
+      this.displayColumns.setSelection(...this.canFilterColumnKeys);
+    } else {
+      this.displayColumns.clear();
+    }
+  }
+
+  isShownColumn(key: string) {
+    return this.displayColumns.isSelected(key);
+  }
+
+  toggleColumnFilter(key: string) {
+    this.displayColumns.toggle(key);
+  }
+  //#endregion
+
+  //#region Panel
+  deleteSelected() {
+    this.onDeleteSelected.emit(this.selection.selected);
   }
   //#endregion
 }
