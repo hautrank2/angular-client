@@ -39,6 +39,7 @@ export const TABLE_COLUMNS: ShColumn<any>[] = [
     options: [
       { label: 'Admin', value: 'admin' },
       { label: 'User', value: 'user' },
+      { label: 'Moderator', value: 'moderator' },
     ],
   },
   { key: 'isActive', label: 'Active', type: 'toggle' },

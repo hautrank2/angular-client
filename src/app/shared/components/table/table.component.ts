@@ -47,7 +47,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() z: number | string = 0;
   @Input() height!: number | string;
   @Input() maxHeight!: number | string;
-  @Input() formGroup!: FormGroup;
+  formGroup: FormGroup = new FormGroup({});
   @Input() isForm: boolean = false;
 
   // Style
@@ -121,17 +121,21 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     private cdr: ChangeDetectorRef,
     private formSrv: FormService,
   ) {
-    this.columnData.set(this.columns);
-  }
-
-  //#region Hooks
-  ngOnInit(): void {
     if (!this.formGroup) {
       if (this.isForm) {
         this.formGroup = this.formSrv.buildTableForm(this.columns);
       }
     }
+    this.columnData.set(this.columns);
+  }
 
+  onSubmit() {
+    console.log(this.formGroup);
+    console.log(this.formGroup.value);
+  }
+
+  //#region Hooks
+  ngOnInit(): void {
     this.displayColumns.setSelection(
       ...(this.defaultDisplayColumns
         ? this.defaultDisplayColumns

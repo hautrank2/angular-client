@@ -26,7 +26,6 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
   @Input({ required: true }) row!: T;
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isForm = false;
-  @Input() rowValues!: T;
   constructor(private injector: Injector) {}
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -35,10 +34,10 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
 
   get cellValue() {
     const value = this.isForm
-      ? this.getFormControl(this.rowIndex, this.column.key)
+      ? this.getFormControl(this.rowIndex, this.column.key).value
       : (this.row as Record<string, any>)[this.column.key];
     if (this.column.render) {
-      return this.column.render(value, this.rowValues, this.rowIndex);
+      return this.column.render(value, this.row, this.rowIndex);
     }
     return value;
   }

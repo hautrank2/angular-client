@@ -5,11 +5,7 @@
 <ng-container *ngIf="!column.pipe">
   @switch (column.type) {
     @case ("text") {
-      {{
-        column.formatter
-          ? column.formatter(cellValue, row, rowIndex)
-          : cellValue
-      }}
+      {{ cellValue }}
     }
     @case ("number") {
       {{ cellValue | shFormatNumber }}
@@ -34,12 +30,6 @@
       </div>
     }
     @case ("time") {
-      <input
-        hidden
-        matInput
-        [formControl]="getFormControl(rowIndex, column.key)"
-        placeholder="Enter {{ column.label }}"
-      />
       {{ cellValue | shFormatTime }}
     }
     @case ("select") {

@@ -1,7 +1,7 @@
+import { TableComponent } from './../../../shared/components/table/table.component';
 import {
   AfterViewInit,
   Component,
-  effect,
   ElementRef,
   OnInit,
   signal,
@@ -17,9 +17,10 @@ import {
   ApiPaginationQuery,
   PaginationResponse,
 } from '~/app/types/query';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { EditorView, basicSetup } from 'codemirror';
 import { json } from '@codemirror/lang-json';
+import { ShowcaseEntityModel } from './showcase-table.type';
 
 @Component({
   selector: 'app-showcase-table',
@@ -28,33 +29,33 @@ import { json } from '@codemirror/lang-json';
   styleUrl: './showcase-table.component.scss',
 })
 export class ShowcaseTableComponent implements OnInit, AfterViewInit {
-  columns = signal<ShColumn<any>[]>([]);
-  data = signal<PaginationResponse<any>>(API_REPONSE_BASE);
+  @ViewChild(TableComponent)
+  showcaseTable!: TableComponent<ShowcaseEntityModel>;
+  columns = signal<ShColumn<ShowcaseEntityModel>[]>([]);
+  data = signal<PaginationResponse<ShowcaseEntityModel>>(API_REPONSE_BASE);
   filters = signal<ApiPaginationQuery>({ page: 1, pageSize: 10 });
-  formGroup = new FormGroup({});
 
   //#region START: Table
   tbSelect = signal(true);
-  tbIsForm = signal(false);
+  tbIsForm = signal(true);
   //#endregion
 
   //#region START: JSON FORM
   @ViewChild('columnsEditor', { static: true }) editorRef!: ElementRef;
+  private editorView!: EditorView;
   isInitializedColumnForm = false;
   columnControl = new FormControl('', [Validators.required, jsonValidator()]);
-  private editorView!: EditorView;
+
+  @ViewChild('formValuesEditor', { static: true }) formValuesRef!: ElementRef;
+  private formValuesView!: EditorView;
   //#endregion END JSON FORM
 
   readonly apiEndpoint: string = '/data/users.json';
-  constructor(private apiFakerSrv: ApiFakerService<any>) {
-    effect(() => {
-      console.log('columns', this.columns());
-    });
+  constructor(private apiFakerSrv: ApiFakerService<ShowcaseEntityModel>) {
+    this.columns.set(TABLE_COLUMNS);
   }
 
   ngOnInit(): void {
-    this.columns.set(TABLE_COLUMNS);
-
     this.apiFakerSrv.find(this.apiEndpoint, this.filters()).subscribe((res) => {
       this.data.set(res);
     });
@@ -101,5 +102,17 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
       parent: this.editorRef.nativeElement,
     });
     this.isInitializedColumnForm = true;
+  }
+
+  private initFormValuesContent(values: ShowcaseEntityModel[]) {
+    this.editorView = new EditorView({
+      doc: JSON.stringify(values, null, 2),
+      extensions: [basicSetup, json()],
+      parent: this.formValuesRef.nativeElement,
+    });
+  }
+
+  submit() {
+    this.initFormValuesContent(this.showcaseTable.formGroup.getRawValue().rows);
   }
 }

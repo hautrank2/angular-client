@@ -8,21 +8,18 @@
             Column is not valid json
           </p>
         }
-        @if (this.formGroup.valid && this.formGroup.value) {
-          <button mat-flat-button (click)="changeColumns()">Save</button>
-        }
       </div>
     }
   </div>
   <div class="json-form column-form flex justify-between">
     <div #columnsEditor></div>
-    x x
   </div>
 </section>
 
 <section>
   <h1 appTypography="headline-sm">Result</h1>
   <sh-table
+    [keyName]="'id'"
     [columns]="columns()"
     [data]="data().items"
     [maxHeight]="'64vh'"
@@ -32,4 +29,8 @@
     [defaultDisplayColumns]="defaultDisplayColumns"
     [z]="2"
   ></sh-table>
+  <button mat-flat-button (click)="submit()" class="mt-2">Submit</button>
+  <div class="form-values max-h-[40vh] mt-2 overflow-y-auto">
+    <div #formValuesEditor></div>
+  </div>
 </section>
