@@ -115,4 +115,5 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
   submit() {
     this.initFormValuesContent(this.showcaseTable.formGroup.getRawValue().rows);
   }
+  //#endregion
 }

@@ -1,8 +1,9 @@
-<ng-container *ngIf="column.pipe">
-  {{ transformValue(cellValue, column.pipe) }}
-</ng-container>
-
-<ng-container *ngIf="!column.pipe">
+<div
+  class="table-cell"
+  (click)="tableCellClick($event)"
+  #trigger="cdkOverlayOrigin"
+  cdkOverlayOrigin
+>
   @switch (column.type) {
     @case ("text") {
       {{ cellValue }}
@@ -154,4 +155,37 @@
       <span>Unsupported Type</span>
     }
   }
-</ng-container>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="openEditorPopover()"
+  (detach)="openEditorPopover.set(false)"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  [cdkConnectedOverlayBackdropClass]="'table-cell-popover-backdrop'"
+  (backdropClick)="closePopover()"
+  (attach)="
+    popoverInput?.nativeElement?.focus(); popoverInput?.nativeElement?.select()
+  "
+>
+  <div class="table-cell-popover" [shZ]="4">
+    <mat-form-field class="table-cell-input" appearance="outline">
+      <!-- <mat-label>Clearable input</mat-label> -->
+      <input
+        #popoverInput
+        (keydown.enter)="closePopover(true)"
+        matInput
+        type="text"
+        [formControl]="editFormControl"
+        (keydown.escape)="closePopover()"
+      />
+    </mat-form-field>
+    <div class="table-cell-popover-footer">
+      <button mat-button (click)="closePopover()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="closePopover(true)">
+        Save
+      </button>
+    </div>
+  </div>
+</ng-template>

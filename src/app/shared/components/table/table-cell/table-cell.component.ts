@@ -1,12 +1,16 @@
 import {
   Component,
   DoCheck,
+  effect,
+  ElementRef,
   Injector,
   Input,
   OnChanges,
   PipeTransform,
+  signal,
   SimpleChanges,
   TemplateRef,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -26,6 +30,11 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
   @Input({ required: true }) row!: T;
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isForm = false;
+
+  openEditorPopover = signal(false);
+  editFormControl = new FormControl('');
+  @ViewChild('popoverInput') popoverInput?: ElementRef<HTMLInputElement>;
+
   constructor(private injector: Injector) {}
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -42,6 +51,12 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
     return value;
   }
 
+  get fc(): FormControl | null {
+    if (!this.isForm || !this.rows) return null;
+    return (this.rows.at(this.rowIndex) as FormGroup).get(
+      this.column.key,
+    ) as FormControl;
+  }
   //#region Ultility
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
@@ -85,6 +100,31 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
   getPipeClass(pipeName: string): any {
     const pipes: any = {};
     return pipes[pipeName];
+  }
+  //#endregion
+
+  //#region table cell edit
+  readonly popoverTypes = ['text', 'number'];
+  tableCellClick(event: MouseEvent) {
+    if (
+      this.isForm &&
+      !!this.fc &&
+      this.popoverTypes.includes(this.column.type)
+    ) {
+      this.openEditorPopover.set(true);
+      this.editFormControl.setValue(this.cellValue);
+    }
+  }
+
+  closePopover(ok?: boolean) {
+    if (!this.openEditorPopover || !this.fc) return;
+    if (!ok) {
+      this.openEditorPopover.set(false);
+      return;
+    }
+    const value = this.editFormControl.value;
+    this.fc.setValue(value);
+    this.openEditorPopover.set(false);
   }
   //#endregion
 }
