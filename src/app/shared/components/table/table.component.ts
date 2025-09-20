@@ -49,6 +49,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() maxHeight!: number | string;
   formGroup: FormGroup = new FormGroup({});
   @Input() isForm: boolean = false;
+  @Input() disabledIndexRows: number[] = [];
 
   // Style
   @Input() tableStyle: Record<string, any> = {};
@@ -72,7 +73,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   readonly selectName = 'SELECT_NAME';
   @Input() isSelect: boolean = false;
   @Output() changeSelect = new EventEmitter<ShTableSelect[]>();
-  @Input() disabledIndexRows: number[] = [];
   @Input() defaultSelects: ShTableSelect[] = [];
   @Input() selection = new SelectionModel<ShTableSelect>(true, []);
 

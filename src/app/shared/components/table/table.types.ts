@@ -12,16 +12,13 @@ export interface ShBaseColumn<T> {
   label: string;
   sortable?: boolean;
   width?: number;
-  pipe?: {
-    name: string;
-    props?: Record<string, any>;
-  };
   props?: Record<string, any>;
   onChange?(value: any, item: T, index: number): void;
   sticky?: boolean;
   stickyEnd?: boolean;
   render?: (value: any, item: T, index: number) => void;
   lock?: boolean;
+  disabled?: boolean;
   formField?: ShFormField;
 }
 

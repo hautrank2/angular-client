@@ -103,6 +103,7 @@
                 [rowIndex]="rowIndex"
                 [row]="row"
                 [customCells]="customCells"
+                [rowDisabled]="disabledIndexRows.includes(rowIndex)"
               ></sh-table-cell>
             } @else {
               <ng-container

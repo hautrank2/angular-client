@@ -47,6 +47,7 @@
             column.onChange && column.onChange($event.value, row, rowIndex)
           "
           [formControl]="getFormControl(rowIndex, column.key)"
+          [disabled]="disabled"
         >
           <mat-option
             *ngFor="let option of column.options"
@@ -69,10 +70,15 @@
         "
         class="size-sm"
         [formControl]="getFormControl(rowIndex, column.key)"
+        [disabled]="disabled"
       ></mat-slide-toggle>
     }
     @case ("radio") {
-      <mat-radio-group aria-label="Radio button" [value]="cellValue">
+      <mat-radio-group
+        aria-label="Radio button"
+        [value]="cellValue"
+        [disabled]="disabled"
+      >
         @for (opt of column.options; track $index) {
           <mat-radio-button [value]="opt.value">{{
             opt.label

@@ -23,8 +23,19 @@ const status = [
   { value: 'unknown', iconName: 'help', label: 'Unknown', color: 'gray' },
 ];
 
+const genders = [
+  {
+    label: 'Male',
+    value: 'male',
+  },
+  {
+    label: 'Female',
+    value: 'female',
+  },
+];
+
 export const TABLE_COLUMNS: ShColumn<any>[] = [
-  { key: 'id', label: 'ID', type: 'text', sticky: true },
+  { key: 'id', label: 'ID', type: 'text', sticky: true, disabled: true },
   { key: 'name', label: 'Name', type: 'text', sticky: true },
   {
     key: 'age',
@@ -79,10 +90,18 @@ export const TABLE_COLUMNS: ShColumn<any>[] = [
     key: 'gender',
     label: 'Gender',
     type: 'text',
+    render(value) {
+      return genders.find((e) => e.value === value)?.label;
+    },
+    formField: {
+      key: 'gender',
+      type: 'select',
+      options: genders,
+    },
   },
   { key: 'loginTime', label: 'Login Time', type: 'time' },
   { key: 'avatarUrl', label: 'Avatar', type: 'img' },
-  { key: 'tags', label: 'Tags', type: 'chips' },
+  { key: 'tags', label: 'Tags', type: 'chips', disabled: true },
   {
     key: 'actions',
     label: 'Actions',

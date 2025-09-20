@@ -32,6 +32,7 @@ export class TableCellComponent<T> {
   @Input({ required: true }) row!: T;
   @Input() customCells!: { [key: string]: TemplateRef<any> };
   @Input() isForm = false;
+  @Input() rowDisabled = false;
 
   openEditorPopover = signal(false);
   editFormGroup = new FormGroup({});
@@ -57,6 +58,10 @@ export class TableCellComponent<T> {
     return (this.rows.at(this.rowIndex) as FormGroup).get(
       this.column.key,
     ) as FormControl;
+  }
+
+  get disabled(): boolean {
+    return !!(this.rowDisabled || this.column.disabled);
   }
   //#region Ultility
   objectKeys(obj: any): string[] {
@@ -125,7 +130,8 @@ export class TableCellComponent<T> {
     if (
       this.isForm &&
       !!this.fc &&
-      this.popoverTypes.includes(this.column.type)
+      this.popoverTypes.includes(this.column.type) &&
+      !this.disabled
     ) {
       this.editFormGroup = this.formSrv.buildForm([this.formField]);
       this.editFormGroup.setValue({ [this.formField.key]: this.cellValue });
