@@ -169,9 +169,29 @@
     popoverInput?.nativeElement?.focus(); popoverInput?.nativeElement?.select()
   "
 >
-  <div class="table-cell-popover" [shZ]="4">
-    <mat-form-field class="table-cell-input" appearance="outline">
-      <!-- <mat-label>Clearable input</mat-label> -->
+  <div
+    class="table-cell-popover"
+    [shZ]="4"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+  >
+    <form
+      class="table-cell-form"
+      [formGroup]="editFormGroup"
+      (ngSubmit)="closePopover(true)"
+    >
+      <sh-form-field
+        [field]="formField"
+        [formGroup]="editFormGroup"
+      ></sh-form-field>
+      <div class="table-cell-popover-footer">
+        <button mat-button (click)="closePopover()">Cancel</button>
+        <button mat-flat-button color="primary" (click)="closePopover(true)">
+          Save
+        </button>
+      </div>
+    </form>
+    <!-- <mat-form-field class="table-cell-input" appearance="outline">
       <input
         #popoverInput
         (keydown.enter)="closePopover(true)"
@@ -180,12 +200,6 @@
         [formControl]="editFormControl"
         (keydown.escape)="closePopover()"
       />
-    </mat-form-field>
-    <div class="table-cell-popover-footer">
-      <button mat-button (click)="closePopover()">Cancel</button>
-      <button mat-flat-button color="primary" (click)="closePopover(true)">
-        Save
-      </button>
-    </div>
+    </mat-form-field> -->
   </div>
 </ng-template>

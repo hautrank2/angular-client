@@ -13,8 +13,10 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ShColumn } from '../table.types';
+import { ShFormField } from '../../form/form.types';
+import { FormService } from '~/app/shared/services/form.service';
 
 @Component({
   selector: 'sh-table-cell',
@@ -23,7 +25,7 @@ import { ShColumn } from '../table.types';
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class TableCellComponent<T> implements OnChanges, DoCheck {
+export class TableCellComponent<T> {
   @Input() column!: ShColumn<T>;
   @Input() form: FormGroup = new FormGroup({});
   @Input() rowIndex: number = 0;
@@ -32,14 +34,13 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
   @Input() isForm = false;
 
   openEditorPopover = signal(false);
-  editFormControl = new FormControl('');
+  editFormGroup = new FormGroup({});
   @ViewChild('popoverInput') popoverInput?: ElementRef<HTMLInputElement>;
 
-  constructor(private injector: Injector) {}
-
-  ngOnChanges(changes: SimpleChanges): void {}
-
-  ngDoCheck(): void {}
+  constructor(
+    private injector: Injector,
+    private formSrv: FormService,
+  ) {}
 
   get cellValue() {
     const value = this.isForm
@@ -81,6 +82,15 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
       controlName,
     ) as FormControl;
   }
+
+  get formField(): ShFormField {
+    return {
+      key: this.column.key,
+      type: 'text',
+      label: this.column.label,
+      ...this.column.formField,
+    };
+  }
   //#endregion
 
   //#endregion PIPE
@@ -104,15 +114,22 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
   //#endregion
 
   //#region table cell edit
-  readonly popoverTypes = ['text', 'number'];
+  readonly popoverTypes: ReadonlyArray<ShColumn<T>['type']> = [
+    'text',
+    'number',
+    'date',
+    'time',
+  ];
+
   tableCellClick(event: MouseEvent) {
     if (
       this.isForm &&
       !!this.fc &&
       this.popoverTypes.includes(this.column.type)
     ) {
+      this.editFormGroup = this.formSrv.buildForm([this.formField]);
+      this.editFormGroup.setValue({ [this.formField.key]: this.cellValue });
       this.openEditorPopover.set(true);
-      this.editFormControl.setValue(this.cellValue);
     }
   }
 
@@ -122,8 +139,8 @@ export class TableCellComponent<T> implements OnChanges, DoCheck {
       this.openEditorPopover.set(false);
       return;
     }
-    const value = this.editFormControl.value;
-    this.fc.setValue(value);
+    const values = this.editFormGroup.get(this.formField.key);
+    this.fc.setValue(values?.value);
     this.openEditorPopover.set(false);
   }
   //#endregion

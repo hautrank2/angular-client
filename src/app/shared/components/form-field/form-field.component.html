@@ -137,6 +137,14 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
               }
+              @case ("dateTime") {
+                <sh-date-time
+                  [formControlName]="i"
+                  [formOptions]="formOptions"
+                  [appAttr]="fieldAttrs"
+                >
+                </sh-date-time>
+              }
               @default {
                 <!-- Có thể thêm xử lý mặc định -->
               }
@@ -273,6 +281,15 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+    }
+    @case ("dateTime") {
+      <sh-date-time
+        [formControlName]="name"
+        style="width: 100%"
+        [formOptions]="formOptions"
+        [appAttr]="fieldAttrs"
+      >
+      </sh-date-time>
     }
     @case ("upload") {
       <sh-upload [formGroup]="formGroup" [field]="field"></sh-upload>

@@ -12,11 +12,38 @@ export const jsonValidator = (): ValidatorFn => {
   };
 };
 
+const status = [
+  {
+    value: 'active',
+    iconName: 'check_circle',
+    label: 'Active',
+    color: 'green',
+  },
+  { value: 'inactive', iconName: 'cancel', label: 'Inactive', color: 'red' },
+  { value: 'unknown', iconName: 'help', label: 'Unknown', color: 'gray' },
+];
+
 export const TABLE_COLUMNS: ShColumn<any>[] = [
   { key: 'id', label: 'ID', type: 'text', sticky: true },
   { key: 'name', label: 'Name', type: 'text', sticky: true },
-  { key: 'age', label: 'Age', type: 'number' },
-  { key: 'createdAt', label: 'Created Date', type: 'date' },
+  {
+    key: 'age',
+    label: 'Age',
+    type: 'number',
+    formField: {
+      key: 'age',
+      type: 'number',
+    },
+  },
+  {
+    key: 'createdAt',
+    label: 'Created Date',
+    type: 'date',
+    formField: {
+      key: 'createdAt',
+      type: 'dateTime',
+    },
+  },
   {
     key: 'status',
     label: 'Status',
@@ -30,6 +57,11 @@ export const TABLE_COLUMNS: ShColumn<any>[] = [
         default:
           return { iconName: 'help', label: 'Unknown', color: 'gray' };
       }
+    },
+    formField: {
+      key: 'status',
+      type: 'select',
+      options: status.map((e) => ({ value: e.value, label: e.label })),
     },
   },
   {

@@ -59,7 +59,7 @@ export interface ShBaseFormField {
 // ─────────────────────────────────────────────
 
 export interface ShTextFormField extends ShBaseFormField {
-  type: 'text' | 'number' | 'password' | 'date' | 'area';
+  type: 'text' | 'number' | 'password' | 'date' | 'dateTime' | 'area';
 }
 
 export interface ShCheckboxFormField extends ShBaseFormField {
@@ -122,6 +122,7 @@ export type ShFormFieldType =
   | 'number'
   | 'password'
   | 'date'
+  | 'dateTime'
   | 'autocomplete'
   | 'select'
   | 'radio'

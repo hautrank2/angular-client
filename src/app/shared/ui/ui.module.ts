@@ -33,6 +33,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 
 const materialModules = [
   MatButtonModule,
@@ -71,6 +72,7 @@ const materialModules = [
   MatSidenavModule,
   FormsModule,
   MatRippleModule,
+  MatTimepickerModule,
 ];
 
 @NgModule({

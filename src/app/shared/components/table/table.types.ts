@@ -1,3 +1,5 @@
+import { ShFormField } from '../form/form.types';
+
 export type ShTableSelect = string | number;
 export interface ShPagination {
   page: number;
@@ -19,7 +21,8 @@ export interface ShBaseColumn<T> {
   sticky?: boolean;
   stickyEnd?: boolean;
   render?: (value: any, item: T, index: number) => void;
-  lock?: boolean; // if true, the column cannot be hided
+  lock?: boolean;
+  formField?: ShFormField;
 }
 
 // 1. Text column

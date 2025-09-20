@@ -1,0 +1,35 @@
+<div class="date-time-picker">
+  <mat-form-field
+    [appearance]="formOptions.appearance ?? 'outline'"
+    [appAttr]="formOptions.fieldAttrs ?? {}"
+  >
+    <mat-label>Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [(ngModel)]="inputValue"
+      (ngModelChange)="updateValue()"
+      (blur)="onTouched()"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field
+    [appearance]="formOptions.appearance ?? 'outline'"
+    [appAttr]="formOptions.fieldAttrs ?? {}"
+  >
+    <mat-label>Time</mat-label>
+    <input
+      matInput
+      [matTimepicker]="timepicker"
+      [(ngModel)]="inputValue"
+      (ngModelChange)="updateValue()"
+      (blur)="onTouched()"
+    />
+    <mat-timepicker-toggle matIconSuffix [for]="timepicker">
+      <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
+    </mat-timepicker-toggle>
+    <mat-timepicker #timepicker />
+  </mat-form-field>
+</div>

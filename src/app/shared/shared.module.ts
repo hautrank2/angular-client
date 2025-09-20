@@ -27,6 +27,8 @@ import { ImageComponent } from './components/image/image.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ZDirective } from './directives/z.directive';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { DateTimeComponent } from './components/date-time/date-time.component';
 
 const services = [FormService, UploadService];
 const components = [
@@ -41,6 +43,9 @@ const components = [
   EntityFormComponent,
   InputPasswordComponent,
   FormFieldComponent,
+  UploadComponent,
+  ImageComponent,
+  DateTimeComponent,
 ];
 const directives = [
   TypographyDirective,
@@ -53,7 +58,7 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [...components, ...directives, UploadComponent, ImageComponent],
+  declarations: [...components, ...directives],
   imports: [
     ReactiveFormsModule,
     CommonModule,
@@ -62,6 +67,7 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     CdkMenuTrigger,
     CdkMenu,
     CdkMenuItem,
+    CdkTrapFocus,
     ...pipes,
   ],
   exports: [CommonModule, ...components, ...directives, ...pipes],
