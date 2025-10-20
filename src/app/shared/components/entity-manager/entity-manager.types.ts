@@ -1,6 +1,5 @@
 export interface ShEntityResponse<T> {
   total: number;
-  totalPage: number;
   pageSize: number;
   page: number;
   items: T[];

@@ -1,52 +1,48 @@
-<div class="sticky top-12 z-10 rounded-xl overflow-hidden mb-4">
-  @if (selects.hasValue()) {
-    <div [ngClass]="['p-2', 'flex items-center gap-4 bg-primary/10']">
-      <div class="flex items-center gap-2">
-        <button
-          mat-icon-button
-          (click)="clearSelected()"
-          class="selected-clear-btn"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-        <p appTypography="body-lg">
-          selected {{ selects.selected.length }} items
-        </p>
-      </div>
-      <button mat-icon-button (click)="deleteSelected()">
-        <mat-icon>delete_outline</mat-icon>
-      </button>
-    </div>
-  } @else {
-    <div
-      [ngClass]="['p-2', 'panel flex justify-between items-center rounded-lg']"
-    >
-      <div></div>
-      <div class="flex gap-2 items-center">
-        <button mat-mini-fab extended (click)="openDialog()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-  }
-</div>
-
-<section class="overflow-y-auto shadow-[var(--mat-sys-level2)]" tabindex="0">
+<section class="overflow-y-auto" tabindex="0">
   <sh-table
     [data]="dataSource"
     [columns]="_tbColumns"
-    [defaultDisplayColumns]="defaultDisplayColumns"
     (onScrollBottom)="scrollBottom()"
-    [maxHeight]="'64vh'"
+    [maxHeight]="'calc(100vh - var(--header-height) - 180px)'"
     [headerSticky]="true"
     [formGroup]="form"
     [isSelect]="tbSelect"
-    [selection]="selects"
+    (changeSelect)="changeSelect($event)"
+    [defaultSelects]="selects.selected"
+    (rowClick)="rowClick($event)"
+    [isLoading]="loading()"
     [pagination]="{
-      page: filter().page,
-      pageSize: filter().pageSize,
-      total: data().total,
+      page: filter()['page'],
+      pageSize: filter()['pageSize'],
+      total: data()['total'],
     }"
     (changePagination)="changePagination($event)"
-  ></sh-table>
+    [hasPanel]="true"
+    [hasColumnFilter]="true"
+    (onDeleteSelected)="deleteSelected()"
+  >
+    <app-filters
+      tablePanelFilter
+      [filterInfors]="filterFields"
+      (valueChanges)="filterChange($event)"
+      [values]="queryParams"
+    ></app-filters>
+
+    <div tablePanelActions class="flex gap-2 items-center">
+      @if (!!addUrl) {
+        <a mat-flat-button [routerLink]="[addUrl]">
+          <mat-icon>add</mat-icon>
+          Create
+        </a>
+      } @else {
+        <button mat-flat-button (click)="openDialog()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+      }
+      <button mat-icon-button (click)="reload()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div></sh-table
+  >
 </section>

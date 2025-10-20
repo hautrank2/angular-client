@@ -19,6 +19,30 @@ export class AdminComponent {
     { title: 'Members', path: '/admin/members', icon: 'person' },
   ];
 
+  readonly routes = [
+    {
+      title: 'Recruiment',
+      path: '/admin/recruiment',
+      children: [
+        {
+          title: 'Jobs',
+          path: '/admin/recruiment',
+          icon: 'cases',
+        },
+        {
+          title: 'Teams',
+          path: '/admin/recruiment/teams',
+          icon: 'group',
+        },
+        {
+          title: 'Members',
+          path: '/admin/members',
+          icon: 'person',
+        },
+      ],
+    },
+  ];
+
   constructor(private location: Location) {
     this.activeRoute.set(this.location.path());
   }

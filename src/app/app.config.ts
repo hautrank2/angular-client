@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +11,7 @@ import {
   MAT_DATE_LOCALE,
   provideNativeDateAdapter,
 } from '@angular/material/core';
+import { ToastrModule } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +20,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideNativeDateAdapter(),
+    importProvidersFrom(
+      ToastrModule.forRoot({
+        positionClass: 'toast-bottom-right',
+        timeOut: 10000,
+        disableTimeOut: false,
+      }),
+    ),
   ],
 };

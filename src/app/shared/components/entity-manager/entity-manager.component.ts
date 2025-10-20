@@ -12,14 +12,12 @@ import {
 import { FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { API_REPONSE_BASE } from '~/app/types/query';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 import {
   ShColumn,
   ShPaginationEmit,
   ShTableAction,
-  ShTableSelect,
 } from '../table/table.types';
 import {
   ShEntityAction,
@@ -29,8 +27,12 @@ import {
 import { EntityFormComponent } from '../entity-form/entity-form.component';
 import { catchError, concat, finalize, Observable, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { KEY_NAME } from '../../constants/common';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { KEY_NAME, PAGINATION_RESPONSE_BASE } from '../../constants/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MESSAGE } from '../../constants/message';
+import { ShFilterField, ShFilterValueChange } from '../filters/filters.types';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'sh-entity-manager',
@@ -62,39 +64,32 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   @Input() postFormFields!: ShFormField[];
   @Input() putFormFields!: ShFormField[];
 
+  // Filter config
+  @Input() filterFields: ShFilterField[] = [];
+  queryParams: { [key: string]: any } = {};
+
+  // Panel
+  @Input() addUrl?: string;
+
   @Input() filterAsSearchParams: boolean = true;
 
   readonly dialog = inject(MatDialog);
   layout: 'grid' | 'table' = 'table';
-  data = signal<ShEntityResponse<T>>(API_REPONSE_BASE);
+  data = signal<ShEntityResponse<T>>(PAGINATION_RESPONSE_BASE);
   dataSource: T[] = [];
   filter = signal<ShEntityFilter>({ pageSize: 10, page: 1 });
   loading = signal<boolean>(false);
   form = new FormGroup({});
-  selects = new SelectionModel<ShTableSelect>(true, []);
+  selects = new SelectionModel<string>(true, []);
   private snackBar = inject(MatSnackBar);
 
   constructor(
     private formSrv: FormService,
     private route: ActivatedRoute,
     private router: Router,
+    private toastr: ToastrService,
   ) {
     this.form = this.formSrv.buildTableForm(this.tbColumns);
-    this.form.valueChanges.subscribe((res) => {
-      console.log('change form', res);
-    });
-
-    this.route.queryParams.subscribe((params: Params) => {
-      if (this.filterAsSearchParams) {
-        this.filter.update((pre) => {
-          return {
-            ...pre,
-            ...params,
-          };
-        });
-        this.fetchData();
-      }
-    });
 
     effect(() => {
       this.dataSource = this.data().items;
@@ -105,6 +100,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   get _tbColumns(): ShColumn<T>[] {
     const result = this.tbColumns.slice();
     const actions: ShTableAction[] = [];
+    // check # column
     this.tbActions.forEach((action) => {
       switch (action) {
         case 'edit':
@@ -121,20 +117,37 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
             label: 'Delete',
             icon: 'delete',
             onClick: (_, item) => {
-              this.remove(item);
+              Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure?',
+                text: 'You will not be able to recover !',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                cancelButtonColor: '#f7f7f7',
+                customClass: {
+                  cancelButton: 'my-button-class',
+                },
+                reverseButtons: true,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.remove(item);
+                }
+              });
             },
           });
           break;
       }
     });
     if (actions.length > 0) {
-      result.push({ key: 'action', label: '', type: 'actions', actions });
+      result.push({
+        name: 'action',
+        label: 'Actions',
+        type: 'actions',
+        actions,
+      });
     }
     return result;
-  }
-
-  get defaultDisplayColumns(): string[] {
-    return this._tbColumns.map((e) => e.key);
   }
 
   get _formFields(): ShFormField[] {
@@ -153,11 +166,23 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   }
 
   get displayColumns(): string[] {
-    return this.tbColumnsDisplay || this._tbColumns.map((col) => col.key);
+    return this.tbColumnsDisplay || this._tbColumns.map((col) => col.name);
   }
 
   ngOnInit(): void {
     this.fetchData();
+
+    this.route.queryParams.subscribe((queryParams) => {
+      const { pageSize = 10, pageIndex = 1, ...resQps } = queryParams;
+      this.filter.update(() => {
+        return {
+          pageSize: Number(pageSize),
+          page: Number(pageIndex),
+          ...resQps,
+        };
+      });
+      this.fetchData();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -165,16 +190,23 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   private fetchData() {
     // this.findEntities: nullable
     if (this.findEntities) {
-      this.findEntities(this.filter()).subscribe((res) => {
-        this.data.set(res);
-        if (res.items.length === 0) {
-          const maxPage = Math.ceil(res.total / this.filter().pageSize);
-          if (maxPage > 0 && this.filter().page > maxPage) {
-            this.filter().page = maxPage;
-            this.fetchData();
+      this.loading.set(true);
+      this.findEntities(this.filter())
+        .pipe(
+          finalize(() => {
+            this.loading.set(false);
+          }),
+        )
+        .subscribe((res) => {
+          this.data.set(res);
+          if (res.items.length === 0) {
+            const maxPage = Math.ceil(res.total / this.filter().pageSize);
+            if (maxPage > 0 && this.filter().page > maxPage) {
+              this.filter().page = maxPage;
+              this.fetchData();
+            }
           }
-        }
-      });
+        });
     }
   }
 
@@ -228,54 +260,102 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       });
   }
 
-  remove(item: ShTableSelect) {
-    this.deleteEntity(item).subscribe(() => {
-      this.fetchData();
+  //#region Filter
+  filterChange(filter: ShFilterValueChange) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        [filter.name]: filter.value,
+        pageIndex: 1,
+        pageSize: this.filter().pageSize,
+      },
+      queryParamsHandling: 'merge',
     });
   }
+  //#endregion
+
+  //#region DELETE
+  remove(item: T) {
+    this.loading.set(true);
+    this.deleteEntity(item[this.keyName])
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe(() => {
+        this.toastr.success(MESSAGE.DELETE_SUCCESS);
+        this.fetchData();
+      });
+  }
+
+  deleteSelected() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You will not be able to recover !',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor: '#f7f7f7',
+      customClass: {
+        cancelButton: 'my-button-class',
+      },
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading.set(true);
+        const successItems: any[] = [];
+        const failItems: any[] = [];
+        const deleteObservables = this.selects.selected.map((item) =>
+          this.deleteEntity(item).pipe(
+            tap((e) => {
+              successItems.push(e[this.keyName]);
+            }),
+            catchError((e) => {
+              failItems.push(e[this.keyName]);
+              return of(null);
+            }),
+          ),
+        );
+
+        concat(...deleteObservables)
+          .pipe(
+            finalize(() => {
+              if (successItems.length > 0) {
+                this.snackBar.open(`Delete successfully`, 'Close', {
+                  duration: 2000,
+                });
+              }
+              if (failItems.length > 0) {
+                this.snackBar.open(`Delete failed`, 'Close', {
+                  duration: 2000,
+                });
+              }
+
+              this.fetchData();
+              this.selects.clear();
+              this.loading.set(false);
+            }),
+          )
+          .subscribe();
+      }
+    });
+  }
+  //#endregion DELETE
 
   scrollBottom() {}
 
-  deleteSelected() {
-    const successItems: any[] = [];
-    const failItems: any[] = [];
-    const deleteObservables = this.selects.selected.map((item) =>
-      this.deleteEntity(item).pipe(
-        tap((e) => {
-          successItems.push(e[this.keyName]);
-        }),
-        catchError((e) => {
-          failItems.push(e[this.keyName]);
-          return of(null);
-        }),
-      ),
-    );
+  reload() {
+    this.fetchData();
+  }
 
-    concat(...deleteObservables)
-      .pipe(
-        finalize(() => {
-          if (successItems.length > 0) {
-            this.snackBar.open(
-              `Delete successfully: ${successItems.join(', ')}`,
-              'Close',
-            );
-          }
-          if (failItems.length > 0) {
-            this.snackBar.open(
-              `Delete failed: ${failItems.join(', ')}`,
-              'Close',
-            );
-          }
-
-          this.fetchData();
-          this.selects.clear();
-        }),
-      )
-      .subscribe();
+  rowClick(item: T) {
+    this.router.navigate([item[KEY_NAME]], { relativeTo: this.route });
   }
 
   //#region Selects
-  changeSelect(items: ShTableSelect[]) {
+  changeSelect(items: string[]) {
     this.selects.clear();
     this.selects.setSelection(...items);
   }

@@ -30,6 +30,8 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DateTimeComponent } from './components/date-time/date-time.component';
 import { SelectSearchComponent } from './components/select-search/select-search.component';
+import { FiltersComponent } from './components/filters/filters.component';
+import { RouterLink } from '@angular/router';
 
 const services = [FormService, UploadService];
 const components = [
@@ -48,6 +50,7 @@ const components = [
   ImageComponent,
   DateTimeComponent,
   SelectSearchComponent,
+  FiltersComponent,
 ];
 const directives = [
   TypographyDirective,
@@ -70,6 +73,7 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     CdkMenu,
     CdkMenuItem,
     CdkTrapFocus,
+    RouterLink,
     ...pipes,
   ],
   exports: [CommonModule, ...components, ...directives, ...pipes],

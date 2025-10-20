@@ -1,0 +1,108 @@
+<form
+  [formGroup]="form"
+  class="filter-box flex flex-wrap space-x-1 items-center"
+>
+  <ng-container class="filter-item" *ngFor="let filter of filterInfors">
+    <mat-form-field
+      *ngIf="filter.type === 'input'"
+      [appearance]="appearance"
+      [ngStyle]="filter.style"
+      class="no-subscript"
+    >
+      <mat-label>{{ filter.label }}</mat-label>
+      <input type="text" matInput [formControlName]="filter.name" />
+      <div class="flex items-center" matSuffix>
+        <mat-icon *ngIf="filter.suffix" matSuffix>{{ filter.suffix }}</mat-icon>
+        <button
+          *ngIf="form.get(filter.name)?.value"
+          mat-icon-button
+          (click)="clearFilter($event, filter.name)"
+          type="button"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-form-field>
+
+    <mat-form-field
+      *ngIf="filter.type === 'select'"
+      [appearance]="appearance"
+      [ngStyle]="filter.style"
+      class="no-subscript"
+    >
+      <mat-label>{{ filter.label }}</mat-label>
+      <mat-select
+        [id]="filter.name"
+        [formControlName]="filter.name"
+        (openedChange)="filter.selectConfig?.openedChange($event)"
+      >
+        <ng-container *ngIf="filter.options">
+          @for (option of (getOptions(filter.options) | async) || []; track
+          $index) {
+          <mat-option [value]="option['value']">
+            {{ option["label"] }}
+          </mat-option>
+          }
+        </ng-container>
+        <ng-container
+          *ngIf="
+            !filter.options ||
+            (getOptions(filter.options) | async)?.length === 0
+          "
+        >
+          <mat-option> No option </mat-option>
+        </ng-container>
+      </mat-select>
+      <button
+        *ngIf="form.get(filter.name)?.value"
+        mat-icon-button
+        matSuffix
+        (click)="clearFilter($event, filter.name)"
+        type="button"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon *ngIf="filter.suffix" matSuffix>{{ filter.suffix }}</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field
+      *ngIf="filter.type === 'rangeDate'"
+      [appearance]="appearance"
+      class="no-subscript"
+    >
+      <mat-label>{{ filter.label }}</mat-label>
+      <mat-date-range-input
+        [formGroup]="rangeDateForm"
+        [rangePicker]="campaignOnePicker"
+        [comparisonStart]="rangeDateForm.value.start"
+        [comparisonEnd]="rangeDateForm.value.end"
+      >
+        <input matStartDate placeholder="Start date" formControlName="start" />
+        <input matEndDate placeholder="End date" formControlName="end" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="campaignOnePicker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-button-toggle-group
+      [formControlName]="filter.name"
+      aria-label="filter.name"
+      *ngIf="filter.type === 'buttonToggle'"
+    >
+      <mat-button-toggle
+        *ngFor="let option of (getOptions(filter.options) | async) || []"
+        [value]="option.value"
+        >{{ option.label }}</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+  </ng-container>
+
+  <ng-container *ngIf="filterInfors.length > 1">
+    <button type="button" mat-button *ngIf="hasValues" (click)="clearFilters()">
+      <mat-icon>filter_alt_off</mat-icon>Clear
+    </button>
+  </ng-container>
+</form>
