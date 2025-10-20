@@ -22,17 +22,17 @@ export class AdminTeamsComponent {
 
   readonly tbColumns: ShColumn<Team>[] = [
     {
-      key: 'name',
+      name: 'name',
       label: 'Name',
       type: 'text',
     },
     {
-      key: 'description',
+      name: 'description',
       label: 'Description',
       type: 'text',
     },
     {
-      key: 'members',
+      name: 'members',
       label: 'Members',
       type: 'text',
       formatter: (value) => value.length,

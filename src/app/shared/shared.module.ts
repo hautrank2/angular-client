@@ -29,6 +29,7 @@ import { ZDirective } from './directives/z.directive';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DateTimeComponent } from './components/date-time/date-time.component';
+import { SelectSearchComponent } from './components/select-search/select-search.component';
 
 const services = [FormService, UploadService];
 const components = [
@@ -46,6 +47,7 @@ const components = [
   UploadComponent,
   ImageComponent,
   DateTimeComponent,
+  SelectSearchComponent,
 ];
 const directives = [
   TypographyDirective,

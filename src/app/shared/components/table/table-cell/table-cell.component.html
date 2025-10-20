@@ -46,7 +46,7 @@
           (selectionChange)="
             column.onChange && column.onChange($event.value, row, rowIndex)
           "
-          [formControl]="getFormControl(rowIndex, column.key)"
+          [formControl]="getFormControl(rowIndex, column.name)"
           [disabled]="disabled"
         >
           <mat-option
@@ -69,7 +69,7 @@
           column.onChange && column.onChange($event.checked, row, rowIndex)
         "
         class="size-sm"
-        [formControl]="getFormControl(rowIndex, column.key)"
+        [formControl]="getFormControl(rowIndex, column.name)"
         [disabled]="disabled"
       ></mat-slide-toggle>
     }
@@ -95,7 +95,7 @@
         [checked]="cellValue"
         aria-label="Radio row"
         [value]="cellValue"
-        [formControl]="getFormControl(rowIndex, column.key)"
+        [formControl]="getFormControl(rowIndex, column.name)"
         *ngFor="let key of objectKeys(column.props)"
         [attr.[key]]="column.props && column.props[key]"
       ></mat-radio-button>
@@ -148,9 +148,9 @@
     }
     @case ("custom") {
       <ng-container
-        [ngTemplateOutlet]="getTemplate(column.key)"
+        [ngTemplateOutlet]="getTemplate(column.name)"
         [ngTemplateOutletContext]="{
-          control: getFormControl(rowIndex, column.key),
+          control: getFormControl(rowIndex, column.name),
           value: cellValue,
           item: row,
           index: rowIndex,

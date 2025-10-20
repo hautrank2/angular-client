@@ -1,0 +1,15 @@
+.form-field-array {
+  .form-field-array-label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  .form-field-array-item {
+    .mat-grid-tile-content {
+      display: flex;
+      gap: 4px;
+      .form-field-array-input {
+        width: 100%;
+      }
+    }
+  }
+}

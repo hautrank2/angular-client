@@ -7,6 +7,7 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import {
+  ShBaseFormField,
   ShFormField,
   ShFormOption,
   ShGroupArrayFormField,
@@ -18,6 +19,18 @@ import {
   ShSelectColumn,
 } from '../components/table/table.types';
 
+type FormFieldPrimitive = string | number | boolean | Date | null | undefined;
+type FormFieldControlFor<V> = V extends (infer U)[]
+  ? FormArray<FormFieldControlFor<U>>
+  : V extends FormFieldPrimitive
+    ? FormControl<V>
+    : V extends object
+      ? FormGroup<FormFieldControlsOf<V>>
+      : FormControl<V>;
+
+export type FormFieldControlsOf<T extends object> = {
+  [K in keyof T]-?: FormFieldControlFor<T[K]>;
+};
 @Injectable({
   providedIn: 'root',
 })
@@ -25,31 +38,76 @@ export class FormService {
   constructor(private fb: FormBuilder) {}
 
   //#region Build form
-  buildForm(fields: ShFormField[]): FormGroup {
+  buildForm<Dto = any>(fields: ShFormField[], values?: Dto): FormGroup {
     const group: any = {};
     for (const field of fields) {
-      if (field.isArray) {
-        group[field.key] = this.fb.array([]);
-      } else {
-        switch (field.type) {
-          case 'group':
-            group[field.key] = this.buildForm(
-              (field as ShGroupFormField).fields || [],
-            );
-            break;
-          case 'groupArray':
-            group[field.key] = this.fb.array([]);
-            break;
-
-          default:
-            group[field.key] = new FormControl(
-              field.value ?? '',
-              field.validators || [],
-            );
-        }
-      }
+      const name = field.name as keyof Dto;
+      const v = (values?.[name] ?? field.defaultValue) as any;
+      group[field.name] = this.buildFormField(field, v);
     }
     return this.fb.group(group);
+  }
+
+  buildFormField<T = any>(field: ShFormField, value?: T): AbstractControl {
+    const validators =
+      Array.isArray(field.validators) ||
+      typeof field.validators === 'function' ||
+      field.validators === null
+        ? (field.validators as any)
+        : null;
+
+    if (field.isArray) {
+      if (field.type === 'group') {
+        return new FormArray<FormGroup<any>>(
+          ((Array.isArray(value) ? value : []) as any[]).map((v) =>
+            this.buildForm<any>(field.fields || [], v),
+          ),
+        );
+      }
+
+      const arr = (Array.isArray(value) ? value : []) as any[];
+      return new FormArray<FormControl<any>>(
+        arr.map((v) => new FormControl(v, validators)),
+      );
+    }
+
+    switch (field.type) {
+      case 'group': {
+        const f = field as ShGroupFormField;
+        const childVals =
+          value && typeof value === 'object'
+            ? value
+            : (field.defaultValue ?? {});
+        return this.buildForm<any>(f.fields || [], childVals);
+      }
+
+      case 'autocomplete': {
+        const init = Array.isArray(value) ? value : (field.defaultValue ?? []);
+        return new FormControl<any[]>(init, validators);
+      }
+
+      case 'select': {
+        if (field.multiple) {
+          return new FormArray<FormControl<any>>(
+            ((Array.isArray(value) ? value : []) as any[]).map(
+              (v) => new FormControl<any>(v, validators),
+            ),
+          );
+        }
+        // single select: explicit return to prevent fallthrough
+        return new FormControl<any>(
+          value ?? field.defaultValue ?? '',
+          validators,
+        );
+      }
+
+      default: {
+        return new FormControl<any>(
+          value ?? field.defaultValue ?? '',
+          validators,
+        );
+      }
+    }
   }
 
   getLabelFromValue(value: string, options: ShFormOption[]): string {
@@ -149,23 +207,23 @@ export class FormService {
     field: ShFormField,
   ) {
     if (field.isArray) {
-      this.patchFormArray(form, values[field.key], field);
+      this.patchFormArray(form, values[field.name], field);
     } else {
       switch (field.type) {
         case 'group':
-          this.patchForm(form, values[field.key], field.fields);
+          this.patchForm(form, values[field.name], field.fields);
           break;
         case 'groupArray':
-          this.patchFormGroupArray(form, values[field.key], field);
+          this.patchFormGroupArray(form, values[field.name], field);
           break;
         default:
-          this.appendValueToForm(form, values[field.key], field);
+          this.appendValueToForm(form, values[field.name], field);
       }
     }
   }
 
   patchFormArray(form: FormGroup, values: any[], field: ShFormField) {
-    const formArray = form.get(field.key) as FormArray;
+    const formArray = form.get(field.name) as FormArray;
     if (Array.isArray(values)) {
       values.forEach((value) => {
         formArray.push(new FormControl(value, field.validators));
@@ -178,7 +236,7 @@ export class FormService {
     values: Record<string, any>[],
     field: ShGroupArrayFormField,
   ) {
-    const formArray = form.get(field.key) as FormArray;
+    const formArray = form.get(field.name) as FormArray;
     if (Array.isArray(values)) {
       values.forEach((value) => {
         const formGroup = this.buildForm(field.arrayFields);
@@ -189,16 +247,16 @@ export class FormService {
   }
 
   appendValueToForm(form: FormGroup, value: any, field: ShFormField) {
-    const control = form.get(field.key) as FormControl;
+    const control = form.get(field.name) as FormControl;
     if (!control) {
-      console.error('Form dont have control name is ', field.key);
+      console.error('Form dont have control name is ', field.name);
     }
     switch (field.type) {
       case 'number':
         if (typeof value === 'number') {
           control.setValue(value);
         } else {
-          console.error(`Value is not a number with key: ${field.key}`);
+          console.error(`Value is not a number with key: ${field.name}`);
         }
         break;
       default:
@@ -210,10 +268,10 @@ export class FormService {
   //#endregion
 
   //#region Table form
-  buildTableForm<T = any>(columns: ShColumn<T>[]): FormGroup {
+  buildTableForm(columns: ShColumn<any>[]): FormGroup {
     const formFields: ShFormField[] = [
       {
-        key: 'rows',
+        name: 'rows',
         type: 'groupArray',
         arrayFields: this.convertTableColsToFormField(columns),
       },
@@ -221,13 +279,13 @@ export class FormService {
     return this.buildForm(formFields);
   }
 
-  convertTableColsToFormField<T = any>(columns: ShColumn<T>[]): ShFormField[] {
+  convertTableColsToFormField(columns: ShColumn<any>[]): ShFormField[] {
     return columns.map((col) => this.convertTableColToFormField(col));
   }
 
-  convertTableColToFormField<T = any>(column: ShColumn<T>): ShFormField {
-    const baseField = {
-      key: column.key,
+  convertTableColToFormField(column: ShColumn<any>): ShFormField {
+    const baseField: ShBaseFormField = {
+      name: column.name,
       label: column.label,
       col: 12,
       row: 1,
@@ -249,7 +307,7 @@ export class FormService {
       case 'select':
       case 'radio': {
         const options =
-          (column as ShSelectColumn<T> | ShRadioColumn<T>).options || [];
+          (column as ShSelectColumn<any> | ShRadioColumn<any>).options || [];
 
         return {
           ...baseField,

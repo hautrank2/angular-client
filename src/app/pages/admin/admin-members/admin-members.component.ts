@@ -21,27 +21,27 @@ export class AdminMembersComponent {
 
   readonly tbColumns: ShColumn<TeamMember>[] = [
     {
-      key: 'avatar',
+      name: 'avatar',
       label: 'Avatar',
       type: 'img',
     },
     {
-      key: 'name',
+      name: 'name',
       label: 'Name',
       type: 'text',
     },
     {
-      key: 'nickname',
+      name: 'nickname',
       label: 'Nickname',
       type: 'text',
     },
     {
-      key: 'email',
+      name: 'email',
       label: 'Email',
       type: 'text',
     },
     {
-      key: 'roles',
+      name: 'roles',
       label: 'Roles',
       type: 'chips',
     },

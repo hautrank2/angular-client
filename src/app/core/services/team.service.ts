@@ -13,13 +13,13 @@ import { Validators } from '@angular/forms';
 export class TeamService extends CrudService<Team> {
   private readonly _fields: ShFormField[] = [
     {
-      key: 'name',
+      name: 'name',
       label: 'Name',
       type: 'text',
       validators: [Validators.required],
     },
     {
-      key: 'description',
+      name: 'description',
       label: 'Description',
       type: 'text',
       validators: [Validators.required],

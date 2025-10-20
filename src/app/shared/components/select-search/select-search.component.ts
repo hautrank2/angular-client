@@ -1,36 +1,47 @@
-import { Component, effect, Input, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  Input,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { catchError, debounceTime, of } from 'rxjs';
 import {
-  ShAutocompleteFormField,
   SH_DEFAULT_FORM_OPTIONS,
   ShFormOption,
   ShFormOptions,
+  ShSelectSearchFormField,
 } from '../form/form.types';
 import {
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
 } from '@angular/material/autocomplete';
 import { FormService } from '../../services/form.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
-  selector: 'app-autocomplete',
-  templateUrl: './autocomplete.component.html',
-  styleUrl: './autocomplete.component.scss',
+  selector: 'sh-select-search',
   standalone: false,
+  templateUrl: './select-search.component.html',
+  styleUrl: './select-search.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
-export class AutocompleteComponent {
-  @Input() field!: ShAutocompleteFormField;
+export class SelectSearchComponent {
+  @Input() field!: ShSelectSearchFormField;
   @Input() formGroup!: FormGroup;
   @Input() formOptions: ShFormOptions = SH_DEFAULT_FORM_OPTIONS;
+  @Input() helpText: string[] = [];
   @ViewChild('input', { read: MatAutocompleteTrigger })
-  autoComplete?: MatAutocompleteTrigger;
+  autoComplete: MatAutocompleteTrigger;
 
   open = signal(false);
   options = signal<ShFormOption[]>([]);
-  autoInputCtrl = new FormControl('');
+  searchCtrl = new FormControl('');
   filterdOptions = signal<ShFormOption[]>([]);
   errorText = signal<string>('');
+  selectedAll = signal<boolean>(false);
 
   constructor(public formSrv: FormService) {
     effect(() => {
@@ -49,7 +60,7 @@ export class AutocompleteComponent {
   ngOnInit() {
     this.fetchOptions();
 
-    this.autoInputCtrl.valueChanges
+    this.searchCtrl.valueChanges
       .pipe(debounceTime(this.field.debounceTime ?? 200))
       .subscribe((value) => {
         if (!value) {
@@ -107,12 +118,29 @@ export class AutocompleteComponent {
   addItem(event: MatAutocompleteSelectedEvent) {
     const selectedValue = event.option.value;
     this.formControl.setValue([...this.value, selectedValue]);
-    this.autoInputCtrl.setValue('');
+    this.searchCtrl.setValue('');
   }
+
+  changeSelect(event: MatSelectChange) {}
 
   removeArrayItem(index: number) {
     const result = this.value.slice();
     result.splice(index, 1);
     this.formControl.setValue(result);
+  }
+
+  findOption(value: string): boolean {
+    return !!this.filterdOptions().find((e) => e.value === value);
+  }
+
+  toggleAll(): void {
+    if (this.selectedAll()) {
+      this.formControl.setValue([]);
+      this.selectedAll.set(false);
+    } else {
+      const allValues = this.options().map((opt) => opt.value);
+      this.formControl.setValue(allValues);
+      this.selectedAll.set(true);
+    }
   }
 }

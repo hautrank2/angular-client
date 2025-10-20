@@ -26,7 +26,7 @@ export class TeamMemberService extends CrudService<TeamMember> {
   get formFields(): ShFormField[] {
     return [
       {
-        key: 'image',
+        name: 'image',
         label: 'Avatar',
         type: 'upload',
         accept: ['image/*'],
@@ -34,31 +34,31 @@ export class TeamMemberService extends CrudService<TeamMember> {
         validators: [Validators.required, this.formSrv.fileValidator],
       },
       {
-        key: 'name',
+        name: 'name',
         label: 'Name',
         type: 'text',
         validators: [Validators.required],
       },
       {
-        key: 'nickname',
+        name: 'nickname',
         label: 'Nickname',
         type: 'text',
         validators: [Validators.required],
       },
       {
-        key: 'email',
+        name: 'email',
         label: 'Email',
         type: 'text',
         validators: [Validators.required, Validators.email],
       },
       {
-        key: 'birthday',
+        name: 'birthday',
         label: 'Birthday',
         type: 'date',
         validators: [Validators.required],
       },
       {
-        key: 'roles',
+        name: 'roles',
         label: 'Roles',
         type: 'select',
         isArray: true,
@@ -68,7 +68,7 @@ export class TeamMemberService extends CrudService<TeamMember> {
         options: ROLES.map((e) => ({ label: e, value: e })),
       },
       {
-        key: 'hobbies',
+        name: 'hobbies',
         label: 'Hobbies',
         type: 'text',
         isArray: true,
@@ -77,12 +77,12 @@ export class TeamMemberService extends CrudService<TeamMember> {
         },
       },
       {
-        key: 'socials',
+        name: 'socials',
         label: 'Socials',
         type: 'groupArray',
         arrayFields: [
           {
-            key: 'platform',
+            name: 'platform',
             label: 'Platform',
             type: 'select',
             options: SOCIALS.map((e) => ({
@@ -93,7 +93,7 @@ export class TeamMemberService extends CrudService<TeamMember> {
             col: 4,
           },
           {
-            key: 'url',
+            name: 'url',
             label: 'Url',
             type: 'text',
             validators: [Validators.required],
@@ -117,6 +117,6 @@ export class TeamMemberService extends CrudService<TeamMember> {
   }
 
   get updateFormFields(): ShFormField[] {
-    return this.formFields.filter((e) => e.key !== 'image');
+    return this.formFields.filter((e) => e.name !== 'image');
   }
 }

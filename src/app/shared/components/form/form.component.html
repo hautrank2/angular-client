@@ -6,37 +6,58 @@
   </div>
 }
 
-<form
-  *ngIf="formGroup"
-  (ngSubmit)="submit()"
-  [formGroup]="formGroup"
-  class="w-full"
->
-  <div [ngClass]="[isJsonMode ? '' : 'invisible h-0 w-0']">
+@if (!asChild) {
+  <form
+    *ngIf="formGroup"
+    (ngSubmit)="submit()"
+    [formGroup]="formGroup"
+    class="w-full pt-2"
+  >
+    <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+  </form>
+} @else {
+  <ng-container
+    *ngIf="formGroup"
+    [ngTemplateOutlet]="contentTpl"
+  ></ng-container>
+}
+
+<ng-template #contentTpl>
+  <!-- <div [ngClass]="[isJsonMode ? '' : 'invisible h-0 w-0']">
     <sh-json-form
       [value]="valuesStringtify"
       (onValueChange)="onJsonFormChange($event)"
     ></sh-json-form>
-  </div>
+  </div> -->
+
   <div [ngClass]="[!isJsonMode ? '' : 'invisible h-0 w-0 overflow-hidden']">
     @if (formOptions.isGrid) {
-      <mat-grid-list
-        cols="12"
-        rowHeight="76px"
-        gutterSize="16px"
-        class="w-full h-auto"
+      <div
+        [ngClass]="[
+          'form-fields',
+          'grid',
+          'grid-cols-' + (gridConfig?.cols ?? 1),
+          'gap-' + (gridConfig?.gutter ?? 8),
+        ]"
+        class="w-full"
       >
         @for (field of fields; track $index) {
-          <mat-grid-tile [colspan]="field.col || 12" [rowspan]="field.row || 1">
+          <div
+            [ngClass]="[
+              'form-field',
+              'col-span-' + (field?.col ?? 1),
+              'form-field-' + field.name,
+            ]"
+          >
             <ng-container
               [ngTemplateOutlet]="fieldTpl"
               [ngTemplateOutletContext]="{ $implicit: field, field: field }"
             ></ng-container>
-          </mat-grid-tile>
+          </div>
         }
-      </mat-grid-list>
+      </div>
     } @else {
-      <div class="flex flex-col gap-4 w-full">
+      <div class="flex flex-col gap-2 w-full">
         @for (field of fields; track $index) {
           <div class="w-full">
             <ng-container
@@ -48,6 +69,7 @@
       </div>
     }
   </div>
+
   <ng-template #fieldTpl let-field>
     <sh-form-field
       class="form-field-wrapper"
@@ -57,21 +79,18 @@
     ></sh-form-field>
   </ng-template>
 
-  @if (!hideFooter) {
-    <div class="form-footer flex justify-between">
+  @if (!hideFooter && !asChild) {
+    <div class="form-footer flex justify-between mt-4">
       <div>
-        <button mat-stroked-button type="reset" (click)="reset()">Reset</button>
+        <button type="button" mat-stroked-button (click)="reset()">
+          Reset
+        </button>
       </div>
       <div>
-        <button
-          [disabled]="formGroup.invalid"
-          mat-flat-button
-          type="submit"
-          (click)="submit()"
-        >
+        <button [disabled]="formGroup.invalid" mat-flat-button type="submit">
           Submit
         </button>
       </div>
     </div>
   }
-</form>
+</ng-template>

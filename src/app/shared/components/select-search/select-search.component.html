@@ -1,0 +1,42 @@
+<mat-form-field
+  [appearance]="formOptions.appearance ?? 'outline'"
+  [appAttr]="formOptions.fieldAttrs ?? {}"
+  class="w-full"
+>
+  <mat-label>{{ field.label }}</mat-label>
+  <mat-select
+    [placeholder]="field.placeholder ?? 'Choose items'"
+    [multiple]="field.multiple"
+    [formControl]="formControl"
+    (selectionChange)="changeSelect($event)"
+  >
+    @if (field.isSearch) {
+      <mat-option>
+        <ngx-mat-select-search
+          class="select-search-input"
+          [formControl]="searchCtrl"
+          noEntriesFoundLabel="No matching data found"
+          placeholderLabel="Search"
+        ></ngx-mat-select-search>
+      </mat-option>
+    }
+    @if (field.multiple && field.allOption && filterdOptions().length > 0) {
+      <mat-option (onSelectionChange)="toggleAll()" class="select-option-all">
+        <mat-icon class="mr-1">
+          {{ selectedAll() ? "check_box" : "check_box_outline_blank" }}
+        </mat-icon>
+        All
+      </mat-option>
+    }
+    @for (option of options(); track $index) {
+      <mat-option
+        [value]="option.value"
+        [ngClass]="{ 'option-hidden': !findOption(option.value) }"
+        >{{ option.label }}</mat-option
+      >
+    }
+  </mat-select>
+  @if (helpText.length > 0) {
+    <mat-error>{{ helpText[0] }}</mat-error>
+  }
+</mat-form-field>

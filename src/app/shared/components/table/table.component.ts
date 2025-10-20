@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -17,17 +16,12 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  ShColumn,
-  ShPagination,
-  ShPaginationEmit,
-  ShTableSelect,
-} from './table.types';
-import { ScrollDirective } from '../../directives/scroll.directive';
+import { ShColumn, ShPagination, ShPaginationEmit } from './table.types';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
+import { ScrollDirective } from '../../directives/scroll.directive';
 import { KEY_NAME } from '../../constants/common';
 
 @Component({
@@ -38,7 +32,7 @@ import { KEY_NAME } from '../../constants/common';
 })
 export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() keyName: string = KEY_NAME;
-  @Input() data: T[] = [];
+  @Input() data: any[] = [];
   @Input() columns: ShColumn<T>[] = [];
   columnData = signal<ShColumn<T>[]>([]);
   @Input() customCells!: { [key: string]: TemplateRef<any> };
@@ -47,9 +41,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Input() z: number | string = 0;
   @Input() height!: number | string;
   @Input() maxHeight!: number | string;
-  formGroup: FormGroup = new FormGroup({});
-  @Input() isForm: boolean = false;
-  @Input() disabledIndexRows: number[] = [];
 
   // Style
   @Input() tableStyle: Record<string, any> = {};
@@ -72,9 +63,11 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   // Select
   readonly selectName = 'SELECT_NAME';
   @Input() isSelect: boolean = false;
-  @Output() changeSelect = new EventEmitter<ShTableSelect[]>();
-  @Input() defaultSelects: ShTableSelect[] = [];
-  @Input() selection = new SelectionModel<ShTableSelect>(true, []);
+  @Output() changeSelect = new EventEmitter<string[]>();
+  @Input() disabledIndexRows: number[] = [];
+  @Input() defaultSelects: string[] = [];
+  @Input() selectChangeToDirtyForm: boolean = false;
+  selection = new SelectionModel<string>(true, []);
 
   // Number column
   readonly countName = 'COUNT_NAME';
@@ -89,10 +82,13 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
 
   // Form
   readonly editName = 'EDIT_NAME';
+  formGroup: FormGroup = new FormGroup({});
+  @Input() isForm: boolean = false;
   @Input() isEdit: boolean = false;
   @Output() valueChanges = new EventEmitter<any>();
   @Output() valueChange = new EventEmitter<{ index: number; data: any }>();
   @Output() submit = new EventEmitter<any>();
+  @Output() onFormRebuild = new EventEmitter();
 
   // Scroll
   isOnBottom: boolean = false;
@@ -106,10 +102,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   @Output() onSort = new EventEmitter<Sort>();
 
   // Panel
-  @Input({ required: true }) defaultDisplayColumns: string[] = [];
   @Input() hasPanel: boolean = false;
   @Input() hasColumnFilter: boolean = false;
-  @Output() onDeleteSelected = new EventEmitter<ShTableSelect[]>();
+  @Input() defaultDisplayColumns?: string[];
+  @Output() onDeleteSelected = new EventEmitter<string[]>();
   displayColumns = new SelectionModel<string>(true, []);
 
   @HostBinding('style.position') @Input() position: string = 'relative';
@@ -118,20 +114,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     private elRef: ElementRef,
     private fb: FormBuilder,
     private renderer: Renderer2,
-    private cdr: ChangeDetectorRef,
     private formSrv: FormService,
   ) {
-    if (!this.formGroup) {
-      if (this.isForm) {
-        this.formGroup = this.formSrv.buildTableForm(this.columns);
-      }
-    }
     this.columnData.set(this.columns);
-  }
-
-  onSubmit() {
-    console.log(this.formGroup);
-    console.log(this.formGroup.value);
+    this.initForm();
   }
 
   //#region Hooks
@@ -148,7 +134,6 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   ngOnChanges(changes: any): void {
     if (changes['data']) {
       if (this.data) {
-        this.cdr.detectChanges();
         this.initForm();
       }
     }
@@ -190,8 +175,8 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   get displayedColumns(): string[] {
     // Lọc theo đúng thứ tự this.columns
     const colKeys = this.columns
-      .filter((c) => c.lock || this.displayColumns.isSelected(c.key))
-      .map((c) => c.key);
+      .filter((c) => c.lock || this.displayColumns.isSelected(c.name))
+      .map((c) => c.name);
 
     // Pinned trái (giữ đúng thứ tự bạn muốn xuất hiện từ trái sang phải)
     const left: string[] = [];
@@ -244,8 +229,8 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.routerNavigate(pageIndex, pageSize);
   }
 
-  routerNavigate(pageIndex: number, pageSize: number): void {
-    this.changePagination.emit({ pageSize, pageIndex });
+  routerNavigate(page: number, pageSize: number): void {
+    this.changePagination.emit({ pageSize, page });
   }
   //#endregion
 
@@ -275,33 +260,35 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
         });
       },
     );
+
+    this.onFormRebuild.emit();
   }
 
   createRowGroup(data: any): FormGroup {
     const group: { [key: string]: any } = {};
 
     this.columns.forEach((column) => {
-      const value = data[column.key];
+      const value = data[column.name];
 
       // Handle different types of data
       if (Array.isArray(value)) {
         if (typeof value[0] === 'object') {
           // Array of objects: create a FormArray of FormGroups
-          group[column.key] = this.fb.array(
+          group[column.name] = this.fb.array(
             value.map((item: any) =>
               this.fb.group(this.mapObjectToControls(item)),
             ),
           );
         } else {
           // Array of primitive values: create a FormArray
-          group[column.key] = this.fb.array(value || []);
+          group[column.name] = this.fb.array(value || []);
         }
       } else if (typeof value === 'object' && value !== null) {
         // Single object: create a nested FormGroup
-        group[column.key] = this.fb.group(this.mapObjectToControls(value));
+        group[column.name] = this.fb.group(this.mapObjectToControls(value));
       } else {
         // Primitive value: create a simple FormControl
-        group[column.key] = [value];
+        group[column.name] = [value];
       }
     });
 
@@ -384,18 +371,17 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   //#endregion
 
   //#region select
-  getSelection() {
-    return this.selection;
-  }
-
   isAllSelected() {
     return (
       this.selection.selected.length ===
-      this.dataSource.data.length - (this.disabledIndexRows?.length || 0)
+      this.dataSource.data.length - this.disabledIndexRows.length
     );
   }
 
   toggleAllRows() {
+    if (this.formGroup && this.selectChangeToDirtyForm) {
+      this.formGroup.markAsDirty();
+    }
     if (this.isAllSelected()) {
       this.selection.clear();
       this.emitSelectedRows();
@@ -410,7 +396,10 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.emitSelectedRows();
   }
 
-  toggleRow(e: ShTableSelect) {
+  toggleRow(e: string) {
+    if (this.formGroup && this.selectChangeToDirtyForm) {
+      this.formGroup.markAsDirty();
+    }
     this.selection.toggle(e);
     this.emitSelectedRows();
   }
@@ -433,12 +422,11 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
     this.selection.clear();
     this.emitSelectedRows();
   }
-
   //#endregion
 
   //#region Filter column
   get canFilterColumnKeys(): string[] {
-    return this.columns.filter((e) => !e.lock).map((e) => e.key);
+    return this.columns.filter((e) => !e.lock).map((e) => e.name);
   }
 
   get isIndeterminateFilterColumn(): boolean {

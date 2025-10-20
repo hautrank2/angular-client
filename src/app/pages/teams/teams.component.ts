@@ -64,38 +64,38 @@ export class TeamsComponent {
 
   formFieldConfig: ShFormField[] = [
     {
-      key: 'username',
+      name: 'username',
       label: 'Username',
       type: 'text',
-      value: '',
+      defaultValue: '',
       validators: [Validators.required, Validators.minLength(4)],
     },
     {
-      key: 'email',
+      name: 'email',
       label: 'Email',
       type: 'text',
-      value: '',
+      defaultValue: '',
       validators: [Validators.required, Validators.email],
     },
     {
-      key: 'password',
+      name: 'password',
       label: 'Password',
       type: 'password',
-      value: '',
+      defaultValue: '',
       validators: [Validators.required, Validators.minLength(6)],
     },
     {
-      key: 'age',
+      name: 'age',
       label: 'Age',
       type: 'number',
-      value: null,
+      defaultValue: null,
       validators: [Validators.required, Validators.min(0), Validators.max(120)],
     },
     {
-      key: 'gender',
+      name: 'gender',
       label: 'Gender',
       type: 'select',
-      value: '',
+      defaultValue: '',
       options: [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
@@ -104,17 +104,17 @@ export class TeamsComponent {
       validators: [Validators.required],
     },
     {
-      key: 'dob',
+      name: 'dob',
       label: 'Date of Birth',
       type: 'date',
-      value: '',
+      defaultValue: '',
       validators: [Validators.required],
     },
     {
-      key: 'subscription',
+      name: 'subscription',
       label: 'Subscription Type',
       type: 'radio',
-      value: 'basic',
+      defaultValue: 'basic',
       options: [
         { label: 'Basic', value: 'basic' },
         { label: 'Premium', value: 'premium' },
@@ -122,37 +122,37 @@ export class TeamsComponent {
       ],
     },
     {
-      key: 'acceptTerms',
+      name: 'acceptTerms',
       label: 'I accept the Terms and Conditions',
       type: 'checkbox',
-      value: false,
+      defaultValue: false,
       validators: [Validators.requiredTrue],
     },
     {
-      key: 'address',
+      name: 'address',
       label: 'Address',
       type: 'group',
       fields: [
         {
-          key: 'street',
+          name: 'street',
           label: 'Street Address',
           type: 'text',
           validators: [Validators.required],
         },
         {
-          key: 'city',
+          name: 'city',
           label: 'City',
           type: 'text',
           validators: [Validators.required],
         },
         {
-          key: 'zip',
+          name: 'zip',
           label: 'ZIP Code',
           type: 'number',
           validators: [Validators.required],
         },
         {
-          key: 'country',
+          name: 'country',
           label: 'Country',
           type: 'text',
           validators: [Validators.required],
@@ -160,7 +160,7 @@ export class TeamsComponent {
       ],
     },
     {
-      key: 'contacts',
+      name: 'contacts',
       label: 'Emergency Contacts',
       type: 'groupArray',
       config: {
@@ -172,19 +172,19 @@ export class TeamsComponent {
       },
       arrayFields: [
         {
-          key: 'name',
+          name: 'name',
           type: 'text',
           label: 'Name',
           validators: [Validators.required],
         },
         {
-          key: 'relation',
+          name: 'relation',
           type: 'text',
           label: 'Relation',
           validators: [Validators.required],
         },
         {
-          key: 'phone',
+          name: 'phone',
           type: 'text',
           label: 'Phone Number',
           validators: [Validators.required],
@@ -192,11 +192,11 @@ export class TeamsComponent {
       ],
     },
     {
-      key: 'profession',
+      name: 'profession',
       label: 'Profession',
       type: 'autocomplete',
       placeholder: 'Select or type your profession',
-      value: '',
+      defaultValue: '',
       options: [
         { label: 'Engineer', value: 'engineer' },
         { label: 'Doctor', value: 'doctor' },

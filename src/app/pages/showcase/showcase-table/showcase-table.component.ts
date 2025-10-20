@@ -81,7 +81,7 @@ export class ShowcaseTableComponent implements OnInit, AfterViewInit {
   }
 
   get defaultDisplayColumns() {
-    return this.columns().map((e) => e.key);
+    return this.columns().map((e) => e.name);
   }
 
   //#region JSON form

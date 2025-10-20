@@ -1,19 +1,15 @@
 import {
   Component,
-  DoCheck,
-  effect,
   ElementRef,
   Injector,
   Input,
-  OnChanges,
   PipeTransform,
   signal,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ShColumn } from '../table.types';
 import { ShFormField } from '../../form/form.types';
 import { FormService } from '~/app/shared/services/form.service';
@@ -45,8 +41,8 @@ export class TableCellComponent<T> {
 
   get cellValue() {
     const value = this.isForm
-      ? this.getFormControl(this.rowIndex, this.column.key).value
-      : (this.row as Record<string, any>)[this.column.key];
+      ? this.getFormControl(this.rowIndex, this.column.name).value
+      : (this.row as Record<string, any>)[this.column.name];
     if (this.column.render) {
       return this.column.render(value, this.row, this.rowIndex);
     }
@@ -56,7 +52,7 @@ export class TableCellComponent<T> {
   get fc(): FormControl | null {
     if (!this.isForm || !this.rows) return null;
     return (this.rows.at(this.rowIndex) as FormGroup).get(
-      this.column.key,
+      this.column.name,
     ) as FormControl;
   }
 
@@ -90,7 +86,7 @@ export class TableCellComponent<T> {
 
   get formField(): ShFormField {
     return {
-      key: this.column.key,
+      name: this.column.name,
       type: 'text',
       label: this.column.label,
       ...this.column.formField,
@@ -134,7 +130,7 @@ export class TableCellComponent<T> {
       !this.disabled
     ) {
       this.editFormGroup = this.formSrv.buildForm([this.formField]);
-      this.editFormGroup.setValue({ [this.formField.key]: this.cellValue });
+      this.editFormGroup.setValue({ [this.formField.name]: this.cellValue });
       this.openEditorPopover.set(true);
     }
   }
@@ -145,7 +141,7 @@ export class TableCellComponent<T> {
       this.openEditorPopover.set(false);
       return;
     }
-    const values = this.editFormGroup.get(this.formField.key);
+    const values = this.editFormGroup.get(this.formField.name);
     this.fc.setValue(values?.value);
     this.openEditorPopover.set(false);
   }

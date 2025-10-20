@@ -1,0 +1,16 @@
+.select-search-input {
+  button.mat-select-search-clear {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.option-hidden {
+  display: none;
+}
+
+.select-option-all {
+  .mat-pseudo-checkbox {
+    display: none;
+  }
+}

@@ -11,11 +11,11 @@
 }
 
 .table-cell-popover {
-  @include mat.button-density(-2);
-  background-color: var(--mat-sys-surface);
+  background-color: var(--sys-surface);
   border-radius: 8px;
   padding: 8px;
 
+  @include mat.button-density(-2);
   .table-cell-popover-footer {
     display: flex;
     justify-content: flex-end;

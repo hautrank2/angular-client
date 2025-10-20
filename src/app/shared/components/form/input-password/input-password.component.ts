@@ -26,6 +26,7 @@ export class InputPasswordComponent {
   @Input() field!: ShFormField;
   @Input() formGroup!: FormGroup;
   @Input() formOptions: ShFormOptions = SH_DEFAULT_FORM_OPTIONS;
+  @Input() helpText: string[] = [];
 
   hide = signal(true);
   clickEvent(event: MouseEvent) {

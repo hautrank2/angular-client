@@ -16,6 +16,7 @@
     }
   </mat-chip-grid>
   <input
+    #input
     name="currentFruit"
     [placeholder]="field.placeholder ?? 'Choose items'"
     [matChipInputFor]="chipGrid"
@@ -33,4 +34,7 @@
       >
     }
   </mat-autocomplete>
+  @if (!!errorText()) {
+    <mat-hint align="end">{{ errorText() }}</mat-hint>
+  }
 </mat-form-field>

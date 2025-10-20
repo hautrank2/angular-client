@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { ShFormField, ShFormOptions } from '../form/form.types';
 import {
   ControlContainer,
@@ -27,8 +27,27 @@ export class FormFieldComponent {
     isGrid: false,
     fieldAttrs: {},
   };
+  helpText = signal<string[]>([]);
 
   constructor(private formSrv: FormService) {}
+
+  ngOnInit(): void {
+    if (this.formGroup) {
+      this.formGroup.valueChanges.subscribe((res) => {
+        const ctrErrors = this.formGroup.get(this.field.name)?.errors ?? {};
+        const keys = Object.keys(ctrErrors);
+        if (keys.length > 0) {
+          this.helpText.set(
+            keys
+              .map((key: string) => ctrErrors[key])
+              .filter((e) => typeof e === 'string'),
+          );
+        } else {
+          this.helpText.set([]);
+        }
+      });
+    }
+  }
 
   get appearance() {
     return this.formOptions.appearance || 'fill';
@@ -36,6 +55,17 @@ export class FormFieldComponent {
 
   get fieldAttrs() {
     return this.formOptions.fieldAttrs || {};
+  }
+
+  get errorText() {
+    if (!this.formGroup) return;
+    const ctrErrors = this.formGroup.get(this.field.name)?.errors ?? {};
+    Object(ctrErrors)
+      .names()
+      .forEach((e: string) => {
+        console.log('err', e, ctrErrors[e]);
+      });
+    return 'Something error';
   }
 
   getFormArray(key: string): FormArray {
@@ -47,16 +77,30 @@ export class FormFieldComponent {
   }
 
   addArrayItem(field: ShFormField) {
-    if (field.isArray) {
-      const array = this.getFormArray(field.key);
-      const control = new FormControl('', field.validators);
-      array.push(control);
+    if (!field.isArray) return;
+
+    const array = this.getFormArray(field.name);
+
+    switch (field.type) {
+      case 'group': {
+        const fg = this.formSrv.buildForm(field.fields);
+        array.push(fg);
+        break;
+      }
+      default: {
+        const control = new FormControl(
+          field.defaultValue ?? null,
+          field.validators as any,
+        );
+        array.push(control);
+        break;
+      }
     }
   }
 
   addGroupArrayItem(field: ShFormField) {
     if (field.type === 'groupArray') {
-      const array = this.getFormArray(field.key);
+      const array = this.getFormArray(field.name);
       const newGroup = this.formSrv.buildForm(field.arrayFields);
       array.push(newGroup);
     }

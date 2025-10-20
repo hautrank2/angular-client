@@ -17,19 +17,19 @@ export class JobService extends CrudService<Job> {
   get formFields(): ShFormField[] {
     return [
       {
-        key: 'title',
+        name: 'title',
         label: 'Title',
         type: 'text',
         validators: [Validators.required],
       },
       {
-        key: 'location',
+        name: 'location',
         label: 'Location',
         type: 'text',
         validators: [Validators.required],
       },
       {
-        key: 'type',
+        name: 'type',
         label: 'Job',
         type: 'select',
         validators: [Validators.required],
@@ -38,20 +38,20 @@ export class JobService extends CrudService<Job> {
         ),
       },
       {
-        key: 'description',
+        name: 'description',
         label: 'Description',
         type: 'area',
         validators: [Validators.required],
       },
       {
-        key: 'skills',
+        name: 'skills',
         label: 'Skills',
         type: 'autocomplete',
         validators: [Validators.required],
         options: SKILL_DATA.map((e) => ({ label: e.title, value: e.key })),
       },
       {
-        key: 'requirement',
+        name: 'requirement',
         label: 'Requirements',
         type: 'text',
         isArray: true,
@@ -61,7 +61,7 @@ export class JobService extends CrudService<Job> {
         },
       },
       {
-        key: 'responsibility',
+        name: 'responsibility',
         label: 'Responsibility',
         type: 'text',
         isArray: true,
@@ -71,7 +71,7 @@ export class JobService extends CrudService<Job> {
         },
       },
       {
-        key: 'benefit',
+        name: 'benefit',
         label: 'Benefit',
         type: 'text',
         isArray: true,

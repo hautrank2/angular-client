@@ -15,22 +15,22 @@ export class AdminJobsComponent {
   constructor(public jobSrv: JobService) {}
   readonly tbColumns: ShColumn<Job>[] = [
     {
-      key: 'title',
+      name: 'title',
       label: 'Job Title',
       type: 'text',
     },
     {
-      key: 'location',
+      name: 'location',
       label: 'Location',
       type: 'text',
     },
     {
-      key: 'type',
+      name: 'type',
       label: 'Job Type',
       type: 'text',
     },
     {
-      key: 'createdAt',
+      name: 'createdAt',
       label: 'Posted Date',
       type: 'date',
     },

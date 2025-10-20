@@ -35,28 +35,28 @@ const genders = [
 ];
 
 export const TABLE_COLUMNS: ShColumn<any>[] = [
-  { key: 'id', label: 'ID', type: 'text', sticky: true, disabled: true },
-  { key: 'name', label: 'Name', type: 'text', sticky: true },
+  { name: 'id', label: 'ID', type: 'text', sticky: true, disabled: true },
+  { name: 'name', label: 'Name', type: 'text', sticky: true },
   {
-    key: 'age',
+    name: 'age',
     label: 'Age',
     type: 'number',
     formField: {
-      key: 'age',
+      name: 'age',
       type: 'number',
     },
   },
   {
-    key: 'createdAt',
+    name: 'createdAt',
     label: 'Created Date',
     type: 'date',
     formField: {
-      key: 'createdAt',
-      type: 'dateTime',
+      name: 'createdAt',
+      type: 'date',
     },
   },
   {
-    key: 'status',
+    name: 'status',
     label: 'Status',
     type: 'status',
     getConfig: (value) => {
@@ -70,13 +70,13 @@ export const TABLE_COLUMNS: ShColumn<any>[] = [
       }
     },
     formField: {
-      key: 'status',
+      name: 'status',
       type: 'select',
       options: status.map((e) => ({ value: e.value, label: e.label })),
     },
   },
   {
-    key: 'role',
+    name: 'role',
     label: 'Role',
     type: 'select',
     options: [
@@ -85,25 +85,25 @@ export const TABLE_COLUMNS: ShColumn<any>[] = [
       { label: 'Moderator', value: 'moderator' },
     ],
   },
-  { key: 'isActive', label: 'Active', type: 'toggle' },
+  { name: 'isActive', label: 'Active', type: 'toggle' },
   {
-    key: 'gender',
+    name: 'gender',
     label: 'Gender',
     type: 'text',
     render(value) {
       return genders.find((e) => e.value === value)?.label;
     },
     formField: {
-      key: 'gender',
+      name: 'gender',
       type: 'select',
       options: genders,
     },
   },
-  { key: 'loginTime', label: 'Login Time', type: 'time' },
-  { key: 'avatarUrl', label: 'Avatar', type: 'img' },
-  { key: 'tags', label: 'Tags', type: 'chips', disabled: true },
+  { name: 'loginTime', label: 'Login Time', type: 'time' },
+  { name: 'avatarUrl', label: 'Avatar', type: 'img' },
+  { name: 'tags', label: 'Tags', type: 'chips', disabled: true },
   {
-    key: 'actions',
+    name: 'actions',
     label: 'Actions',
     type: 'actions',
     actions: [

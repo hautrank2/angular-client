@@ -1,6 +1,7 @@
-import { Type } from '@angular/core';
+import { TemplateRef, Type } from '@angular/core';
 import { FormControlOptions, ValidatorFn } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { Observable } from 'rxjs';
 
 export type ShValidatorOpts =
   | ValidatorFn
@@ -8,25 +9,40 @@ export type ShValidatorOpts =
   | FormControlOptions
   | null;
 
+export type ShFormOptionType = ShFormOption[] | ShFormOptionSync;
+
 export type ShFormOption = {
   value: string;
   label: string;
 };
 
-export interface ShGridConfig {
+export type ShFormOptionPagination = {
+  totalCount: number;
+  totalPage: number;
+  pageSize: number;
+  pageIndex: number;
+  items: ShFormOption[];
+};
+
+export type ShFormOptionSync = Observable<ShFormOption[]>;
+
+// ─────────────────────────────────────────────
+// ⚙️ Form options & grid config
+// ─────────────────────────────────────────────
+export type ShGridConfig = {
   itemLabel?: string;
   cols?: number;
   rowHeight?: number | string;
   col?: number;
   row?: number;
   gutter?: number;
-}
+};
 
-export interface ShFormOptions {
+export type ShFormOptions = {
   appearance?: MatFormFieldAppearance;
   fieldAttrs?: { [key: string]: any };
   isGrid?: boolean;
-}
+};
 
 export const SH_DEFAULT_FORM_OPTIONS: ShFormOptions = {
   appearance: 'outline',
@@ -35,13 +51,12 @@ export const SH_DEFAULT_FORM_OPTIONS: ShFormOptions = {
 };
 
 // ─────────────────────────────────────────────
-// 🧱 Base FormField Interface
+// 🧱 Base FormField Types
 // ─────────────────────────────────────────────
-
-export interface ShBaseFormField {
-  key: string;
+export type ShBaseFormField = ShBaseFormFieldArray & {
+  name: string;
   label?: string;
-  value?: any;
+  defaultValue?: any;
   placeholder?: string;
   validators?: ShValidatorOpts;
   componentRef?: Type<any>;
@@ -49,72 +64,93 @@ export interface ShBaseFormField {
   col?: number;
   row?: number;
   hidden?: boolean;
+};
 
+export type ShBaseFormFieldArray = {
   isArray?: boolean;
   arrayConfig?: ShGridConfig;
-}
+  formOptions?: ShFormOptions;
+  arrayVariant?: 'default' | 'chips';
+};
+
+export type ShBaseSelectFormField = {
+  multiple?: boolean;
+  allOption?: boolean;
+  isSearch?: boolean;
+};
 
 // ─────────────────────────────────────────────
 // 🧩 Specialized FormField Types
 // ─────────────────────────────────────────────
+export type ShTextFormField = ShBaseFormField & {
+  type: 'text' | 'number' | 'password' | 'date' | 'area';
+};
 
-export interface ShTextFormField extends ShBaseFormField {
-  type: 'text' | 'number' | 'password' | 'date' | 'dateTime' | 'area';
-}
-
-export interface ShCheckboxFormField extends ShBaseFormField {
+export type ShCheckboxFormField = ShBaseFormField & {
   type: 'checkbox';
-}
+};
 
-export interface ShToggleFormField extends ShBaseFormField {
+export type ShToggleFormField = ShBaseFormField & {
   type: 'toggle';
-}
+};
 
-export interface ShSelectFormField extends ShBaseFormField {
-  type: 'select';
-  options: ShFormOption[];
-  filter?: (enterValue: string) => ShFormOption[];
-  debounceTime?: number;
-}
+export type ShSelectFormField = ShBaseFormField &
+  ShBaseSelectFormField & {
+    type: 'select';
+    options: ShFormOption[];
+    filter?: (enterValue: string) => ShFormOption[];
+    debounceTime?: number;
+  };
 
-export interface ShRadioFormField extends ShBaseFormField {
+export type ShSelectSearchFormField = ShBaseFormField &
+  ShBaseSelectFormField & {
+    type: 'selectSearch';
+    options: ShFormOption[] | ShFormOptionSync;
+    filter?: (enterValue: string) => ShFormOption[];
+    debounceTime?: number;
+  };
+
+export type ShRadioFormField = ShBaseFormField & {
   type: 'radio';
   options: ShFormOption[];
-}
+};
 
-export interface ShAutocompleteFormField extends ShBaseFormField {
-  type: 'autocomplete';
-  options: ShFormOption[];
-  filter?: (enterValue: string) => ShFormOption[];
-  debounceTime?: number;
-}
+export type ShAutocompleteFormField = ShBaseFormField &
+  ShBaseSelectFormField & {
+    type: 'autocomplete';
+    options: ShFormOption[] | ShFormOptionSync;
+    filter?: (enterValue: string) => ShFormOption[];
+    debounceTime?: number;
+  };
 
-export interface ShUploadFormField extends ShBaseFormField {
+export type ShUploadFormField = ShBaseFormField & {
   type: 'upload';
   isArray?: false;
   variant?: 'default' | 'custom';
   multiple: boolean;
-  accept?: string[]; // example:  ['image/jpeg', 'application/pdf']
-  maxFileSize?: number; //Byte
+  accept?: string[]; // e.g. ['image/jpeg', 'application/pdf']
+  maxFileSize?: number; // Byte
   showPreview?: boolean;
   showProgress?: boolean;
-}
+};
 
-export interface ShGroupFormField extends ShBaseFormField {
+export type ShGroupFormField = ShBaseFormField & {
   type: 'group';
   fields: ShFormField[];
-}
+  gridConfig?: ShGridConfig;
+};
 
-export interface ShGroupArrayFormField extends ShBaseFormField {
+export type ShGroupArrayFormField = ShBaseFormField & {
   type: 'groupArray';
   arrayFields: ShFormField[];
   config?: ShGridConfig;
   formOptions?: ShFormOptions;
-}
+};
 
-export interface ShCustomFormField extends ShBaseFormField {
+export type ShCustomFormField = ShBaseFormField & {
   type: 'custom';
-}
+  renderTemplate: TemplateRef<any>;
+};
 
 export type ShFormFieldType =
   | 'text'
@@ -122,18 +158,14 @@ export type ShFormFieldType =
   | 'number'
   | 'password'
   | 'date'
-  | 'dateTime'
   | 'autocomplete'
   | 'select'
+  | 'selectSearch'
   | 'radio'
   | 'toggle'
   | 'upload'
   | 'group'
   | 'groupArray';
-
-// ─────────────────────────────────────────────
-// 🔗 Union Type for All FormField Variants
-// ─────────────────────────────────────────────
 
 export type ShFormField =
   | ShTextFormField
@@ -145,4 +177,5 @@ export type ShFormField =
   | ShGroupFormField
   | ShUploadFormField
   | ShGroupArrayFormField
+  | ShSelectSearchFormField
   | ShCustomFormField;

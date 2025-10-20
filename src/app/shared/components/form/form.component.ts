@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
-import { ShFormField, ShFormOptions } from './form.types';
+import { ShFormField, ShFormOptions, ShGridConfig } from './form.types';
 import { FormService } from '../../services/form.service';
 
 @Component({
@@ -20,6 +20,10 @@ export class FormWrapperComponent {
   };
   @Input() hideFooter: boolean = false;
   @Input() isJsonForm: boolean = false;
+  @Input() defaultValue?: any;
+  @Input() asChild: boolean = false;
+  @Input() gridConfig?: ShGridConfig;
+
   isJsonMode: boolean = false;
 
   constructor(public formSrv: FormService) {}
@@ -28,7 +32,7 @@ export class FormWrapperComponent {
     if (!this.formGroup) {
       this.formGroup = this.formSrv.buildForm(this.fields);
       this.formGroup.valueChanges.subscribe((res) => {
-        console.log('Form changes:', res);
+        console.log('Form changes:', res, this.formGroup);
       });
     }
   }
@@ -50,7 +54,8 @@ export class FormWrapperComponent {
   }
 
   reset() {
-    this.formGroup?.reset();
+    console.log(this.defaultValue);
+    this.formGroup?.reset(this.defaultValue);
   }
 
   submit() {
@@ -71,7 +76,7 @@ export class FormWrapperComponent {
 
   addArrayItem(field: ShFormField) {
     if (field.isArray) {
-      const array = this.getFormArray(field.key);
+      const array = this.getFormArray(field.name);
       const control = new FormControl('', field.validators);
       array.push(control);
     }
