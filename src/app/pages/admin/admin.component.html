@@ -6,28 +6,30 @@
     mode="side"
     [ngClass]="['p-4']"
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col pt-4">
       @for (wrapRoute of routes; track $index) {
-        <div>
-          <p appTypography="title-lg">{{ wrapRoute.title }}</p>
+        <div class="mt-4">
+          <div>
+            <p appTypography="title-md" class="mb-2">{{ wrapRoute.title }}</p>
+          </div>
+          <ul>
+            @for (route of wrapRoute.children; track $index) {
+              <a
+                [href]="route.path"
+                class="justify-start!"
+                [ngClass]="[
+                  'flex gap-4 items-center rounded-full',
+                  'px-4 py-2',
+                  'hover:bg-primary/10',
+                  activeRoute() === route.path ? 'text-primary' : '',
+                ]"
+              >
+                <mat-icon>{{ route.icon }}</mat-icon>
+                <span>{{ route.title }}</span>
+              </a>
+            }
+          </ul>
         </div>
-        <ul>
-          @for (route of wrapRoute.children; track $index) {
-            <a
-              [href]="route.path"
-              class="justify-start!"
-              [ngClass]="[
-                'flex gap-4 items-center rounded-full',
-                'p-4',
-                'hover:bg-primary/10',
-                activeRoute() === route.path ? 'text-primary' : '',
-              ]"
-            >
-              <mat-icon>{{ route.icon }}</mat-icon>
-              <span>{{ route.title }}</span>
-            </a>
-          }
-        </ul>
       }
     </div>
   </mat-drawer>

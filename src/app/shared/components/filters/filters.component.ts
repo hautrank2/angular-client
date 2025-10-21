@@ -51,15 +51,15 @@ export interface FilterInfor {
 export class FiltersComponent implements OnInit, OnChanges {
   // @Input() form?: FormGroup;
   @Input() appearance: MatFormFieldAppearance = 'fill';
-  @Input() filterInfors: FilterInfor[];
+  @Input() filterInfors: FilterInfor[] = [];
   @Input() values?: any;
-  @Input() loading: boolean;
+  @Input() loading: boolean = false;
   @Input() defaultValues?: any;
   @Output() valueChanges = new EventEmitter<ValueChange>();
   @Output() valuesChanges = new EventEmitter<ValueChange[]>();
 
   // START: rangeDate
-  rangeDate: boolean;
+  rangeDate: boolean = false;
   tempRangeValue: { [key: string]: any } = { start: null, end: null };
   // END: rangeDate
 

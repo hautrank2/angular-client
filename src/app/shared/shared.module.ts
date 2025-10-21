@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TypographyDirective } from './directives/typography.directive';
 import { FormWrapperComponent } from './components/form/form.component';
 import { UiModule } from './ui/ui.module';
@@ -77,6 +77,6 @@ const pipes = [FormatTimePipe, FormatNumberPipe];
     ...pipes,
   ],
   exports: [CommonModule, ...components, ...directives, ...pipes],
-  providers: [...services],
+  providers: [...services, DatePipe],
 })
 export class SharedModule {}

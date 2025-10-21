@@ -1,0 +1,13 @@
+<sh-entity-manager
+  keyName="id"
+  entityName="movie"
+  [formFields]="moviesSrv.formFields"
+  [tbColumns]="moviesSrv.tbColumns"
+  [findEntities]="moviesSrv.find.bind(moviesSrv)"
+  [putEntity]="moviesSrv.update.bind(moviesSrv)"
+  [deleteEntity]="moviesSrv.delete.bind(moviesSrv)"
+  [postEntity]="moviesSrv.create.bind(moviesSrv)"
+  [tbActions]="['edit', 'delete']"
+  [tbSelect]="true"
+  [tbPagination]="true"
+></sh-entity-manager>

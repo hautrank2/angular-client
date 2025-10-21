@@ -64,7 +64,7 @@ export class UploadComponent implements OnInit, OnDestroy {
 
   get control(): FormControl {
     return (
-      (this.formGroup?.get(this.field.key) as FormControl) ||
+      (this.formGroup?.get(this.field.name) as FormControl) ||
       new FormControl(this.defaultValues, [
         this.multiple ? this.formSrv.filesValidate : this.formSrv.fileValidator,
       ])

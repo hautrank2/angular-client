@@ -24,7 +24,7 @@ export class TypographyDirective implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.applyClasses();
+    // this.applyClasses();
     this.applyStyle();
 
     if (changes['fontWeight'] && this.fontWeight) {

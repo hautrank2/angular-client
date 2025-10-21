@@ -45,25 +45,42 @@ export const routes: Routes = [
       import('./pages/admin/admin.component').then((m) => m.AdminComponent),
     children: [
       {
-        path: '',
-        loadComponent: () =>
-          import('./pages/admin/admin-jobs/admin-jobs.component').then(
-            (m) => m.AdminJobsComponent,
-          ),
+        path: 'recruiment',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./pages/admin/admin-jobs/admin-jobs.component').then(
+                (m) => m.AdminJobsComponent,
+              ),
+          },
+          {
+            path: 'teams',
+            loadComponent: () =>
+              import('./pages/admin/admin-teams/admin-teams.component').then(
+                (m) => m.AdminTeamsComponent,
+              ),
+          },
+          {
+            path: 'members',
+            loadComponent: () =>
+              import(
+                './pages/admin/admin-members/admin-members.component'
+              ).then((m) => m.AdminMembersComponent),
+          },
+        ],
       },
       {
-        path: 'teams',
-        loadComponent: () =>
-          import('./pages/admin/admin-teams/admin-teams.component').then(
-            (m) => m.AdminTeamsComponent,
-          ),
-      },
-      {
-        path: 'members',
-        loadComponent: () =>
-          import('./pages/admin/admin-members/admin-members.component').then(
-            (m) => m.AdminMembersComponent,
-          ),
+        path: 'pop-corner',
+        children: [
+          {
+            path: 'movies',
+            loadComponent: () =>
+              import('./pages/admin/pop-corner/movies/movies.component').then(
+                (m) => m.MoviesComponent,
+              ),
+          },
+        ],
       },
     ],
   },

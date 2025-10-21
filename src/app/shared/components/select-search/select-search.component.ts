@@ -34,7 +34,7 @@ export class SelectSearchComponent {
   @Input() formOptions: ShFormOptions = SH_DEFAULT_FORM_OPTIONS;
   @Input() helpText: string[] = [];
   @ViewChild('input', { read: MatAutocompleteTrigger })
-  autoComplete: MatAutocompleteTrigger;
+  autoComplete?: MatAutocompleteTrigger;
 
   open = signal(false);
   options = signal<ShFormOption[]>([]);

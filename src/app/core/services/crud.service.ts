@@ -47,8 +47,9 @@ export class CrudService<T> {
   constructor(
     protected http: HttpClient,
     @Inject('API_ENDPOINT') protected apiTag: string,
+    @Inject('API_DOMAIN') protected apiDomain?: string,
   ) {
-    this.apiEndpoint = environment.apiUrl + apiTag;
+    this.apiEndpoint = (apiDomain ?? environment.apiUrl) + apiTag;
   }
 
   find(params: ApiPaginationQuery): Observable<PaginationResponse<T>> {
@@ -65,7 +66,7 @@ export class CrudService<T> {
     return this.http.post<T>(this.apiEndpoint, dto, options);
   }
 
-  update(_id: string, dto: (T & { _id: string }) | FormData): Observable<T> {
+  update(_id: string, dto: T | FormData): Observable<T> {
     return this.http.patch<T>(`${this.apiEndpoint}/${_id}`, dto);
   }
 

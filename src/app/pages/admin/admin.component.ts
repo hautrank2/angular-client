@@ -36,8 +36,19 @@ export class AdminComponent {
         },
         {
           title: 'Members',
-          path: '/admin/members',
+          path: '/admin/recruiment/members',
           icon: 'person',
+        },
+      ],
+    },
+    {
+      title: 'PopCorner',
+      path: '/admin/pop-corner',
+      children: [
+        {
+          title: 'Movies',
+          path: '/admin/pop-corner/movies',
+          icon: 'movie',
         },
       ],
     },
