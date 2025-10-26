@@ -33,7 +33,7 @@ export type ShNumberColumn<T> = ShBaseColumn<T> & {
 
 // 3. Date column
 export type ShDateColumn<T> = ShBaseColumn<T> & {
-  type: 'date';
+  type: 'date' | 'dateTime';
 };
 
 // 5. Status column

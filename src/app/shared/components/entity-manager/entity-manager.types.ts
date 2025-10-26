@@ -1,3 +1,5 @@
+import { ShFormField } from '../form/form.types';
+
 export interface ShEntityResponse<T> {
   total: number;
   pageSize: number;
@@ -12,3 +14,11 @@ export interface ShEntityFilter {
 }
 
 export type ShEntityAction = 'edit' | 'delete';
+
+export type EntityForm = {
+  reqBody: 'json' | 'form';
+};
+
+export const DEFAULT_FORM_CONFIG: EntityForm = {
+  reqBody: 'json',
+};

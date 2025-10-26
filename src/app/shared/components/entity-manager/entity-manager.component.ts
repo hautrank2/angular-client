@@ -20,6 +20,8 @@ import {
   ShTableAction,
 } from '../table/table.types';
 import {
+  DEFAULT_FORM_CONFIG,
+  EntityForm,
   ShEntityAction,
   ShEntityFilter,
   ShEntityResponse,
@@ -49,8 +51,11 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
     filters: ShEntityFilter,
   ) => Observable<ShEntityResponse<T>>;
   @Input() deleteEntity!: (id: any) => Observable<T>;
-  @Input() putEntity!: (id: any, entity: T) => Observable<T>;
+  @Input() putEntity!: (id: any, entity: T, defaultValues: T) => Observable<T>;
   @Input() postEntity!: (entity: T) => Observable<T>;
+
+  @Input() postFormConfig: EntityForm = DEFAULT_FORM_CONFIG;
+  @Input() putFormConfig: EntityForm = DEFAULT_FORM_CONFIG;
 
   // Table config
   @Input({ required: true }) tbColumns: ShColumn<T>[] = [];
@@ -124,7 +129,6 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 cancelButtonText: 'Cancel',
-                cancelButtonColor: '#f7f7f7',
                 customClass: {
                   cancelButton: 'my-button-class',
                 },
@@ -245,6 +249,8 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
           formFields: isEdit ? this._putFormFields : this._postFormFields,
           putEntity: this.putEntity,
           postEntity: this.postEntity,
+          formConfig: isEdit ? this.putFormConfig : this.postFormConfig,
+          keyName: this.keyName,
         },
       })
       .afterClosed()
@@ -351,7 +357,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   }
 
   rowClick(item: T) {
-    this.router.navigate([item[KEY_NAME]], { relativeTo: this.route });
+    // this.router.navigate([item[this.keyName]], { relativeTo: this.route });
   }
 
   //#region Selects

@@ -12,6 +12,9 @@
       {{ cellValue | shFormatNumber }}
     }
     @case ("date") {
+      {{ cellValue | date: "mediumDate" }}
+    }
+    @case ("dateTime") {
       {{ cellValue | date: "dd/MM/yyyy, HH:mm:ss" }}
     }
     @case ("status") {
@@ -136,7 +139,9 @@
             <button
               [matTooltip]="item.label"
               mat-icon-button
-              (click)="item.onClick(cellValue, row, rowIndex)"
+              (click)="
+                $event.stopPropagation(); item.onClick(cellValue, row, rowIndex)
+              "
             >
               <mat-icon class="material-icons-outlined">{{
                 item.icon

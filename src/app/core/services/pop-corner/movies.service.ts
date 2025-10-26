@@ -1,19 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ShFormField } from '~/app/shared/components/form/form.types';
+import {
+  ShFormField,
+  ShFormOptionSync,
+} from '~/app/shared/components/form/form.types';
 import { Validators } from '@angular/forms';
-import { SKILL_DATA } from '~/app/constant/job';
 import { CrudService } from '~/app/core/services/crud.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
 import { PopCornerMovieModel } from '~/app/types/pop-corner';
 import { environment } from '~/environments/environment';
+import { GenreService } from './genre.service';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MoviesService extends CrudService<PopCornerMovieModel> {
-  constructor(http: HttpClient) {
-    super(http, '/movie', environment.popCornerApiUrl);
+  constructor(
+    http: HttpClient,
+    private genreSrv: GenreService,
+  ) {
+    super(http, '/movie', `${environment.popCornerUrl}/api`);
   }
 
   get formFields(): ShFormField[] {
@@ -79,17 +86,15 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
       {
         name: 'movieGenres',
         label: 'Genres',
-        type: 'autocomplete',
-        isArray: true,
-        arrayVariant: 'chips',
-        arrayConfig: { cols: 1 },
-        options: [
-          { label: 'Action', value: 'action' },
-          { label: 'Drama', value: 'drama' },
-          { label: 'Comedy', value: 'comedy' },
-          { label: 'Sci-Fi', value: 'sci-fi' },
-          { label: 'Romance', value: 'romance' },
-        ],
+        type: 'select',
+        multiple: true,
+        options: this.genreSrv
+          .getAll()
+          .pipe(
+            map((res) =>
+              res.map((item) => ({ label: item.name, value: item.name })),
+            ),
+          ),
         validators: [Validators.required],
       },
       {
@@ -97,7 +102,6 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         label: 'Actors',
         type: 'text',
         isArray: true,
-        arrayConfig: { cols: 1 },
         validators: [Validators.required],
       },
       {
@@ -124,29 +128,49 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         inputs: { min: 0, max: 10, step: 0.1 },
         validators: [Validators.min(0), Validators.max(10)],
       },
-      // Hidden fields
-      {
-        name: 'id',
-        label: 'ID',
-        type: 'text',
-        hidden: true,
-      },
-      {
-        name: 'createdAt',
-        label: 'Created At',
-        type: 'date',
-        hidden: true,
-      },
-      {
-        name: 'updatedAt',
-        label: 'Updated At',
-        type: 'date',
-        hidden: true,
-      },
     ];
   }
 
   get tbColumns(): ShColumn<PopCornerMovieModel>[] {
-    return [];
+    return [
+      {
+        name: 'posterUrl',
+        label: 'Poster',
+        type: 'img',
+        render(value) {
+          return `${environment.popCornerUrl}${value}`;
+        },
+      },
+      {
+        name: 'title',
+        label: 'Title',
+        type: 'text',
+      },
+      {
+        name: 'releaseDate',
+        label: 'ReleaseDate',
+        type: 'date',
+      },
+      {
+        name: 'director',
+        label: 'Director',
+        type: 'text',
+      },
+      {
+        name: 'country',
+        label: 'Country',
+        type: 'text',
+      },
+      {
+        name: 'duration',
+        label: 'Duration',
+        type: 'text',
+        render(value, item, index) {
+          const h = Math.round(value / 60);
+          const m = value % 60;
+          return `${h}h ${m}m`;
+        },
+      },
+    ];
   }
 }

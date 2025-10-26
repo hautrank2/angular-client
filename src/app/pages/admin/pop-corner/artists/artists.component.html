@@ -1,0 +1,16 @@
+<sh-entity-manager
+  keyName="id"
+  entityName="movie"
+  [formFields]="artistSrv.formFields"
+  [tbColumns]="artistSrv.tbColumns"
+  [findEntities]="artistSrv.find.bind(artistSrv)"
+  [putEntity]="artistSrv.updateEntity.bind(artistSrv)"
+  [deleteEntity]="artistSrv.delete.bind(artistSrv)"
+  [postEntity]="artistSrv.create.bind(artistSrv)"
+  [putFormFields]="artistSrv.editFormFields"
+  [postFormConfig]="{ reqBody: 'form' }"
+  [putFormConfig]="{ reqBody: 'form' }"
+  [tbActions]="['edit', 'delete']"
+  [tbSelect]="true"
+  [tbPagination]="true"
+></sh-entity-manager>

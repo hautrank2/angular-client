@@ -88,11 +88,7 @@ export class FormService {
 
       case 'select': {
         if (field.multiple) {
-          return new FormArray<FormControl<any>>(
-            ((Array.isArray(value) ? value : []) as any[]).map(
-              (v) => new FormControl<any>(v, validators),
-            ),
-          );
+          return new FormControl(value ?? field.defaultValue ?? [], validators);
         }
         // single select: explicit return to prevent fallthrough
         return new FormControl<any>(

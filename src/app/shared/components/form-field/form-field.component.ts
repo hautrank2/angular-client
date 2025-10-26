@@ -1,5 +1,10 @@
 import { Component, Input, signal } from '@angular/core';
-import { ShFormField, ShFormOptions } from '../form/form.types';
+import {
+  ShFormField,
+  ShFormOption,
+  ShFormOptions,
+  ShFormOptionSync,
+} from '../form/form.types';
 import {
   ControlContainer,
   FormArray,
@@ -8,6 +13,8 @@ import {
   FormGroupDirective,
 } from '@angular/forms';
 import { FormService } from '../../services/form.service';
+import { ShOption } from '../table/table.types';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'sh-form-field',
@@ -66,6 +73,15 @@ export class FormFieldComponent {
         console.log('err', e, ctrErrors[e]);
       });
     return 'Something error';
+  }
+
+  get options$(): ShFormOptionSync {
+    if (this.field.type === 'select') {
+      return Array.isArray(this.field.options)
+        ? of(this.field.options)
+        : this.field.options;
+    }
+    return of([]);
   }
 
   getFormArray(key: string): FormArray {

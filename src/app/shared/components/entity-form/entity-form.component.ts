@@ -5,6 +5,7 @@ import { FormService } from '~/app/shared/services/form.service';
 import { ShFormField } from '~/app/shared/components/form/form.types';
 import { finalize, Observable } from 'rxjs';
 import { KEY_NAME } from '../../constants/common';
+import { EntityForm } from '../entity-manager/entity-manager.types';
 
 export interface EntityFormData<T extends { [key: string]: any }> {
   title?: string;
@@ -12,8 +13,10 @@ export interface EntityFormData<T extends { [key: string]: any }> {
 
   keyName?: string;
   formFields: ShFormField[];
-  putEntity: (id: any, entity: T | FormData) => Observable<T>;
+  putEntity: (id: any, entity: T | FormData, defaultValues: T) => Observable<T>;
   postEntity: (entity: T | FormData) => Observable<T>;
+
+  formConfig: EntityForm;
 }
 
 @Component({
@@ -59,11 +62,20 @@ export class EntityFormComponent<T extends { [key: string]: any }>
 
   submit() {
     if (this.form.valid) {
-      const values = this.form.value;
+      const formValues = this.form.value;
+      const values =
+        this.data.formConfig.reqBody === 'json'
+          ? formValues
+          : this.formSrv.buildFormData(formValues);
       this.loading.set(true);
+
       if (this.isEdit && this.data.defaultValues) {
         this.data
-          .putEntity(this.data.defaultValues[this.keyName], values)
+          .putEntity(
+            this.data.defaultValues[this.keyName],
+            values,
+            this.data.defaultValues,
+          )
           .pipe(finalize(() => this.loading.set(false)))
           .subscribe(() => {
             this.dialogRef.close({ success: true });

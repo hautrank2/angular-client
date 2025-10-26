@@ -97,7 +97,7 @@ export type ShToggleFormField = ShBaseFormField & {
 export type ShSelectFormField = ShBaseFormField &
   ShBaseSelectFormField & {
     type: 'select';
-    options: ShFormOption[];
+    options: ShFormOption[] | ShFormOptionSync;
     filter?: (enterValue: string) => ShFormOption[];
     debounceTime?: number;
   };

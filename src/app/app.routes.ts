@@ -74,10 +74,22 @@ export const routes: Routes = [
         path: 'pop-corner',
         children: [
           {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'movies',
+          },
+          {
             path: 'movies',
             loadComponent: () =>
               import('./pages/admin/pop-corner/movies/movies.component').then(
                 (m) => m.MoviesComponent,
+              ),
+          },
+          {
+            path: 'artists',
+            loadComponent: () =>
+              import('./pages/admin/pop-corner/artists/artists.component').then(
+                (m) => m.ArtistsComponent,
               ),
           },
         ],

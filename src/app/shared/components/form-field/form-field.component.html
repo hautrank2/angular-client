@@ -12,9 +12,9 @@
       <div
         [ngClass]="[
           'form-field-array-list',
-          'grid',
+          'grid mt-2',
           'grid-cols-' + (field.arrayConfig?.cols ?? 1),
-          'gap-' + (field.arrayConfig?.gutter ?? 8),
+          'gap-' + (field.arrayConfig?.gutter ?? 4),
         ]"
       >
         @for (
@@ -69,146 +69,156 @@
                 </mat-card-content>
               </mat-card>
             } @else {
-              @switch (field.type) {
-                @case ("text") {
-                  <mat-form-field
-                    style="width: 100%"
-                    [appearance]="appearance"
-                    [appAttr]="fieldAttrs"
-                  >
-                    <mat-label>{{ field.label }}</mat-label>
-                    <input matInput [type]="field.type" [formControlName]="i" />
-                  </mat-form-field>
-                }
-                @case ("area") {
-                  <mat-form-field
-                    style="width: 100%"
-                    [appearance]="appearance"
-                    [appAttr]="fieldAttrs"
-                  >
-                    <mat-label>{{ field.label }}</mat-label>
-                    <textarea
-                      matInput
-                      [type]="field.type"
-                      [formControlName]="i"
-                    ></textarea>
-                  </mat-form-field>
-                }
-                @case ("number") {
-                  <mat-form-field
-                    style="width: 100%"
-                    [appearance]="appearance"
-                    [appAttr]="fieldAttrs"
-                  >
-                    <mat-label>{{ field.label }}</mat-label>
-                    <input matInput [type]="field.type" [formControlName]="i" />
-                  </mat-form-field>
-                }
-                @case ("password") {
-                  <app-input-password
-                    [field]="field"
-                    [formGroup]="formGroup"
-                    [formOptions]="formOptions"
-                    [helpText]="helpText()"
-                  ></app-input-password>
-                }
-                @case ("select") {
-                  <mat-form-field
-                    style="width: 100%"
-                    [appearance]="appearance"
-                    [appAttr]="fieldAttrs"
-                  >
-                    <mat-label>{{ field.label }}</mat-label>
-                    <mat-select
-                      [formControlName]="i"
-                      [multiple]="field.multiple"
+              <div class="flex items-center gap-2">
+                @switch (field.type) {
+                  @case ("text") {
+                    <mat-form-field
+                      style="width: 100%"
+                      [appearance]="appearance"
+                      [appAttr]="fieldAttrs"
                     >
-                      <mat-option
-                        *ngFor="let opt of field.options"
-                        [value]="opt.value"
+                      <mat-label>{{ field.label }}</mat-label>
+                      <input
+                        matInput
+                        [type]="field.type"
+                        [formControlName]="i"
+                      />
+                    </mat-form-field>
+                  }
+                  @case ("area") {
+                    <mat-form-field
+                      style="width: 100%"
+                      [appearance]="appearance"
+                      [appAttr]="fieldAttrs"
+                    >
+                      <mat-label>{{ field.label }}</mat-label>
+                      <textarea
+                        matInput
+                        [type]="field.type"
+                        [formControlName]="i"
+                      ></textarea>
+                    </mat-form-field>
+                  }
+                  @case ("number") {
+                    <mat-form-field
+                      style="width: 100%"
+                      [appearance]="appearance"
+                      [appAttr]="fieldAttrs"
+                    >
+                      <mat-label>{{ field.label }}</mat-label>
+                      <input
+                        matInput
+                        [type]="field.type"
+                        [formControlName]="i"
+                      />
+                    </mat-form-field>
+                  }
+                  @case ("password") {
+                    <app-input-password
+                      [field]="field"
+                      [formGroup]="formGroup"
+                      [formOptions]="formOptions"
+                      [helpText]="helpText()"
+                    ></app-input-password>
+                  }
+                  @case ("select") {
+                    <mat-form-field
+                      style="width: 100%"
+                      [appearance]="appearance"
+                      [appAttr]="fieldAttrs"
+                    >
+                      <mat-label>{{ field.label }}</mat-label>
+                      <mat-select
+                        [formControlName]="i"
+                        [multiple]="field.multiple"
                       >
-                        {{ opt.label }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                        <mat-option
+                          *ngFor="let opt of options$ | async"
+                          [value]="opt.value"
+                        >
+                          {{ opt.label }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  }
+                  @case ("autocomplete") {
+                    <app-autocomplete
+                      [field]="field"
+                      [formGroup]="formGroup"
+                      [formOptions]="formOptions"
+                    ></app-autocomplete>
+                  }
+                  @case ("radio") {
+                    <div class="form-field" [appAttr]="fieldAttrs">
+                      <label>{{ field.label }}</label>
+                      <mat-radio-group [formControlName]="i">
+                        <mat-radio-button
+                          *ngFor="let opt of field.options"
+                          [value]="opt.value"
+                        >
+                          {{ opt.label }}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  }
+                  @case ("checkbox") {
+                    <div class="form-field" [appAttr]="fieldAttrs">
+                      <mat-checkbox [formControlName]="i">
+                        {{ field.label }}
+                      </mat-checkbox>
+                    </div>
+                  }
+                  @case ("toggle") {
+                    <div class="form-field" [appAttr]="fieldAttrs">
+                      <mat-slide-toggle [formControlName]="i">
+                        {{ field.label }}
+                      </mat-slide-toggle>
+                    </div>
+                  }
+                  @case ("date") {
+                    <mat-form-field
+                      style="width: 100%"
+                      [appearance]="appearance"
+                      [appAttr]="fieldAttrs"
+                    >
+                      <mat-label>{{ field.label }}</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        [formControlName]="i"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  }
+                  @case ("custom") {
+                    <ng-container *ngIf="field.renderTemplate">
+                      <ng-container
+                        *ngTemplateOutlet="
+                          field.renderTemplate;
+                          context: {
+                            index: i,
+                            control: getFormArray(field.name).at(i),
+                          }
+                        "
+                      ></ng-container>
+                    </ng-container>
+                  }
+                  @default {
+                    <!-- Có thể thêm xử lý mặc định -->
+                  }
                 }
-                @case ("autocomplete") {
-                  <app-autocomplete
-                    [field]="field"
-                    [formGroup]="formGroup"
-                    [formOptions]="formOptions"
-                  ></app-autocomplete>
-                }
-                @case ("radio") {
-                  <div class="form-field" [appAttr]="fieldAttrs">
-                    <label>{{ field.label }}</label>
-                    <mat-radio-group [formControlName]="i">
-                      <mat-radio-button
-                        *ngFor="let opt of field.options"
-                        [value]="opt.value"
-                      >
-                        {{ opt.label }}
-                      </mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-                }
-                @case ("checkbox") {
-                  <div class="form-field" [appAttr]="fieldAttrs">
-                    <mat-checkbox [formControlName]="i">
-                      {{ field.label }}
-                    </mat-checkbox>
-                  </div>
-                }
-                @case ("toggle") {
-                  <div class="form-field" [appAttr]="fieldAttrs">
-                    <mat-slide-toggle [formControlName]="i">
-                      {{ field.label }}
-                    </mat-slide-toggle>
-                  </div>
-                }
-                @case ("date") {
-                  <mat-form-field
-                    style="width: 100%"
-                    [appearance]="appearance"
-                    [appAttr]="fieldAttrs"
-                  >
-                    <mat-label>{{ field.label }}</mat-label>
-                    <input
-                      matInput
-                      [matDatepicker]="picker"
-                      [formControlName]="i"
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker"
-                    ></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                }
-                @case ("custom") {
-                  <ng-container *ngIf="field.renderTemplate">
-                    <ng-container
-                      *ngTemplateOutlet="
-                        field.renderTemplate;
-                        context: {
-                          index: i,
-                          control: getFormArray(field.name).at(i),
-                        }
-                      "
-                    ></ng-container>
-                  </ng-container>
-                }
-                @default {
-                  <!-- Có thể thêm xử lý mặc định -->
-                }
-              }
-              <button
-                mat-icon-button
-                type="button"
-                (click)="removeArrayItem(field.name, i)"
-              >
-                <mat-icon>close</mat-icon>
-              </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeArrayItem(field.name, i)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
             }
           </div>
         }
@@ -296,7 +306,7 @@
       >
         <mat-label>{{ field.label }}</mat-label>
         <mat-select [formControlName]="name" [multiple]="field.multiple">
-          @for (opt of field.options; track $index) {
+          @for (opt of options$ | async; track opt.value) {
             <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
           }
         </mat-select>

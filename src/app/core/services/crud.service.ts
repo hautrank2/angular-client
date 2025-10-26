@@ -66,8 +66,12 @@ export class CrudService<T> {
     return this.http.post<T>(this.apiEndpoint, dto, options);
   }
 
-  update(_id: string, dto: T | FormData): Observable<T> {
+  edit(_id: string, dto: T | FormData): Observable<T> {
     return this.http.patch<T>(`${this.apiEndpoint}/${_id}`, dto);
+  }
+
+  update(_id: string, dto: T | FormData): Observable<T> {
+    return this.http.put<T>(`${this.apiEndpoint}/${_id}`, dto);
   }
 
   delete(id: string): Observable<T> {

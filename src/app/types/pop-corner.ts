@@ -57,3 +57,19 @@ export type PopCornerMovieCreditModel = {
   name: string;
   role: string;
 };
+
+export type PopCornerGenreModel = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+
+export type PopCornerArtistModel = {
+  id: string;
+  name: string;
+  birthday: string; // YYYY-MM-DD
+  coutry: string;
+  bio: string;
+  avatarUrl: string;
+}

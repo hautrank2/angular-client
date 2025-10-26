@@ -50,6 +50,11 @@ export class AdminComponent {
           path: '/admin/pop-corner/movies',
           icon: 'movie',
         },
+        {
+          title: 'Artist',
+          path: '/admin/pop-corner/artists',
+          icon: 'person',
+        },
       ],
     },
   ];
