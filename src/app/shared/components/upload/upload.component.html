@@ -1,7 +1,7 @@
 <input
   #fileInput
   type="file"
-  id="fileInput"
+  [id]="field.name"
   name="files"
   [multiple]="multiple"
   [accept]="accept"
@@ -10,14 +10,17 @@
   [attr.maxSize]="maxFileSize"
 />
 <div class="upload-wrapper">
-  @switch (field.variant) {
-    @default {
-      <button type="button" mat-raised-button (click)="onUpload()">
-        <mat-icon>upload</mat-icon>
-        Upload
-      </button>
+  <div class="flex items-center gap-4">
+    <label [for]="field.name">{{ field.label }}</label>
+    @switch (field.variant) {
+      @default {
+        <button type="button" mat-raised-button (click)="onUpload()">
+          <mat-icon>upload</mat-icon>
+          Upload
+        </button>
+      }
     }
-  }
+  </div>
 
   <div class="upload-previews">
     @for (file of fileUrls(); track $index; let index = $index) {

@@ -1,3 +1,5 @@
+import { PaginationResponse } from './query';
+
 export type PopCornerMovieModel = {
   id: string; // Guid
   title: string;
@@ -7,7 +9,8 @@ export type PopCornerMovieModel = {
   posterUrl: string;
   trailerUrl: string;
   imgUrls: string[];
-  director: string;
+  directorId: string;
+  director: PopCornerArtistModel;
   country: string;
   view: number;
   avgRating: number;
@@ -64,7 +67,6 @@ export type PopCornerGenreModel = {
   description: string;
 };
 
-
 export type PopCornerArtistModel = {
   id: string;
   name: string;
@@ -72,4 +74,6 @@ export type PopCornerArtistModel = {
   coutry: string;
   bio: string;
   avatarUrl: string;
-}
+};
+
+export type PopCornerPaginationResponse<T> = PaginationResponse<T>;

@@ -31,6 +31,10 @@ type FormFieldControlFor<V> = V extends (infer U)[]
 export type FormFieldControlsOf<T extends object> = {
   [K in keyof T]-?: FormFieldControlFor<T[K]>;
 };
+
+export type FormDataOptions = {
+  quotation?: boolean;
+};
 @Injectable({
   providedIn: 'root',
 })
@@ -149,7 +153,9 @@ export class FormService {
     obj: any,
     formData: FormData = new FormData(),
     parentKey: string | null = null,
+    options: FormDataOptions = { quotation: false },
   ): FormData {
+    const { quotation } = options;
     for (const key in obj) {
       if (!obj.hasOwnProperty(key)) continue;
 
@@ -163,6 +169,7 @@ export class FormService {
         formData.append(fullKey, value.toISOString());
       } else if (Array.isArray(value)) {
         value.forEach((item, index) => {
+          const name = quotation ? `${fullKey}[${index}]` : `${fullKey}`;
           if (
             typeof item === 'object' &&
             !(item instanceof File) &&
@@ -170,9 +177,9 @@ export class FormService {
           ) {
             this.buildFormData(item, formData, `${fullKey}[${index}]`);
           } else if (item instanceof Date) {
-            formData.append(`${fullKey}[${index}]`, item.toISOString());
+            formData.append(name, item.toISOString());
           } else {
-            formData.append(`${fullKey}[]`, item);
+            formData.append(name, item);
           }
         });
       } else if (typeof value === 'object' && value !== null) {

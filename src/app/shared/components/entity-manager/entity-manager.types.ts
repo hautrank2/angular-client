@@ -1,3 +1,4 @@
+import { FormDataOptions } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 
 export interface ShEntityResponse<T> {
@@ -16,9 +17,13 @@ export interface ShEntityFilter {
 export type ShEntityAction = 'edit' | 'delete';
 
 export type EntityForm = {
-  reqBody: 'json' | 'form';
+  reqBody?: 'json' | 'form';
+  formDataOptions?: FormDataOptions;
 };
 
 export const DEFAULT_FORM_CONFIG: EntityForm = {
   reqBody: 'json',
+  formDataOptions: {
+    quotation: false,
+  },
 };

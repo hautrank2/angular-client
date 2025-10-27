@@ -370,7 +370,7 @@ export class TableComponent<T> implements OnInit, OnChanges, AfterContentInit {
   }
   //#endregion
 
-  //#region select
+  //#region Select
   isAllSelected() {
     return (
       this.selection.selected.length ===

@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PopCornerArtistModel } from '~/app/types/pop-corner';
+import {
+  PopCornerArtistModel,
+  PopCornerPaginationResponse,
+} from '~/app/types/pop-corner';
 import { environment } from '~/environments/environment';
 import { CrudService } from '../crud.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
@@ -25,13 +28,18 @@ export class ArtistService extends CrudService<PopCornerArtistModel> {
     dto: FormData | PopCornerArtistModel,
     defaultValues: PopCornerArtistModel,
   ): Observable<PopCornerArtistModel> {
-    console.log(dto);
     if (dto instanceof FormData) {
       dto.append('avatarUrl', defaultValues.avatarUrl);
     }
     return this.http.put<PopCornerArtistModel>(
       `${environment.popCornerUrl}/api/artist/${_id}`,
       dto,
+    );
+  }
+
+  findAll(): Observable<PopCornerPaginationResponse<PopCornerArtistModel>> {
+    return this.http.get<PopCornerPaginationResponse<PopCornerArtistModel>>(
+      `${environment.popCornerUrl}/api/artist`,
     );
   }
 

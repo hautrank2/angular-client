@@ -1,5 +1,6 @@
 <section class="overflow-y-auto rounded" [shZ]="2" tabindex="0">
   <sh-table
+    [keyName]="keyName"
     [data]="dataSource"
     [columns]="_tbColumns"
     (onScrollBottom)="scrollBottom()"

@@ -7,6 +7,8 @@
   [putEntity]="moviesSrv.update.bind(moviesSrv)"
   [deleteEntity]="moviesSrv.delete.bind(moviesSrv)"
   [postEntity]="moviesSrv.create.bind(moviesSrv)"
+  [postFormConfig]="{ reqBody: 'form' }"
+  [putFormConfig]="{ reqBody: 'form' }"
   [tbActions]="['edit', 'delete']"
   [tbSelect]="true"
   [tbPagination]="true"

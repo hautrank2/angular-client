@@ -1,10 +1,11 @@
-<mat-drawer-container class="bg-transparent!" autosize>
+<mat-drawer-container autosize>
   <mat-drawer
     #drawer
     [opened]="sidebarOpened()"
     class="sidebar"
     mode="side"
-    [ngClass]="['p-4']"
+    [ngClass]="['p-4 my-4', 'bg-background']"
+    [shZ]="2"
   >
     <div class="flex flex-col pt-4">
       @for (wrapRoute of routes; track $index) {
@@ -34,21 +35,20 @@
     </div>
   </mat-drawer>
 
-  <header
-    class="flex sticky top-0 items-center justify-between px-2 z-10 h-10"
-    [ngClass]="[
-      'mb-4 mx-4',
-      'bg-[var(--mat-sys-background)] shadow-[var(--mat-sys-level1)]',
-    ]"
-  >
-    <div class="flex items-center gap-4">
-      <button type="button" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <h3 appTypography="body-lg" extraClass="text-primary">Admin page</h3>
+  <div class="container mx-auto">
+    <header
+      class="flex sticky top-0 items-center justify-between px-2 z-10 h-14"
+      [ngClass]="['mb-4 mx-4 p-4']"
+    >
+      <div class="flex items-center gap-4">
+        <button type="button" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <h3 appTypography="headline-sm" class="text-primary">Admin page</h3>
+      </div>
+    </header>
+    <div class="px-4 pb-8">
+      <router-outlet></router-outlet>
     </div>
-  </header>
-  <div class="container mx-auto px-4 pb-8">
-    <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>

@@ -11,6 +11,8 @@ import { PopCornerMovieModel } from '~/app/types/pop-corner';
 import { environment } from '~/environments/environment';
 import { GenreService } from './genre.service';
 import { map } from 'rxjs';
+import { ArtistService } from './artist.service';
+import { CommonService } from '../common.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,8 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
   constructor(
     http: HttpClient,
     private genreSrv: GenreService,
+    private artistSrv: ArtistService,
+    private commonSrv: CommonService,
   ) {
     super(http, '/movie', `${environment.popCornerUrl}/api`);
   }
@@ -26,21 +30,30 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
   get formFields(): ShFormField[] {
     return [
       {
+        name: 'imgFiles',
+        label: 'Images',
+        type: 'upload',
+        multiple: true,
+        validators: [Validators.required],
+      },
+      {
+        name: 'poster',
+        label: 'Poster',
+        type: 'upload',
+        multiple: false,
+        validators: [Validators.required],
+      },
+      {
         name: 'title',
         label: 'Title',
         type: 'text',
         validators: [Validators.required, Validators.maxLength(200)],
       },
       {
-        name: 'director',
-        label: 'Director',
-        type: 'text',
-        validators: [Validators.required, Validators.maxLength(100)],
-      },
-      {
         name: 'country',
         label: 'Country',
-        type: 'text',
+        type: 'select',
+        options: this.commonSrv.getContriesOption(),
         validators: [Validators.required, Validators.maxLength(100)],
       },
       {
@@ -63,24 +76,9 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         validators: [Validators.required, Validators.maxLength(2000)],
       },
       {
-        name: 'posterUrl',
-        label: 'Poster URL',
-        type: 'text',
-        validators: [Validators.required],
-      },
-      {
         name: 'trailerUrl',
         label: 'Trailer URL',
         type: 'text',
-        validators: [Validators.required],
-      },
-      {
-        name: 'imgUrls',
-        label: 'Image URLs',
-        type: 'text',
-        isArray: true,
-        arrayVariant: 'chips',
-        arrayConfig: { cols: 1 },
         validators: [Validators.required],
       },
       {
@@ -98,10 +96,32 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         validators: [Validators.required],
       },
       {
-        name: 'movieActors',
+        name: 'directorId',
+        label: 'Director',
+        type: 'select',
+        options: this.artistSrv.findAll().pipe(
+          map((res) =>
+            res.items.map((e) => ({
+              label: e.name,
+              value: e.id,
+            })),
+          ),
+        ),
+        validators: [Validators.required],
+      },
+      {
+        name: 'actorIds',
         label: 'Actors',
-        type: 'text',
-        isArray: true,
+        type: 'select',
+        multiple: true,
+        options: this.artistSrv.findAll().pipe(
+          map((res) =>
+            res.items.map((e) => ({
+              label: e.name,
+              value: e.id,
+            })),
+          ),
+        ),
         validators: [Validators.required],
       },
       {
@@ -155,6 +175,9 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         name: 'director',
         label: 'Director',
         type: 'text',
+        render(value) {
+          return value.name;
+        },
       },
       {
         name: 'country',
