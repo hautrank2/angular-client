@@ -11,4 +11,9 @@ import { MoviesService } from '../../../../core/services/pop-corner/movies.servi
 })
 export class MoviesComponent {
   constructor(public moviesSrv: MoviesService) {}
+
+  get editFormField() {
+    const hideFields = ['poster', 'imgFiles'];
+    return this.moviesSrv.formFields.filter((e) => !hideFields.includes(e.name));
+  }
 }

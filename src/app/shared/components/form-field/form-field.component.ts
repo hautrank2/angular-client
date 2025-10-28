@@ -1,7 +1,6 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, ViewEncapsulation } from '@angular/core';
 import {
   ShFormField,
-  ShFormOption,
   ShFormOptions,
   ShFormOptionSync,
 } from '../form/form.types';
@@ -13,7 +12,6 @@ import {
   FormGroupDirective,
 } from '@angular/forms';
 import { FormService } from '../../services/form.service';
-import { ShOption } from '../table/table.types';
 import { of } from 'rxjs';
 
 @Component({
@@ -24,6 +22,7 @@ import { of } from 'rxjs';
   viewProviders: [
     { provide: ControlContainer, useExisting: FormGroupDirective },
   ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FormFieldComponent {
   @Input({ required: true }) field!: ShFormField;

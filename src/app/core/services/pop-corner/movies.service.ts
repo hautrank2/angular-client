@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  ShFormField,
-  ShFormOptionSync,
-} from '~/app/shared/components/form/form.types';
+import { ShFormField } from '~/app/shared/components/form/form.types';
 import { Validators } from '@angular/forms';
-import { CrudService } from '~/app/core/services/crud.service';
+import {
+  ApiPaginationQuery,
+  CrudService,
+  PaginationResponse,
+} from '~/app/core/services/crud.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
 import { PopCornerMovieModel } from '~/app/types/pop-corner';
 import { environment } from '~/environments/environment';
 import { GenreService } from './genre.service';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ArtistService } from './artist.service';
 import { CommonService } from '../common.service';
 
@@ -25,6 +26,27 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
     private commonSrv: CommonService,
   ) {
     super(http, '/movie', `${environment.popCornerUrl}/api`);
+  }
+
+  override find(
+    params: ApiPaginationQuery,
+  ): Observable<PaginationResponse<PopCornerMovieModel>> {
+    return this.http
+      .get<
+        PaginationResponse<PopCornerMovieModel>
+      >(`${environment.popCornerUrl}/api/movie`, { params })
+      .pipe(
+        map((res) => {
+          return {
+            ...res,
+            items: res.items.map((e) => ({
+              ...e,
+              actorIds: e.actors.map((m) => m.id),
+              genreIds: e.genres.map((m) => m.id),
+            })),
+          };
+        }),
+      );
   }
 
   get formFields(): ShFormField[] {
@@ -82,7 +104,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         validators: [Validators.required],
       },
       {
-        name: 'movieGenres',
+        name: 'genreIds',
         label: 'Genres',
         type: 'select',
         multiple: true,
@@ -90,7 +112,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
           .getAll()
           .pipe(
             map((res) =>
-              res.map((item) => ({ label: item.name, value: item.name })),
+              res.map((item) => ({ label: item.name, value: item.id })),
             ),
           ),
         validators: [Validators.required],

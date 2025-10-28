@@ -18,11 +18,15 @@ export type PopCornerMovieModel = {
   updatedAt: string; // ISO date string
 
   // --- Navigation (optional relations) ---
-  ratings?: PopCornerRatingModel[];
-  comments?: PopCornerCommentModel[];
-  movieGenres?: PopCornerMovieGenreModel[];
-  movieActors?: PopCornerMovieActorModel[];
-  credits?: PopCornerMovieCreditModel[];
+  ratings: PopCornerRatingModel[];
+  comments: PopCornerCommentModel[];
+  credits: PopCornerMovieCreditModel[];
+
+  //
+  actorIds: string[];
+  actors: PopCornerArtistModel[];
+  genreIds: string[];
+  genres: PopCornerGenreModel[];
 };
 
 // --- Related Models ---

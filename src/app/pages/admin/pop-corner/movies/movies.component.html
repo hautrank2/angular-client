@@ -2,6 +2,7 @@
   keyName="id"
   entityName="movie"
   [formFields]="moviesSrv.formFields"
+  [putFormFields]="editFormField"
   [tbColumns]="moviesSrv.tbColumns"
   [findEntities]="moviesSrv.find.bind(moviesSrv)"
   [putEntity]="moviesSrv.update.bind(moviesSrv)"
