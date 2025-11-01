@@ -106,6 +106,9 @@
     @case ("img") {
       <sh-image shImg imgClass="table-cell-img" [src]="cellValue" />
     }
+    @case ("imgs") {
+      <sh-avatar-group imgClass="table-cell-img" [srcs]="cellValue" />
+    }
     @case ("chips") {
       <mat-chip-listbox
         aria-label="Status List"

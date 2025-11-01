@@ -184,6 +184,14 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         },
       },
       {
+        name: 'imgUrls',
+        label: 'ImgUrls',
+        type: 'imgs',
+        render(value: string[]) {
+          return value.map((v) => `${environment.popCornerUrl}${v}`);
+        },
+      },
+      {
         name: 'title',
         label: 'Title',
         type: 'text',

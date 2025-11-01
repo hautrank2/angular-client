@@ -1,5 +1,7 @@
 .sh-image-wrapper {
   --img-overlay: rgba(255, 255, 255, 0.6);
+  --img-overlay-2: rgba(0, 0, 0, 0.233);
+
   position: relative;
   overflow: hidden;
   .sh-img-overlay {
@@ -34,4 +36,8 @@
       transform: translateX(-50%);
     }
   }
+}
+
+.img-preview {
+  --img-bg-action: rgba(0, 0, 0, 0.2);
 }

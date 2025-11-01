@@ -74,6 +74,10 @@ export type ShImgColumn<T> = ShBaseColumn<T> & {
   type: 'img';
 };
 
+export type ShImgsColumn<T> = ShBaseColumn<T> & {
+  type: 'imgs';
+};
+
 export type ShChipColumn<T> = ShBaseColumn<T> & {
   type: 'chips';
 };
@@ -103,6 +107,7 @@ export type ShColumn<T> =
   | ShTimeColumn<T>
   | ShImgColumn<T>
   | ShChipColumn<T>
+  | ShImgsColumn<T>
   | ShAvatarGroupColumn<T>
   | ShActionColumn<T>;
 

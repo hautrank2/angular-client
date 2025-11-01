@@ -78,5 +78,6 @@ const materialModules = [
 @NgModule({
   imports: [...materialModules],
   exports: [...materialModules],
+  declarations: [],
 })
 export class UiModule {}

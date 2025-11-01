@@ -32,6 +32,7 @@ import { DateTimeComponent } from './components/date-time/date-time.component';
 import { SelectSearchComponent } from './components/select-search/select-search.component';
 import { FiltersComponent } from './components/filters/filters.component';
 import { RouterLink } from '@angular/router';
+import { AvatarGroupComponent } from './components/avatar-group/avatar-group.component';
 
 const services = [FormService, UploadService];
 const components = [
@@ -63,7 +64,7 @@ const directives = [
 const pipes = [FormatTimePipe, FormatNumberPipe];
 
 @NgModule({
-  declarations: [...components, ...directives],
+  declarations: [...components, ...directives, AvatarGroupComponent],
   imports: [
     ReactiveFormsModule,
     CommonModule,

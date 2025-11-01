@@ -1,0 +1,34 @@
+.sh-avatar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sh-image-wrapper-count-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--mat-sys-surface-container);
+}
+
+.img-preview-prev {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.img-preview-next {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.img-preview-action {
+  background-color: var(--img-bg-action);
+  border-radius: 8px;
+  padding: 8px;
+}

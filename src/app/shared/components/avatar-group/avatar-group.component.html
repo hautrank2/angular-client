@@ -1,0 +1,118 @@
+<div class="sh-avatar-group">
+  @for (src of displayImgs; track $index; let index = $index) {
+    <div
+      class="sh-image-wrapper"
+      [ngClass]="{ 'sh-image-wrapper-hover': imgHoverd }"
+      #wrapper
+      (mouseover)="hover.set(index)"
+      (mouseleave)="hover.set(null)"
+      [ngStyle]="{
+        width,
+        height,
+      }"
+    >
+      <img
+        [src]="src"
+        [alt]="src"
+        [ngClass]="[imgClass]"
+        style="width: 100%; height: 100%"
+        [ngStyle]="imgStyle"
+      />
+      @if (imgHoverd && hover() === index) {
+        <div class="sh-img-overlay">
+          @for (action of shImageActions; track action) {
+            <button
+              *ngIf="action === 'preview'"
+              mat-icon-button
+              (click)="onPreview(index)"
+              aria-label="Preview"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <button
+              *ngIf="action === 'remove'"
+              mat-icon-button
+              (click)="onRemove()"
+              aria-label="Remove"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (hiddenImgs.length > 0) {
+    <div
+      class="sh-image-wrapper sh-image-wrapper-count"
+      [ngStyle]="{
+        width,
+        height,
+      }"
+      (click)="onPreview(maxCount)"
+    >
+      <div
+        class="sh-image-wrapper-count-img"
+        [ngStyle]="imgStyle"
+        [ngClass]="[imgClass]"
+      >
+        <p>+{{ hiddenImgs.length }}</p>
+      </div>
+    </div>
+  }
+</div>
+
+<ng-template #previewTpl>
+  <div class="img-preview" (wheel)="onWheel($event)">
+    @if (currPreview) {
+      <img
+        shImg
+        [shImgSrc]="currPreview"
+        [shImgPrefix]="prefix"
+        alt="Preview image"
+        [style.transform]="transformStyle"
+        [style.transition]="'transform 0.3s ease'"
+      />
+
+      <div class="img-preview-actions img-preview-action">
+        @for (btn of imgPreviewActions; track $index) {
+          <button
+            mat-icon-button
+            (click)="btn.action()"
+            [attr.aria-label]="btn.label"
+            [matTooltip]="btn.label"
+          >
+            <mat-icon [fontSet]="btn.iconSet || 'material-icons'">{{
+              btn.icon
+            }}</mat-icon>
+          </button>
+        }
+      </div>
+
+      @if (srcs.length > 1) {
+        <div class="img-preview-action img-preview-prev">
+          <button
+            mat-icon-button
+            (click)="onPrevPreview()"
+            [attr.aria-label]="'img-preview-prev'"
+            [matTooltip]="'Change previous image'"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+        <div class="img-preview-action img-preview-next">
+          <button
+            mat-icon-button
+            (click)="onNextPreview()"
+            [attr.aria-label]="'img-next-prev'"
+            [matTooltip]="'Change next image'"
+          >
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      }
+    }
+  </div>
+</ng-template>
