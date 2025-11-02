@@ -195,20 +195,21 @@
       </tr>
     </table>
   </ng-template>
-  <ng-container *ngIf="pagination">
-    <mat-divider></mat-divider>
-    <mat-paginator
-      *ngIf="pagination"
-      showFirstLastButtons
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      (page)="onChangePage($event)"
-      [pageSize]="pagination.pageSize"
-      [pageIndex]="pagination.page - 1"
-      [length]="pagination.total"
-      class="pagination"
-    ></mat-paginator>
-  </ng-container>
 </div>
+
+<ng-container *ngIf="pagination">
+  <mat-divider></mat-divider>
+  <mat-paginator
+    *ngIf="pagination"
+    showFirstLastButtons
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onChangePage($event)"
+    [pageSize]="pagination.pageSize"
+    [pageIndex]="pagination.page - 1"
+    [length]="pagination.total"
+    class="pagination"
+  ></mat-paginator>
+</ng-container>
 
 <ng-template #menu>
   <div class="table-column-filter-menu bg-background" [shZ]="2" cdkMenu>

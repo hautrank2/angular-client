@@ -8,6 +8,7 @@ import {
   OnInit,
   signal,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -15,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormService } from '../../services/form.service';
 import { ShFormField } from '../form/form.types';
 import {
+  ShActionColumn,
   ShColumn,
   ShPaginationEmit,
   ShTableAction,
@@ -61,8 +63,10 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
   @Input({ required: true }) tbColumns: ShColumn<T>[] = [];
   @Input() tbColumnsDisplay!: string[];
   @Input() tbActions: ShEntityAction[] = [];
+  @Input() tbExtraActions: ShTableAction[] = [];
   @Input() tbSelect: boolean = false;
   @Input() tbPagination: boolean = false;
+  @Input() customCells!: { [key: string]: TemplateRef<any> };
 
   // Form config
   @Input() formFields!: ShFormField[];
@@ -143,12 +147,16 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
           break;
       }
     });
+    this.tbExtraActions.forEach((action) => {
+      actions.push(action);
+    });
     if (actions.length > 0) {
       result.push({
         name: 'action',
         label: 'Actions',
         type: 'actions',
         actions,
+        stickyEnd: true,
       });
     }
     return result;
@@ -303,7 +311,6 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
       showCancelButton: true,
       confirmButtonText: 'Delete',
       cancelButtonText: 'Cancel',
-      cancelButtonColor: '#f7f7f7',
       customClass: {
         cancelButton: 'my-button-class',
       },

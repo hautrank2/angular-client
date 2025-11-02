@@ -9,8 +9,8 @@
   [deleteEntity]="moviesSrv.delete.bind(moviesSrv)"
   [postEntity]="moviesSrv.create.bind(moviesSrv)"
   [postFormConfig]="{ reqBody: 'form' }"
-  [putFormConfig]="{ reqBody: 'form' }"
   [tbActions]="['edit', 'delete']"
+  [tbExtraActions]="tbExtraActions"
   [tbSelect]="true"
   [tbPagination]="true"
 ></sh-entity-manager>
