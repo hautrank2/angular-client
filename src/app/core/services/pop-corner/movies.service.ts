@@ -49,6 +49,15 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
       );
   }
 
+  updatePoster(movieId: string, file: File) {
+    const data = new FormData();
+    data.append('poster', file);
+    return this.http.put<PopCornerMovieModel>(
+      `${environment.popCornerUrl}/api/movie/${movieId}/poster`,
+      data,
+    );
+  }
+
   get formFields(): ShFormField[] {
     return [
       {

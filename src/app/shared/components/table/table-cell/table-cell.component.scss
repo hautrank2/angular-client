@@ -1,28 +1,30 @@
 @use "@angular/material" as mat;
 
-.sh-image-wrapper {
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
+sh-table-cell {
+  .sh-image-wrapper {
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
 
-  .table-cell-img {
-    object-fit: cover;
+    .table-cell-img {
+      object-fit: cover;
+    }
   }
-}
 
-.table-cell-popover {
-  background-color: var(--sys-surface);
-  border-radius: 8px;
-  padding: 8px;
+  .table-cell-popover {
+    background-color: var(--sys-surface);
+    border-radius: 8px;
+    padding: 8px;
 
-  @include mat.button-density(-2);
-  .table-cell-popover-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
+    @include mat.button-density(-2);
+    .table-cell-popover-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
   }
-}
 
-.table-cell-popover-backdrop {
-  background-color: transparent;
+  .table-cell-popover-backdrop {
+    background-color: transparent;
+  }
 }
