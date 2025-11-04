@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Edit poster and images</h2>
 
 <mat-dialog-content class="p-0">
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-6 py-2">
     <!-- Poster -->
     <section class="flex flex-col gap-4">
       <div class="flex items-center gap-4 justify-between">
@@ -65,8 +65,8 @@
       </div>
 
       <div class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-        @for (url of imgUrls; track $index) {
-          <div class="relative group border rounded-lg overflow-hidden">
+        @for (url of imgUrls; track $index; let index = $index) {
+          <div class="relative group rounded-lg overflow-hidden" shZ="2">
             <sh-image
               [width]="'120px'"
               height="120px"
@@ -75,8 +75,8 @@
               [imgStyle]="{ objectFit: 'contain' }"
             />
             <button
-              class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white text-lg opacity-0 group-hover:opacity-100 transition"
-              (click)="onRemoveImage(url)"
+              class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white text-lg opacity-0 group-hover:opacity-100 transition hover:cursor-pointer"
+              (click)="onRemoveImage(index)"
               title="Remove"
             >
               ×

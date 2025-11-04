@@ -22,7 +22,7 @@ import { environment } from '~/environments/environment';
 export class MoviesImagesComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<MoviesImagesComponent>);
   movieData = signal<PopCornerMovieModel | null>(null);
-
+  isChanged = signal(false);
   data: { movieId: string; movieData: PopCornerMovieModel } =
     inject(MAT_DIALOG_DATA);
 
@@ -35,6 +35,7 @@ export class MoviesImagesComponent implements OnInit {
   }
 
   private onFetchData() {
+    this.isChanged.set(true);
     this.movieSrv.findById(this.data.movieId).subscribe((res) => {
       this.movieData.set(res);
     });
@@ -65,7 +66,7 @@ export class MoviesImagesComponent implements OnInit {
   }
 
   // ===== Poster section =====
-  async onClickUploadPoster(input: HTMLInputElement) {
+  onClickUploadPoster(input: HTMLInputElement) {
     input.value = ''; // reset để chọn lại cùng 1 file cũng trigger được
     input.click();
   }
@@ -94,49 +95,22 @@ export class MoviesImagesComponent implements OnInit {
     input.click();
   }
 
-  async onImagesSelected(ev: Event) {
+  onImagesSelected(ev: Event) {
     const input = ev.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
     if (files.length === 0) return;
-
-    this.uploadingImages = true;
-    try {
-      // Upload tuần tự (đơn giản). Nếu muốn nhanh hơn có thể Promise.all kèm giới hạn concurrency.
-      const newUrls: string[] = [];
-      for (const f of files) {
-        // TODO: gọi API upload image – TRẢ VỀ URL ảnh
-        // const url = await this.movieService.uploadImage(this.movieData.id, f).toPromise();
-        const url = await this.mockUpload(f); // <- tạm mock
-        newUrls.push(url);
-      }
-      // this.imgUrls = [...this.imgUrls, ...newUrls];
-    } catch (err) {
-      console.error('Upload images error', err);
-      // TODO: show toast
-    } finally {
-      this.uploadingImages = false;
-    }
+    this.movieSrv.addImage(this.movieId, files).subscribe(() => {
+      this.onFetchData();
+    });
   }
 
-  async onRemoveImage(url: string) {
-    try {
-      // TODO: gọi API xóa ảnh nếu cần:
-      // await this.movieService.deleteImage(this.movieData.id, url).toPromise();
-      // this.imgUrls = this.imgUrls.filter((u) => u !== url);
-    } catch (err) {
-      console.error('Delete image error', err);
-      // TODO: show toast
-    }
+  onRemoveImage(imgIndex: number) {
+    this.movieSrv.removeImgsByIndex(this.movieId, imgIndex).subscribe(() => {
+      this.onFetchData();
+    });
   }
 
   close() {
-    this.dialogRef.close(this.movieData);
-  }
-
-  // ----- MOCK upload (demo) -----
-  private async mockUpload(file: File): Promise<string> {
-    await new Promise((r) => setTimeout(r, 600));
-    // Trả về object URL để demo. Khi tích hợp API thực, trả về URL từ server.
-    return URL.createObjectURL(file);
+    this.dialogRef.close(this.isChanged());
   }
 }

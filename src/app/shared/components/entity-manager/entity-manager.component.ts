@@ -199,7 +199,7 @@ export class EntityManagerComponent<T extends { [key: string]: any }>
 
   ngOnChanges(changes: SimpleChanges): void {}
 
-  private fetchData() {
+  fetchData() {
     // this.findEntities: nullable
     if (this.findEntities) {
       this.loading.set(true);

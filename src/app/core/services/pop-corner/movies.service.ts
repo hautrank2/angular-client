@@ -58,6 +58,23 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
     );
   }
 
+  addImage(movieId: string, files: File[]) {
+    const data = new FormData();
+    files.forEach((file) => {
+      data.append('files', file);
+    });
+    return this.http.post<PopCornerMovieModel>(
+      `${environment.popCornerUrl}/api/movie/${movieId}/images`,
+      data,
+    );
+  }
+
+  removeImgsByIndex(movieId: string, imgIndex: number) {
+    return this.http.delete<PopCornerMovieModel>(
+      `${environment.popCornerUrl}/api/movie/${movieId}/images/${imgIndex}`,
+    );
+  }
+
   get formFields(): ShFormField[] {
     return [
       {
