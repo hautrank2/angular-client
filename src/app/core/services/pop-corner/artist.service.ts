@@ -50,7 +50,7 @@ export class ArtistService extends CrudService<PopCornerArtistModel> {
         type: 'img',
         label: 'Avatar',
         render(value) {
-          return `${environment.popCornerUrl}${value}`;
+          return `${environment.popCornerAssetUrl}${value}`;
         },
       },
       {

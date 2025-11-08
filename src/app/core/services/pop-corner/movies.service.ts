@@ -206,7 +206,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         label: 'Poster',
         type: 'img',
         render(value) {
-          return `${environment.popCornerUrl}${value}`;
+          return `${environment.popCornerAssetUrl}${value}`;
         },
       },
       {
@@ -214,7 +214,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         label: 'ImgUrls',
         type: 'imgs',
         render(value: string[]) {
-          return value.map((v) => `${environment.popCornerUrl}${v}`);
+          return value.map((v) => `${environment.popCornerAssetUrl}${v}`);
         },
       },
       {

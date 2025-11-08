@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { finalize } from 'rxjs';
 import { MoviesService } from '~/app/core/services/pop-corner/movies.service';
 import { SharedModule } from '~/app/shared/shared.module';
 import { UiModule } from '~/app/shared/ui/ui.module';
@@ -25,6 +26,8 @@ export class MoviesImagesComponent implements OnInit {
   isChanged = signal(false);
   data: { movieId: string; movieData: PopCornerMovieModel } =
     inject(MAT_DIALOG_DATA);
+
+  loading = signal(false);
 
   constructor(private movieSrv: MoviesService) {}
 
@@ -54,14 +57,14 @@ export class MoviesImagesComponent implements OnInit {
   // local state để hiển thị ngay
   get posterUrl() {
     return this.movieData()?.posterUrl
-      ? `${environment.popCornerUrl}${this.movieData()?.posterUrl}`
+      ? `${environment.popCornerAssetUrl}${this.movieData()?.posterUrl}`
       : '';
   }
 
   get imgUrls(): string[] {
     const data = this.movieData();
     return data
-      ? data.imgUrls.map((e) => `${environment.popCornerUrl}${e}`)
+      ? data.imgUrls.map((e) => `${environment.popCornerAssetUrl}${e}`)
       : [];
   }
 
@@ -78,9 +81,17 @@ export class MoviesImagesComponent implements OnInit {
 
     try {
       this.uploadingPoster = true;
-      this.movieSrv.updatePoster(this.movieId, file).subscribe((res) => {
-        this.onFetchData();
-      });
+      this.loading.set(true);
+      this.movieSrv
+        .updatePoster(this.movieId, file)
+        .pipe(
+          finalize(() => {
+            this.loading.set(false);
+          }),
+        )
+        .subscribe((res) => {
+          this.onFetchData();
+        });
     } catch (err) {
       console.error('Upload poster error', err);
       // TODO: show toast
@@ -99,15 +110,31 @@ export class MoviesImagesComponent implements OnInit {
     const input = ev.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
     if (files.length === 0) return;
-    this.movieSrv.addImage(this.movieId, files).subscribe(() => {
-      this.onFetchData();
-    });
+    this.loading.set(true);
+    this.movieSrv
+      .addImage(this.movieId, files)
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe(() => {
+        this.onFetchData();
+      });
   }
 
   onRemoveImage(imgIndex: number) {
-    this.movieSrv.removeImgsByIndex(this.movieId, imgIndex).subscribe(() => {
-      this.onFetchData();
-    });
+    this.loading.set(true);
+    this.movieSrv
+      .removeImgsByIndex(this.movieId, imgIndex)
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe(() => {
+        this.onFetchData();
+      });
   }
 
   close() {
