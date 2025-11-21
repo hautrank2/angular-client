@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ShFormField } from '~/app/shared/components/form/form.types';
+import {
+  ShFormField,
+  ShGroupFormField,
+} from '~/app/shared/components/form/form.types';
 import { Validators } from '@angular/forms';
 import {
   ApiPaginationQuery,
@@ -157,29 +160,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         ),
         validators: [Validators.required],
       },
-      {
-        name: 'actorIds',
-        label: 'Actors',
-        type: 'select',
-        multiple: true,
-        options: this.artistSrv.findAll().pipe(
-          map((res) =>
-            res.items.map((e) => ({
-              label: e.name,
-              value: e.id,
-            })),
-          ),
-        ),
-        validators: [Validators.required],
-      },
-      {
-        name: 'credits',
-        label: 'Credits (name - role)',
-        type: 'text',
-        isArray: true,
-        arrayConfig: { cols: 1 },
-        placeholder: 'e.g. Hans Zimmer - Composer',
-      },
+      this.creditFormField,
       {
         name: 'view',
         label: 'Views',
@@ -197,6 +178,58 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         validators: [Validators.min(0), Validators.max(10)],
       },
     ];
+  }
+
+  get addFormField(): ShFormField[] {
+    return this.formFields.filter((e) => !['credits'].includes(e.name));
+  }
+
+  get creditFormField(): ShGroupFormField {
+    return {
+      name: 'credits',
+      label: 'Credits (name - role)',
+      type: 'group',
+      isArray: true,
+      arrayConfig: { cols: 1 },
+      fields: [
+        {
+          name: 'artistId',
+          label: 'Actors',
+          type: 'select',
+          multiple: true,
+          options: this.artistSrv.findAll().pipe(
+            map((res) =>
+              res.items.map((e) => ({
+                label: e.name,
+                value: e.id,
+              })),
+            ),
+          ),
+          validators: [Validators.required],
+        },
+        {
+          name: 'creditRoleId',
+          label: 'Role',
+          type: 'select',
+          multiple: true,
+          options: this.artistSrv.findAll().pipe(
+            map((res) =>
+              res.items.map((e) => ({
+                label: e.name,
+                value: e.id,
+              })),
+            ),
+          ),
+          validators: [Validators.required],
+        },
+        {
+          name: 'characterName',
+          label: 'Character Name',
+          type: 'text',
+          validators: [Validators.required],
+        },
+      ],
+    };
   }
 
   get tbColumns(): ShColumn<PopCornerMovieModel>[] {
