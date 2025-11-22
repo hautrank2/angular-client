@@ -271,6 +271,7 @@
           matInput
           [type]="field.type"
           [formControlName]="name"
+          [rows]="5"
         ></textarea>
         @if (helpText().length > 0) {
           <mat-error>{{ helpText()[0] }}</mat-error>

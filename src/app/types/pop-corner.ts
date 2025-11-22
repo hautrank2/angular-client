@@ -75,7 +75,7 @@ export type PopCornerArtistModel = {
   id: string;
   name: string;
   birthday: string; // YYYY-MM-DD
-  coutry: string;
+  country: string;
   bio: string;
   avatarUrl: string;
 };

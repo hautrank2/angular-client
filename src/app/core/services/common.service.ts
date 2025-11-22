@@ -37,15 +37,40 @@ export class CommonService {
   }
 
   getContriesOption(): Observable<ShFormOption[]> {
+    const priorityCountries = [
+      'United States',
+      'United Kingdom',
+      'Canada',
+      'Australia',
+      'France',
+      'Germany',
+      'Japan',
+      'South Korea',
+      'China',
+      'India',
+    ].reverse();
+
     return this.http.get<RestCountryLite[]>(`${environment.contryApi}`).pipe(
-      map((res) =>
-        res
-          .map((e) => ({
-            label: e.name.common,
-            value: e.name.common,
-          }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
-      ),
+      map((res) => {
+        const mapped = res.map((e) => ({
+          label: e.name.common,
+          value: e.name.common,
+        }));
+
+        // Tách ra thành 2 nhóm
+        const priority = mapped.filter((x) =>
+          priorityCountries.includes(x.label),
+        );
+        const others = mapped.filter(
+          (x) => !priorityCountries.includes(x.label),
+        );
+
+        // Sort từng nhóm
+        others.sort((a, b) => a.label.localeCompare(b.label));
+
+        // Gộp lại — priority lên đầu
+        return [...priority, ...others];
+      }),
     );
   }
 }

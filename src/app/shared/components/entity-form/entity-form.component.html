@@ -9,11 +9,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Close</button>
+  <button [disabled]="loading()" mat-button (click)="close()">Close</button>
   <button
     mat-flat-button
     color="primary"
-    [disabled]="form.invalid"
+    [disabled]="form.invalid || loading()"
     (click)="submit()"
   >
     Save
