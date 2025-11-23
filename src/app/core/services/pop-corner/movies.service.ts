@@ -11,12 +11,16 @@ import {
   PaginationResponse,
 } from '~/app/core/services/crud.service';
 import { ShColumn } from '~/app/shared/components/table/table.types';
-import { PopCornerMovieModel } from '~/app/types/pop-corner';
+import {
+  PopCornerCreditRole,
+  PopCornerMovieModel,
+} from '~/app/types/pop-corner';
 import { environment } from '~/environments/environment';
 import { GenreService } from './genre.service';
 import { map, Observable } from 'rxjs';
 import { ArtistService } from './artist.service';
 import { CommonService } from '../common.service';
+import { ShFilterField } from '~/app/shared/components/filters/filters.types';
 
 @Injectable({
   providedIn: 'root',
@@ -44,12 +48,17 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
             ...res,
             items: res.items.map((e) => ({
               ...e,
-              actorIds: e.actors.map((m) => m.id),
               genreIds: e.genres.map((m) => m.id),
             })),
           };
         }),
       );
+  }
+
+  findCreditRole(): Observable<PopCornerCreditRole[]> {
+    return this.http.get<PopCornerCreditRole[]>(
+      `${environment.popCornerUrl}/api/credit/role`,
+    );
   }
 
   updatePoster(movieId: string, file: File) {
@@ -150,14 +159,16 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         name: 'directorId',
         label: 'Director',
         type: 'select',
-        options: this.artistSrv.findAll().pipe(
-          map((res) =>
-            res.items.map((e) => ({
-              label: e.name,
-              value: e.id,
-            })),
+        options: this.artistSrv
+          .findAll({ orderBy: 'name', orderDirection: 'Asc' })
+          .pipe(
+            map((res) =>
+              res.items.map((e) => ({
+                label: e.name,
+                value: e.id,
+              })),
+            ),
           ),
-        ),
         validators: [Validators.required],
       },
       this.creditFormField,
@@ -165,18 +176,16 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
         name: 'view',
         label: 'Views',
         type: 'number',
-        defaultValue: 0,
         inputs: { min: 0 },
         validators: [Validators.min(0)],
       },
-      {
-        name: 'avgRating',
-        label: 'Avg Rating (0–10)',
-        type: 'number',
-        defaultValue: 0,
-        inputs: { min: 0, max: 10, step: 0.1 },
-        validators: [Validators.min(0), Validators.max(10)],
-      },
+      // {
+      //   name: 'avgRating',
+      //   label: 'Avg Rating (0–10)',
+      //   type: 'number',
+      //   inputs: { min: 0, max: 10, step: 0.1 },
+      //   validators: [Validators.min(0), Validators.max(10)],
+      // },
     ];
   }
 
@@ -187,34 +196,28 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
   get creditFormField(): ShGroupFormField {
     return {
       name: 'credits',
-      label: 'Credits (name - role)',
+      label: 'Credits',
       type: 'group',
       isArray: true,
       arrayConfig: { cols: 1 },
+      gridConfig: {
+        cols: 4,
+      },
+      formOptions: {
+        isGrid: true,
+        appearance: 'outline',
+      },
+      defaultValue: {
+        creditRoleId: 1,
+      },
       fields: [
-        {
-          name: 'artistId',
-          label: 'Actors',
-          type: 'select',
-          multiple: true,
-          options: this.artistSrv.findAll().pipe(
-            map((res) =>
-              res.items.map((e) => ({
-                label: e.name,
-                value: e.id,
-              })),
-            ),
-          ),
-          validators: [Validators.required],
-        },
         {
           name: 'creditRoleId',
           label: 'Role',
           type: 'select',
-          multiple: true,
-          options: this.artistSrv.findAll().pipe(
+          options: this.findCreditRole().pipe(
             map((res) =>
-              res.items.map((e) => ({
+              res.map((e) => ({
                 label: e.name,
                 value: e.id,
               })),
@@ -222,11 +225,34 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
           ),
           validators: [Validators.required],
         },
+        {
+          name: 'artistId',
+          label: 'Actors',
+          type: 'select',
+          options: this.artistSrv
+            .findAll({ orderBy: 'name', orderDirection: 'Asc' })
+            .pipe(
+              map((res) =>
+                res.items.map((e) => ({
+                  label: e.name,
+                  value: e.id,
+                })),
+              ),
+            ),
+          validators: [Validators.required],
+        },
+
         {
           name: 'characterName',
           label: 'Character Name',
           type: 'text',
           validators: [Validators.required],
+        },
+        {
+          name: 'order',
+          label: 'Order',
+          type: 'number',
+          defaultValue: -1,
         },
       ],
     };
@@ -244,7 +270,7 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
       },
       {
         name: 'imgUrls',
-        label: 'ImgUrls',
+        label: 'Images',
         type: 'imgs',
         render(value: string[]) {
           return value.map((v) => `${environment.popCornerAssetUrl}${v}`);
@@ -282,6 +308,16 @@ export class MoviesService extends CrudService<PopCornerMovieModel> {
           const m = value % 60;
           return `${h}h ${m}m`;
         },
+      },
+    ];
+  }
+
+  get filterFields(): ShFilterField[] {
+    return [
+      {
+        label: 'Title',
+        name: 'title',
+        type: 'input',
       },
     ];
   }

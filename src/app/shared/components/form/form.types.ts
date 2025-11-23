@@ -12,7 +12,7 @@ export type ShValidatorOpts =
 export type ShFormOptionType = ShFormOption[] | ShFormOptionSync;
 
 export type ShFormOption = {
-  value: string;
+  value: string | number;
   label: string;
 };
 

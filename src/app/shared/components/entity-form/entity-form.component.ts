@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 import { FormService } from '~/app/shared/services/form.service';
 import { ShFormField } from '~/app/shared/components/form/form.types';
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, catchError, EMPTY } from 'rxjs';
 import { KEY_NAME } from '../../constants/common';
 import { EntityForm } from '../entity-manager/entity-manager.types';
+import { ToastrService } from 'ngx-toastr';
 
 export interface EntityFormData<T extends { [key: string]: any }> {
   title?: string;
@@ -39,17 +40,16 @@ export class EntityFormComponent<T extends { [key: string]: any }>
   // 👇 Giả lập danh sách member từ backend
   isJsonForm: boolean = false;
 
-  constructor(private formSrv: FormService) {}
+  constructor(
+    private formSrv: FormService,
+    private toastSrv: ToastrService,
+  ) {}
 
   ngOnInit(): void {
-    this.form = this.formSrv.buildForm(this.data.formFields);
-    if (this.data.defaultValues) {
-      this.formSrv.patchForm(
-        this.form,
-        this.data.defaultValues,
-        this.data.formFields,
-      );
-    }
+    this.form = this.formSrv.buildForm(
+      this.data.formFields,
+      this.data.defaultValues,
+    );
   }
 
   get isEdit() {
@@ -67,27 +67,64 @@ export class EntityFormComponent<T extends { [key: string]: any }>
         this.data.formConfig.reqBody === 'json'
           ? formValues
           : this.formSrv.buildFormData(formValues);
+
       this.loading.set(true);
 
-      if (this.isEdit && this.data.defaultValues) {
-        this.data
-          .putEntity(
-            this.data.defaultValues[this.keyName],
-            values,
-            this.data.defaultValues,
-          )
-          .pipe(finalize(() => this.loading.set(false)))
-          .subscribe(() => {
-            this.dialogRef.close({ success: true });
-          });
-      } else {
-        this.data
-          .postEntity(values)
-          .pipe(finalize(() => this.loading.set(false)))
-          .subscribe(() => {
-            this.dialogRef.close({ success: true });
-          });
-      }
+      const request$ =
+        this.isEdit && this.data.defaultValues
+          ? this.data.putEntity(
+              this.data.defaultValues[this.keyName],
+              values,
+              this.data.defaultValues,
+            )
+          : this.data.postEntity(values);
+
+      request$
+        .pipe(
+          catchError((e: any) => {
+            const msg = this.extractErrorMessage(e);
+            this.toastSrv.error(msg);
+            return EMPTY;
+          }),
+          finalize(() => this.loading.set(false)),
+        )
+        .subscribe(() => {
+          this.dialogRef.close({ success: true });
+        });
+    }
+  }
+
+  private extractErrorMessage(err: any): string {
+    if (!err) return 'Unknown error';
+
+    // Khi Angular HTTP client trả HttpErrorResponse
+    if (err.error) {
+      const inner = err.error;
+
+      // case string: error: "Something wrong"
+      if (typeof inner === 'string') return inner;
+
+      // case backend trả object { message: "...", error: "...", msg: "...", detail: "..."}
+      if (inner.message) return inner.message;
+      if (inner.error) return inner.error;
+      if (inner.msg) return inner.msg;
+      if (inner.detail) return inner.detail;
+
+      // fallback: stringify
+      return JSON.stringify(inner);
+    }
+
+    // Trường hợp err là string
+    if (typeof err === 'string') return err;
+
+    // Trường hợp err.message ở root
+    if (err.message) return err.message;
+
+    // fallback cuối cùng
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return 'Unexpected error occurred';
     }
   }
 

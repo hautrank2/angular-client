@@ -11,6 +11,7 @@ import {
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { BehaviorSubject, debounceTime, Subject } from 'rxjs';
+import { ShFilterField } from './filters.types';
 
 const today = new Date();
 const month = today.getMonth();
@@ -50,8 +51,8 @@ export interface FilterInfor {
 })
 export class FiltersComponent implements OnInit, OnChanges {
   // @Input() form?: FormGroup;
-  @Input() appearance: MatFormFieldAppearance = 'fill';
-  @Input() filterInfors: FilterInfor[] = [];
+  @Input() appearance: MatFormFieldAppearance = 'outline';
+  @Input() filterInfors: ShFilterField[] = [];
   @Input() values?: any;
   @Input() loading: boolean = false;
   @Input() defaultValues?: any;

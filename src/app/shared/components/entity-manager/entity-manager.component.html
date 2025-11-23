@@ -21,6 +21,7 @@
     [hasColumnFilter]="true"
     (onDeleteSelected)="deleteSelected()"
     [customCells]="customCells"
+    [height]="'64vh'"
   >
     <app-filters
       tablePanelFilter
@@ -44,6 +45,6 @@
       <button mat-icon-button (click)="reload()">
         <mat-icon>refresh</mat-icon>
       </button>
-    </div></sh-table
-  >
+    </div>
+  </sh-table>
 </section>

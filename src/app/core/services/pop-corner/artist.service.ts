@@ -11,6 +11,7 @@ import { ShFormField } from '~/app/shared/components/form/form.types';
 import { Validators } from '@angular/forms';
 import { CommonService } from '../common.service';
 import { Observable } from 'rxjs';
+import { ShFilterField } from '~/app/shared/components/filters/filters.types';
 
 @Injectable({
   providedIn: 'root',
@@ -37,9 +38,12 @@ export class ArtistService extends CrudService<PopCornerArtistModel> {
     );
   }
 
-  findAll(): Observable<PopCornerPaginationResponse<PopCornerArtistModel>> {
+  findAll(
+    params?: any,
+  ): Observable<PopCornerPaginationResponse<PopCornerArtistModel>> {
     return this.http.get<PopCornerPaginationResponse<PopCornerArtistModel>>(
       `${environment.popCornerUrl}/api/artist`,
+      { params },
     );
   }
 
@@ -121,5 +125,15 @@ export class ArtistService extends CrudService<PopCornerArtistModel> {
       }
       return e;
     });
+  }
+
+  get filterFields(): ShFilterField[] {
+    return [
+      {
+        label: 'Name',
+        name: 'name',
+        type: 'input',
+      },
+    ];
   }
 }

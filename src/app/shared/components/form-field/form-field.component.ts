@@ -98,7 +98,7 @@ export class FormFieldComponent {
 
     switch (field.type) {
       case 'group': {
-        const fg = this.formSrv.buildForm(field.fields);
+        const fg = this.formSrv.buildForm(field.fields, field.defaultValue);
         array.push(fg);
         break;
       }

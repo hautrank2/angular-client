@@ -12,7 +12,7 @@ export type PopCornerMovieModel = {
   directorId: string;
   director: PopCornerArtistModel;
   country: string;
-  view: number;
+  view: string;
   avgRating: number;
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
@@ -22,9 +22,6 @@ export type PopCornerMovieModel = {
   comments: PopCornerCommentModel[];
   credits: PopCornerMovieCreditModel[];
 
-  //
-  actorIds: string[];
-  actors: PopCornerArtistModel[];
   genreIds: string[];
   genres: PopCornerGenreModel[];
 };
@@ -59,10 +56,14 @@ export type PopCornerMovieActorModel = {
 };
 
 export type PopCornerMovieCreditModel = {
-  id: string;
   movieId: string;
-  name: string;
-  role: string;
+  artistId: string;
+  artist: PopCornerArtistModel;
+  creditRoleId: string;
+  creditRole: PopCornerCreditRole;
+  characterName: string;
+  order: number;
+  createdAt: string;
 };
 
 export type PopCornerGenreModel = {
@@ -78,6 +79,12 @@ export type PopCornerArtistModel = {
   country: string;
   bio: string;
   avatarUrl: string;
+};
+
+export type PopCornerCreditRole = {
+  id: number;
+  name: string;
+  description: string;
 };
 
 export type PopCornerPaginationResponse<T> = PaginationResponse<T>;

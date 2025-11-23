@@ -129,7 +129,7 @@ export class SelectSearchComponent {
     this.formControl.setValue(result);
   }
 
-  findOption(value: string): boolean {
+  findOption(value: any): boolean {
     return !!this.filterdOptions().find((e) => e.value === value);
   }
 

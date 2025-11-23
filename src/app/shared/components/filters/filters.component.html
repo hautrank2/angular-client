@@ -1,8 +1,5 @@
-<form
-  [formGroup]="form"
-  class="filter-box flex flex-wrap space-x-1 items-center"
->
-  <ng-container class="filter-item" *ngFor="let filter of filterInfors">
+<form [formGroup]="form" class="filters flex flex-wrap items-center">
+  @for (filter of filterInfors; track $index) {
     <mat-form-field
       *ngIf="filter.type === 'input'"
       [appearance]="appearance"
@@ -37,11 +34,13 @@
         (openedChange)="filter.selectConfig?.openedChange($event)"
       >
         <ng-container *ngIf="filter.options">
-          @for (option of (getOptions(filter.options) | async) || []; track
-          $index) {
-          <mat-option [value]="option['value']">
-            {{ option["label"] }}
-          </mat-option>
+          @for (
+            option of (getOptions(filter.options) | async) || [];
+            track $index
+          ) {
+            <mat-option [value]="option['value']">
+              {{ option["label"] }}
+            </mat-option>
           }
         </ng-container>
         <ng-container
@@ -98,8 +97,7 @@
         >{{ option.label }}</mat-button-toggle
       >
     </mat-button-toggle-group>
-  </ng-container>
-
+  }
   <ng-container *ngIf="filterInfors.length > 1">
     <button type="button" mat-button *ngIf="hasValues" (click)="clearFilters()">
       <mat-icon>filter_alt_off</mat-icon>Clear

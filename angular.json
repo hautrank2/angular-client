@@ -33,7 +33,8 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "@angular/cdk/overlay-prebuilt.css",
               "src/styles.scss",
-              "src/tailwind.css"
+              "src/tailwind.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },

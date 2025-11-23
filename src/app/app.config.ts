@@ -11,7 +11,8 @@ import {
   MAT_DATE_LOCALE,
   provideNativeDateAdapter,
 } from '@angular/material/core';
-import { ToastrModule } from 'ngx-toastr';
+import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +21,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideNativeDateAdapter(),
+    provideToastr(),
+    provideAnimations(),
     importProvidersFrom(
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
