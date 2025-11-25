@@ -55,6 +55,11 @@ export class AdminComponent {
           path: '/admin/pop-corner/artists',
           icon: 'person',
         },
+        {
+          title: 'User',
+          path: '/admin/pop-corner/users',
+          icon: 'account_circle',
+        },
       ],
     },
   ];

@@ -92,6 +92,13 @@ export const routes: Routes = [
                 (m) => m.ArtistsComponent,
               ),
           },
+          {
+            path: 'users',
+            loadComponent: () =>
+              import('./pages/admin/pop-corner/users/users.component').then(
+                (m) => m.UsersComponent,
+              ),
+          },
         ],
       },
     ],

@@ -87,4 +87,5 @@ export type PopCornerCreditRole = {
   description: string;
 };
 
+export type PopCornerUserModel = {};
 export type PopCornerPaginationResponse<T> = PaginationResponse<T>;

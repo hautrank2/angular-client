@@ -1,0 +1,18 @@
+<sh-entity-manager
+  keyName="id"
+  entityName="user"
+  [formFields]="userSrv.addFormField"
+  [putFormFields]="userSrv.editFormFields"
+  [tbColumns]="userSrv.tbColumns"
+  [findEntities]="userSrv.find.bind(userSrv)"
+  [putEntity]="userSrv.update.bind(userSrv)"
+  [deleteEntity]="userSrv.delete.bind(userSrv)"
+  [postEntity]="userSrv.create.bind(userSrv)"
+  [postFormConfig]="{ reqBody: 'form' }"
+  [putFormConfig]="{ reqBody: 'form' }"
+  [tbActions]="['edit', 'delete']"
+  [tbSelect]="true"
+  [tbPagination]="true"
+  [filterFields]="userSrv.filterFields"
+  #entityRef
+></sh-entity-manager>
